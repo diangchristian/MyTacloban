@@ -11,7 +11,7 @@ const {user} = useAuthStore()
 
 
 <template>
-    <div class="mt-28">
+    <div class="">
         <h1>Welcome to Admin Dashboard</h1>
 
         <form action="" @submit.prevent="logout">
