@@ -1,24 +1,23 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
-import NavBar from './components/NavBar.vue';
+import { useRoute } from 'vue-router';
+import DefaultLayout from './components/DefaultLayout.vue';
+import SidebarLayout from './components/SidebarLayout.vue';
+
+const route = useRoute();
+
+
+const layouts = {
+  default: DefaultLayout,
+  sidebar: SidebarLayout
+}
+
+
 </script>
 
 <template>
-  <header>
-  
-    <div class="wrapper">
-
-      <!-- <nav>
-        <RouterLink to="/" class="bg-green-500/20 px-2 py-1 rounded-md mt-12 ml-12">Home</RouterLink>
-        <RouterLink to="/login" class="bg-green-500/20 px-2 py-1 rounded-md mt-12 ml-12">Login</RouterLink>
-        <RouterLink to="/register" class="bg-green-500/20 px-2 py-1 rounded-md mt-12 ml-12">Register</RouterLink>
-      
-      </nav> -->
-
-      <NavBar/>
-    </div>
-  </header>
-
-  <RouterView />
+  <component :is="layouts[route.meta.layout || 'default']">
+    <RouterView />
+  </component>
 </template>
 
