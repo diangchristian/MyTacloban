@@ -56,7 +56,7 @@ main.css
 ```
 
 ### components/
->Contains everything related to Vue Router..
+>Reusable Vue components that can be used across multiple pages.
 ```bash
 router/
  ├─ landing/     //components for landing page
