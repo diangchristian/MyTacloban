@@ -50,7 +50,7 @@ const formData = reactive({
           />
           <Input
             type="password"
-            placeholder="Enter password"
+            placeholder="Confirm your password"
             class="mt-4 w-full p-2 rounded"
             autocomplete="current-password"
             v-model="formData.password_confirmation"
