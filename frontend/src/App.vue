@@ -3,13 +3,15 @@ import { RouterLink, RouterView } from 'vue-router'
 import { useRoute } from 'vue-router';
 import DefaultLayout from './components/DefaultLayout.vue';
 import SidebarLayout from './components/SidebarLayout.vue';
+import NoLayoutPage from './components/NoLayoutPage.vue';
 
 const route = useRoute();
 
 
 const layouts = {
   default: DefaultLayout,
-  sidebar: SidebarLayout
+  sidebar: SidebarLayout,
+  noLayout: NoLayoutPage,
 }
 
 
@@ -17,7 +19,8 @@ const layouts = {
 
 <template>
   <component :is="layouts[route.meta.layout || 'default']">
-    <RouterView />
+    <RouterView />  
   </component>
+
 </template>
 

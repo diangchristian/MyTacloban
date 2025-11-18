@@ -13,12 +13,12 @@ export default [
         path: '/login',
         name: 'login',
         component: LoginView,
-        meta: {guest: true, layout: 'default'}
+        meta: {guest: true, layout: 'noLayout'}
       },
       {
         path: '/register',
         name: 'register',
         component: RegisterView,
-        meta: {guest: true, layout: 'default'}
+        meta: {guest: true, layout: 'noLayout'}
       },
 ]
