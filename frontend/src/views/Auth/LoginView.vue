@@ -1,9 +1,10 @@
-<script setup lang="ts">
+<script setup >
 import { Input } from "@/components/ui/input"
 import {Button} from "@/components/ui/button"
 import { useAuthStore } from "@/stores/auth";
 import { reactive } from "vue";
 import { RouterLink } from "vue-router";
+import LoginForm from "@/components/LoginForm.vue";
 
 const {Authenticate} = useAuthStore()
 
@@ -18,37 +19,28 @@ const formData = reactive({
 
 
 <template>
-    <main>
-      <div class="max-w-lg mt-28 mx-auto p-4">
-        <h1 class="text-2xl font-semibold text-center">Login to your account</h1>
-  
-        <form class="w-full max-w-md mt-6" @submit.prevent="Authenticate('login',formData)">
-          <Input
-            type="email"
-            placeholder="Enter email"
-            class="w-full p-2 rounded"
-            autocomplete="username"
-            v-model="formData.email"
-          />
-  
-          <Input
-            type="password"
-            placeholder="Enter password"
-            class="mt-4 w-full p-2 rounded"
-            autocomplete="current-password"
-            v-model="formData.password"
-          />
-  
-          <button
-            type="submit"
-            class="mt-4 bg-green-300 w-full hover:bg-green-500 cursor-pointer py-2 rounded"
-            >
-            Login
-        </button>
-
-        <p class="mt-4 text-slate-600">Don't have an account? <a href="/register" class="text-primary underline">Register</a></p>
-
-        </form>
+  <div class="grid min-h-svh lg:grid-cols-2">
+    <div class="flex flex-col gap-4 p-6 md:p-10">
+      <div class="flex justify-center gap-2 md:justify-start">
+        <RouterLink to="/" class="flex items-center gap-2 font-medium">
+          <div class="bg-primary text-primary-foreground flex size-6 items-center justify-center rounded-md">
+            <GalleryVerticalEnd class="size-4" />
+          </div>
+          MyTacloban
+        </RouterLink>
       </div>
-    </main>
-  </template>
+      <div class="flex flex-1 items-center justify-center">
+        <div class="w-full max-w-xs">
+          <LoginForm />
+        </div>
+      </div>
+    </div>
+    <div class="bg-muted relative hidden lg:block">
+      <img
+        src="https://placehold.co/600x400"
+        alt="Image"
+        class="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
+      >
+    </div>
+  </div>
+</template>
