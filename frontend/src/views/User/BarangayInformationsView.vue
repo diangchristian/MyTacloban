@@ -12,7 +12,7 @@ import { Input } from '@/components/ui/input';
         <Input type="text" placeholder="Search Barangay" class="w-2/3 pl-10 pr-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
     </div>
 
-    <div class="mt-10">
+    <div class="mt-5">
         <div class="grid grid-cols-4 gap-4">
             <BarangayCard/>
             <BarangayCard/>
