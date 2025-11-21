@@ -3,7 +3,18 @@ import { MapPin} from "lucide-vue-next"
 import { onMounted, ref } from "vue";
 import L from "leaflet";
 import ImagesModal from "@/components/ImagesModal.vue";
+import { initFlowbite } from 'flowbite'
+import { defineProps } from "vue";
 
+
+const props = defineProps({
+    report: Object
+})
+
+
+onMounted(() => {
+  initFlowbite()
+})
 
 const map = ref(null);
 
@@ -26,53 +37,70 @@ onMounted(() => {
 
 </script>
 
-
 <template>
-    <div class="">
-        <div class="">
-            <div class="flex items-center justify-between w-full mb-2 text-sm text-gray-400">
-                    <p>#2847</p>
-                    <p>November 19, 2025</p>
-            </div> 
-            <!-- header -->
-            <div class="">
-                <h1 class="text-3xl font-bold ">Broken Streetlight</h1>
-                <div class="flex gap-2 mt-2">
-                    <h2 class="">Status:</h2>
-                    <span
-                    class="bg-red-500/15 px-2 py-1 text-xs rounded-lg text-destructive"
-                    >Urgent</span>
-                </div>
-            </div> 
-            <!-- description -->
-            <div class="mt-4">
-                <p class="font-semibold">Description:</p>
-                <p>Severe flooding during heavy rain. Water accumulates up to knee level, blocking the road.</p>
-            </div>
-            <!-- location -->
-            <div class="mt-4 flex  items-start">
-                <p class="font-semibold">Location:</p>
-                <div class="flex ml-2 text-gray-500 items-center"><MapPin class="size-5 mr-1"/>Main Road, Barangay 1</div>
-            </div>
-            <!-- map -->
-            <div class="mt-4">
-                <div class="w-full h-64 z-2" id="map"></div>
-            </div>
-            <!-- images -->
-             <div class="mt-4">
-                <div class="flex space-x-4 flex-col">
-                    <p class="font-semibold">Images:</p>
-                    <div class="size-40 object-cover mt-2 ">
-                        <button data-modal-target="default-modal" data-modal-toggle="default-modal" 
-                            class=" bg-primary box-border border border-transparent  shadow-xs focus:outline-none  object-cover" type="button">
-                                <img src="@/assets/images/Mockup.png" alt="Mockup" class="w-48 cursor-pointer" />
-                         </button>
-                    </div>
-                    <ImagesModal/>
-                    
-                </div>
-                
-             </div>
+    <div class="h-full">
+      <div class="space-y-4">
+  
+        <!-- ID + Date -->
+        <div class="flex flex-wrap items-center justify-between w-full mb-2 text-sm text-gray-400 gap-1">
+          <p>{{ report.id }}</p>
+          <p>{{ report.date }}</p>
         </div>
+  
+        <!-- Header -->
+        <div>
+          <h1 class="text-xl md:text-3xl font-bold break-words">{{ report.title }}</h1>
+  
+          <div class="flex flex-wrap gap-2 mt-2 text-sm">
+            <h2>Category:</h2>
+            <span class="bg-red-500/15 px-2 py-1 text-xs rounded-lg text-destructive">
+              {{ report.category }}
+            </span>
+          </div>
+        </div>
+  
+        <!-- Description -->
+        <div>
+          <p class="font-semibold">Description:</p>
+          <p class="text-gray-700 break-words">{{ report.description }}</p>
+        </div>
+  
+        <!-- Location -->
+        <div>
+          <p class="font-semibold">Location:</p>
+          <div class="flex items-center mt-1 ml-0 text-gray-500">
+            <MapPin class="size-5 mr-1" />
+            <p class="break-words">{{ report.location }}</p>
+          </div>
+        </div>
+  
+        <!-- Map -->
+        <div>
+          <div class="w-full h-40 sm:h-64 rounded-lg overflow-hidden z-2" id="map"></div>
+        </div>
+  
+        <!-- Images -->
+        <div>
+          <p class="font-semibold mb-2">Images:</p>
+  
+          <div class="flex flex-wrap gap-4">
+            <button
+              data-modal-target="default-modal"
+              data-modal-toggle="default-modal"
+              class="bg-primary border border-transparent shadow-xs focus:outline-none rounded-lg overflow-hidden"
+            >
+              <img
+                src="@/assets/images/Mockup.png"
+                alt="Mockup"
+                class="w-32 sm:w-48 h-auto object-cover cursor-pointer"
+              />
+            </button>
+          </div>
+  
+          <ImagesModal />
+        </div>
+  
+      </div>
     </div>
-</template>
+  </template>
+  

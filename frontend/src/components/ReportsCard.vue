@@ -9,7 +9,15 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { defineProps } from "vue";
 
+
+const props = defineProps({
+  report: Object
+  
+})
+
+const emit = defineEmits(['view'])
 </script>
 
 <template>
@@ -17,24 +25,22 @@ import {
             <CardHeader>
               <CardTitle class="text-md">
                 <div class="flex items-center justify-between w-full mb-2">
-                    <p>#2847</p>
+                    <p>{{report.id }}</p>
                   <span
                     class="bg-red-500/15 px-2 py-1 text-xs rounded-lg text-destructive"
-                    >Urgent</span
+                    >{{ report.category }}</span
                   >
                 </div>
-                Scheduled Water Interruption - District 1
+                {{ report.title }}
               </CardTitle>
               <CardDescription class="mt-2">
-                Water service will be temporarily interrupted on November 20,
-                2025, from 8:00 AM to 5:00 PM in District 1 for maintenance
-                work.
+               {{ report.description }}
               </CardDescription>
             </CardHeader>
 
             <CardContent class="-mt-1">
-              <Button variant="outline" class="cursor-pointer">
-                Read More
+              <Button variant="outline" class="cursor-pointer" @click="emit('view', report)">
+                View Details
               </Button>
             </CardContent>
           </Card>
