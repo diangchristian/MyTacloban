@@ -12,13 +12,12 @@ import { defineProps } from "vue";
 import { 
 ArrowRight
 } from "lucide-vue-next"
-
+import { RouterLink } from "vue-router";
 
 
 const props = defineProps({
-    button: {
-        type: String,
-        default: ''
+    quickLinks: {
+        type: Object,
     }
 })
 
@@ -33,14 +32,18 @@ const props = defineProps({
     <CardHeader>
         <CardTitle class="text-md">
             <!-- <div class="size-20  rounded-lg mb-2"></div> -->
-            Submit a Report
+            {{ quickLinks.title }}
         </CardTitle>
         <CardDescription class="-mt-2">
-            Report issues in your community
+            {{ quickLinks.subHeader }}
         </CardDescription>
     </CardHeader>
     <CardContent class="-mt-1">
-        <Button :variant="props.button === 'primary' ? '' : 'outline' " class="w-full text-start" >Get Started <ArrowRight /></Button>
+        <Button :variant="quickLinks.buttonType" class="w-full text-start cursor-pointer" asChild>
+            <RouterLink :to="quickLinks.url" class="flex items-center justify-between w-full">
+            Get Started <ArrowRight class="ml-2" />
+            </RouterLink>
+        </Button>
         
     </CardContent>
             
