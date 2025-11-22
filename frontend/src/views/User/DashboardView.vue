@@ -1,7 +1,7 @@
 <script setup >
 import DashboardCard from "@/components/user/DashboardCard.vue";
-import AnnouncementCard from "@/components/AnnouncementCard.vue";
-import EventsCard from "@/components/EventsCard.vue";
+import AnnouncementCard from "@/components/cards/AnnouncementCard.vue";
+import EventsCard from "@/components/cards/EventsCard.vue";
 import { RouterLink } from "vue-router";
 import { MoveRight } from 'lucide-vue-next';
 const dashboardLinks = [
