@@ -11,7 +11,7 @@ import { defineProps } from "vue";
 import { 
 ArrowRight
 } from "lucide-vue-next"
-import Button from "./ui/button/Button.vue";
+import Button from "../ui/button/Button.vue";
 
 
 

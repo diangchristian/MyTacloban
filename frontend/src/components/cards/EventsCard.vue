@@ -13,7 +13,7 @@ import {
     MapPin
     
 } from "lucide-vue-next"
-import Button from "./ui/button/Button.vue";
+import Button from "../ui/button/Button.vue";
 
 </script>
 

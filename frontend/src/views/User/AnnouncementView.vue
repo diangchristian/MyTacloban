@@ -3,10 +3,10 @@ import { useAuthStore } from "@/stores/auth";
 import { storeToRefs } from "pinia";
 import { onMounted } from "vue";
 import DashboardCard from "@/components/user/DashboardCard.vue";
-import AnnouncementCard from "@/components/AnnouncementCard.vue";
-import EventsCard from "@/components/EventsCard.vue";
-import HighlightsCard from "@/components/HighlightsCard.vue"
-import NewsCard from "@/components/NewsCard.vue";
+import AnnouncementCard from "@/components/cards/AnnouncementCard.vue";
+import EventsCard from "@/components/cards/EventsCard.vue";
+import HighlightsCard from "@/components/cards/HighlightsCard.vue"
+import NewsCard from "@/components/cards/NewsCard.vue";
 
 
 const { logout } = useAuthStore();

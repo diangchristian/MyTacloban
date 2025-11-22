@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import { Button } from './ui/button';
+import { Button } from '../ui/button';
 import {
     Card,
     CardAction,
@@ -9,8 +9,8 @@ import {
     CardFooter,
     CardHeader,
     CardTitle,
-} from './ui/card'
-import { Label } from './ui/label';
+} from '../ui/card'
+import { Label } from '../ui/label';
 
 </script>
 
