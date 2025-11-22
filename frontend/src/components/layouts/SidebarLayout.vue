@@ -4,7 +4,7 @@ import { useRoute } from "vue-router";
 import Header from './Header.vue';
 import Sidebar from './AppSidebar.vue';
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
-import AppSidebar from "@/components/AppSidebar.vue"
+import AppSidebar from "@/components/layouts/AppSidebar.vue"
 
 const route = useRoute();
 
