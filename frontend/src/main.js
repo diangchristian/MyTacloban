@@ -1,14 +1,14 @@
 import './assets/main.css'
-
 import { createApp, markRaw } from 'vue'
 import { createPinia } from 'pinia'
 import 'flowbite'
 import App from './App.vue'
 import router from './router'
 import { useAuthStore } from './stores/auth'
+import { Chart, registerables } from "chart.js";
 
 
-
+Chart.register(...registerables);
 const app = createApp(App)
 const pinia =  createPinia()
 
