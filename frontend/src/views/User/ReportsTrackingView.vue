@@ -1,7 +1,7 @@
 <script setup>
 import Input from "@/components/ui/input/Input.vue";
 import Button from "@/components/ui/button/Button.vue";
-import ReportsCard from "@/components/ReportsCard.vue";
+import ReportsCard from "@/components/cards/ReportsCard.vue";
 import ReportsDetails from "@/components/ReportsDetails.vue";
 import { useMediaQuery } from '@vueuse/core'
 import { ref, onMounted, onBeforeUnmount, defineProps } from "vue";

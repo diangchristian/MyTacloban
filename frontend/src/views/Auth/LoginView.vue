@@ -4,7 +4,7 @@ import {Button} from "@/components/ui/button"
 import { useAuthStore } from "@/stores/auth";
 import { reactive } from "vue";
 import { RouterLink } from "vue-router";
-import LoginForm from "@/components/LoginForm.vue";
+import LoginForm from "@/components/forms/LoginForm.vue";
 
 const {Authenticate} = useAuthStore()
 

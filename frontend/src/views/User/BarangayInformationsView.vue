@@ -1,5 +1,5 @@
-<script setup lang="ts">
-import BarangayCard from '@/components/BarangayCard.vue';
+<script setup >
+import BarangayCard from '@/components/cards/BarangayCard.vue';
 import { Input } from '@/components/ui/input';
 
 </script>

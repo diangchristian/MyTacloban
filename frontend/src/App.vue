@@ -1,9 +1,9 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
 import { useRoute } from 'vue-router';
-import DefaultLayout from './components/DefaultLayout.vue';
-import SidebarLayout from './components/SidebarLayout.vue';
-import NoLayoutPage from './components/NoLayoutPage.vue';
+import DefaultLayout from './components/layouts/DefaultLayout.vue';
+import SidebarLayout from './components/layouts/SidebarLayout.vue';
+import NoLayoutPage from './components/layouts/NoLayoutPage.vue';
 
 const route = useRoute();
 
