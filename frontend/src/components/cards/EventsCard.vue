@@ -9,7 +9,7 @@ import {
 
 import { defineProps } from "vue";
 import { Clock, MapPin, Calendar } from "lucide-vue-next";
-import Button from "./ui/button/Button.vue";
+import Button from "../ui/button/Button.vue";
 
 // Accept ONE object prop
 const props = defineProps({

@@ -1,5 +1,5 @@
 <script setup>
-import EventsCard from "@/components/EventsCard.vue";
+import EventsCard from "@/components/cards/EventsCard.vue";
 import Input from "@/components/ui/input/Input.vue";
 import Button from "@/components/ui/button/Button.vue";
 import { ref, computed } from "vue";
