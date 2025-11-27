@@ -118,13 +118,13 @@ const reports = [
   <main>
     <div class="w-full h-screen">
       <div
-        class="w-full flex flex-col sm:flex-row gap-4 sm:items-center justify-center">
+        class="w-full flex flex-col lg:flex-row gap-4 sm:items-center justify-center">
         <Input placeholder="Search reports" class="w-full max-w-md" />
-        <div class="flex flex-wrap gap-2">
-          <Button>All Reports (9)</Button>
-          <Button variant="outline">Pending (12)</Button>
-          <Button variant="outline">In Progress (3)</Button>
-        </div>
+          <div class="flex flex-wrap gap-2">
+            <Button>All Reports (9)</Button>
+            <Button variant="outline">Pending (12)</Button>
+            <Button variant="outline">In Progress (3)</Button>
+          </div>
       </div>
       <PaginatedReports/>
       <!-- <div class="grid grid-cols-4 mt-4 gap-4 h-full">

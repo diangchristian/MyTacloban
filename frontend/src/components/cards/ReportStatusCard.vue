@@ -20,20 +20,17 @@ import {
                     <SelectValue placeholder="Select a status" class="w-full"/>
                 </SelectTrigger>
                 <SelectContent>
-                    <SelectItem value="In progress">
+                    <SelectItem value="in_progress">
                         In progress
                     </SelectItem>
-                    <SelectItem value="banana">
-                        Banana
+                    <SelectItem value="assigned">
+                        Assigned
                     </SelectItem>
-                    <SelectItem value="blueberry">
-                        Blueberry
+                    <SelectItem value="resolved">
+                        Resolved
                     </SelectItem>
-                    <SelectItem value="grapes">
-                        Grapes
-                    </SelectItem>
-                    <SelectItem value="pineapple">
-                        Pineapple
+                    <SelectItem value="Rejected">
+                        Rejected
                     </SelectItem>
                 </SelectContent>
             </Select>

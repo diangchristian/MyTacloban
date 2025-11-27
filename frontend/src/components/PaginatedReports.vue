@@ -148,7 +148,7 @@ const viewDetails = (id) => {
   <div class="space-y-4 mt-4">
 
     <!-- Render the cards -->
-    <div class="grid grid-cols-4 gap-4">
+    <div class="grid  md:grid-cols-2  lg:grid-cols-3 xl:grid-cols-4 gap-4">
         <ReportsCard
             v-for="r in paginatedReports"
             :key="r.id"

@@ -22,7 +22,7 @@ const addActivity = () => {
 <template>
     <main>
         <div class="w-full">
-            <div class="grid grid-cols-3 gap-4">
+            <div class="grid  grid-cols-1   lg:grid-cols-3 gap-4">
                 <div class="col-span-2 space-y-4">
                     <ReportHeaderCard class=""/>
                     <MapLocation/>
