@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { CarouselApi } from "@/components/ui/carousel";
 import { watchOnce } from "@vueuse/core";
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   Carousel,
@@ -10,22 +10,51 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import { defineProps } from "vue";
+
+const props = defineProps({
+  images: {
+    type: Array
+  },
+  index: {
+    type: Number
+  }
+})
+
 
 const api = ref<CarouselApi>();
 const totalCount = ref(0);
-const current = ref(0);
+
+const activeIndex = ref(props.index ?? 0); // 0-based
+const currentSlide = ref(1);
 
 function setApi(val: CarouselApi) {
   api.value = val;
 }
+
 watchOnce(api, (api) => {
   if (!api) return;
+
   totalCount.value = api.scrollSnapList().length;
-  current.value = api.selectedScrollSnap() + 1;
+
   api.on("select", () => {
-    current.value = api.selectedScrollSnap() + 1;
+    currentSlide.value = api.selectedScrollSnap() + 1;
   });
+
+  // ✅ sync initial index
+  api.scrollTo(props.index);
+  currentSlide.value = props.index + 1;
 });
+
+watch(
+  () => props.index,
+  (i) => {
+    if (api.value) {  
+      api.value.scrollTo(i);
+      currentSlide.value = i + 1;
+    }
+  }
+);
 
 
 </script>
@@ -46,21 +75,8 @@ watchOnce(api, (api) => {
             <Carousel class="relative w-full max-w-md" @init-api="setApi">
                 <CarouselContent>
 
-                    <CarouselItem v-for="(_, index) in 5" :key="index">
-                    <!-- Remove outer p-1 -->
-                    <div class="w-full h-full rounded-xl overflow-hidden">
-                        <Card class="p-0">
-                        
-                        <CardContent class="p-0 m-0 aspect-square">
-                            <img 
-                            src="@/assets/images/Mockup2.png"
-                            class="object-cover w-full h-full"  
-                            alt=""
-                            />
-                        </CardContent>
-
-                        </Card>
-                    </div>
+                    <CarouselItem v-for="(img, index) in images" :key="index">
+                      <img :src="img"   class="object-cover w-full h-full unselectable-image"  />
                     </CarouselItem>
 
                 </CarouselContent>
@@ -70,7 +86,7 @@ watchOnce(api, (api) => {
                 </Carousel>
 
           <div class="py-2 text-center text-sm text-white">
-            Slide {{ current }} of {{ totalCount }}
+            Slide {{ currentSlide }} of {{ totalCount }}
           </div>
         </div>
       </div>

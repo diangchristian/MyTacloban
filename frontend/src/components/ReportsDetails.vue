@@ -5,7 +5,15 @@ import L from "leaflet";
 import ImagesModal from "@/components/ImagesModal.vue";
 import { initFlowbite } from 'flowbite'
 import { defineProps } from "vue";
+import mockup1 from '@/assets/images/Mockup.png'
+import mockup2 from '@/assets/images/Mockup2.png'
+import sample from '@/assets/images/news-sample.png'
 
+const images = [
+  mockup1,
+  mockup2,
+  sample
+]
 
 const props = defineProps({
     report: Object
@@ -97,7 +105,7 @@ onMounted(() => {
             </button>
           </div>
   
-          <ImagesModal />
+          <ImagesModal :images="images"  />
         </div>
   
       </div>
