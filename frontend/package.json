@@ -13,7 +13,8 @@
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.17",
-    "@vueuse/core": "^14.0.0",
+    "@tinymce/tinymce-vue": "^6.3.0",
+    "@vueuse/core": "^14.1.0",
     "axios": "^1.13.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
