@@ -13,7 +13,11 @@
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.17",
+<<<<<<< HEAD
     "@tanstack/vue-table": "^8.21.3",
+=======
+    "@tinymce/tinymce-vue": "^6.3.0",
+>>>>>>> main
     "@vueuse/core": "^14.1.0",
     "axios": "^1.13.2",
     "class-variance-authority": "^0.7.1",

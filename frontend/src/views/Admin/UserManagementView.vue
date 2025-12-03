@@ -55,7 +55,7 @@ const people = ref([
   { id: 12, name: 'Juan De La Doe', email: 'juandelacru@gmail.com', role: 'Admin', status: 'Blocked', dateJoined: 'Jan. 12, 2023' },
 ]);
 
-const selectedPeople = ref([]);
+const selectedPeople = ref([])
 
 const toggleSelectAll = () => {
   if (selectedPeople.length === people.length) {
