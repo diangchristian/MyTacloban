@@ -1,74 +1,74 @@
 <script setup>
-import { defineProps, defineEmits } from 'vue';
-import { Eye, Edit2, Trash2, Users } from 'lucide-vue-next';
+import { defineProps, defineEmits } from 'vue'
+import { MoreHorizontal } from 'lucide-vue-next'
+
+import { TableRow, TableCell } from '@/components/ui/table'
+import { Checkbox } from '@/components/ui/checkbox'
+import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem
+} from '@/components/ui/dropdown-menu'
 
 const props = defineProps({
-  user: Object
-});
+  person: { type: Object, required: true },
+  selected: { type: Boolean, required: true }
+})
 
-const emit = defineEmits(['view', 'edit', 'delete']);
+const emit = defineEmits(['view', 'edit', 'delete', 'toggle'])
 
-const statusColors = {
-  'Blocked': 'bg-red-100 text-red-600',
-  'Pending': 'bg-yellow-100 text-yellow-600',
-  'Active': 'bg-green-100 text-green-600',
-  'Inactive': 'bg-gray-100 text-gray-600'
-};
+const getStatusVariant = (status) => {
+  const variants = {
+    Active: 'default',
+    Inactive: 'inactive',
+    Blocked: 'destructive',
+    Pending: 'pending',
+  }
+  return variants[status] || 'default'
+}
 
-const roleColors = {
-  'Resident': 'bg-gray-100 text-gray-700',
-  'Admin': 'bg-purple-100 text-purple-700'
-};
 </script>
 
 <template>
-  <tr class="border-b border-gray-100 hover:bg-gray-50">
-    <td class="py-4 px-4">
-      <input type="checkbox" class="w-4 h-4 rounded border-gray-300" />
-    </td>
-    <td class="py-4 px-4">
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
-          <Users class="w-5 h-5 text-gray-600" />
-        </div>
-        <div>
-          <p class="font-medium text-gray-900">{{ user.name }}</p>
-          <p class="text-sm text-gray-500">{{ user.email }}</p>
-        </div>
-      </div>
-    </td>
-    <td class="py-4 px-4">
-      <span :class="`px-3 py-1 rounded-full text-xs font-medium ${roleColors[user.role]}`">
-        {{ user.role }}
-      </span>
-    </td>
-    <td class="py-4 px-4">
-      <span :class="`px-3 py-1 rounded-full text-xs font-medium ${statusColors[user.status]}`">
-        {{ user.status }}
-      </span>
-    </td>
-    <td class="py-4 px-4 text-sm text-gray-600">{{ user.dateJoined }}</td>
-    <td class="py-4 px-4">
-      <div class="flex items-center gap-2">
-        <button 
-          @click="emit('view', user)"
-          class="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-        >
-          <Eye class="w-4 h-4 text-gray-600" />
-        </button>
-        <button 
-          @click="emit('edit', user)"
-          class="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-        >
-          <Edit2 class="w-4 h-4 text-gray-600" />
-        </button>
-        <button 
-          @click="emit('delete', user)"
-          class="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-        >
-          <Trash2 class="w-4 h-4 text-gray-600" />
-        </button>
-      </div>
-    </td>
-  </tr>
+  <TableRow>
+    <TableCell>
+      <Checkbox
+        :checked="selected"
+        @update:checked="() => emit('toggle', person.id)"
+      />
+    </TableCell>
+
+    <TableCell>{{ person.name }}</TableCell>
+    <TableCell>{{ person.email }}</TableCell>
+    <TableCell>{{ person.role }}</TableCell>
+
+    <TableCell>
+      <Badge :variant="getStatusVariant(person.status)"> 
+        {{ person.status }}
+      </Badge>
+    </TableCell>
+
+    <TableCell>{{ person.dateJoined }}</TableCell>
+
+    <TableCell>
+      <DropdownMenu>
+        <DropdownMenuTrigger as-child class="cursor-pointer">
+          <Button variant="ghost" size="icon">
+            <MoreHorizontal class="h-4 w-4" />
+          </Button>
+        </DropdownMenuTrigger>
+
+        <DropdownMenuContent align="end">
+          <DropdownMenuItem @click="emit('view', person.id)" class="cursor-pointer">View Details</DropdownMenuItem>
+          <DropdownMenuItem @click="emit('edit', person.id)" class="cursor-pointer">Edit</DropdownMenuItem>
+          <DropdownMenuItem @click="emit('delete', person.id)" class="text-red-600 cursor-pointer">
+            Delete
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </TableCell>
+  </TableRow>
 </template>
