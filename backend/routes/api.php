@@ -3,7 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
-
+use App\Http\Controllers\BarangayController;
 
 Route::get('/user', function (Request $request) {
     return response()->json([
@@ -17,3 +17,8 @@ Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth:sanctum');
 Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('password.reset');
 Route::post('/forgot-password',[AuthController::class, 'forgotPassword'])->name('forgot-password'); 
+
+
+
+Route::get('/barangays', [BarangayController::class, 'index']);
+

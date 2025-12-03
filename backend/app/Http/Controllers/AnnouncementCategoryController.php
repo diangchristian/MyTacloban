@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
-abstract class Controller
+use Illuminate\Http\Request;
+
+class AnnouncementCategoryController extends Controller
 {
     public function index(){
 
