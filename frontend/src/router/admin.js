@@ -6,7 +6,7 @@ import BarangayInformationsView from '@/views/Admin/BarangayInformationsView.vue
 import EventsManagementView from '@/views/Admin/EventsManagementView.vue'
 import SystemSettingsView from '@/views/Admin/SystemSettingsView.vue'
 import ReportsDetailView from '@/views/Admin/ReportsDetailView.vue'
-
+import CreateAnnouncementView from '@/views/Admin/CreateAnnouncementView.vue'
 
 export default [
     {
@@ -20,6 +20,12 @@ export default [
         name: 'admin.announcements',
         component: AnnouncementsView,
         meta: {requiresAuth: true, role: ['admin'], layout: 'sidebar', title: 'Announcements'}
+    },
+    {
+        path: '/admin/announcements/create',
+        name: 'admin.announcements.create',
+        component: CreateAnnouncementView,
+        meta: {requiresAuth: true, role: ['admin'], layout: 'sidebar', title: 'Create New Announcements'}
     },
     {
         path: '/admin/user-management',
