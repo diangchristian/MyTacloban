@@ -98,19 +98,6 @@ const paginatedPeople = computed(() => {
 
 const totalItems = computed(() => people.value.length)
 
-// const users = ref([
-//   { id: 1, name: 'Juan De La Doe', email: 'juandelacru@gmail.com', role: 'Resident', status: 'Blocked', dateJoined: 'Jan. 12, 2023' },
-//   { id: 2, name: 'Juan De La Doe', email: 'juandelacru@gmail.com', role: 'Resident', status: 'Pending', dateJoined: 'Jan. 12, 2023' },
-//   { id: 3, name: 'Juan De La Doe', email: 'juandelacru@gmail.com', role: 'Resident', status: 'Active', dateJoined: 'Jan. 12, 2023' },
-//   { id: 4, name: 'Juan De La Doe', email: 'juandelacru@gmail.com', role: 'Resident', status: 'Inactive', dateJoined: 'Jan. 12, 2023' },
-//   { id: 5, name: 'Juan De La Doe', email: 'juandelacru@gmail.com', role: 'Admin', status: 'Active', dateJoined: 'Jan. 12, 2023' },
-//   { id: 6, name: 'Juan De La Doe', email: 'juandelacru@gmail.com', role: 'Resident', status: 'Pending', dateJoined: 'Jan. 12, 2023' },
-//   { id: 7, name: 'Juan De La Doe', email: 'juandelacru@gmail.com', role: 'Admin', status: 'Active', dateJoined: 'Jan. 12, 2023' },
-//   { id: 8, name: 'Juan De La Doe', email: 'juandelacru@gmail.com', role: 'Admin', status: 'Active', dateJoined: 'Jan. 12, 2023' },
-//   { id: 9, name: 'Juan De La Doe', email: 'juandelacru@gmail.com', role: 'Admin', status: 'Active', dateJoined: 'Jan. 12, 2023' },
-//   { id: 10, name: 'Juan De La Doe', email: 'juandelacru@gmail.com', role: 'Admin', status: 'Active', dateJoined: 'Jan. 12, 2023' },
-//   { id: 11, name: 'Juan De La Doe', email: 'juandelacru@gmail.com', role: 'Admin', status: 'Active', dateJoined: 'Jan. 12, 2023' }
-// ]);
 
 </script>
 
