@@ -10,4 +10,9 @@ class AnnouncementCategoryRepository implements AnnouncementCategoryRepositoryIn
     {
         return null;
     }
+
+    public function create()
+    {
+        throw new \Exception('Not implemented');
+    }
 }
