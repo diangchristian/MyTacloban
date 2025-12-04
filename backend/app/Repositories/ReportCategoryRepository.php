@@ -10,4 +10,20 @@ class ReportCategoryRepository implements ReportCategoryRepositoryInterface {
     {
         return null;
     }
+    public function store($name)
+    {
+        throw new \Exception('Not implemented');
+    }
+
+
+    public function update($id)
+    {
+        throw new \Exception('Not implemented');
+    }
+
+
+    public function destroy($id)
+    {
+        throw new \Exception('Not implemented');
+    }
 }
