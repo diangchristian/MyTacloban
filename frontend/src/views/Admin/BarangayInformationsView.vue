@@ -28,31 +28,47 @@ import BarangayTable from '@/components/BarangayTable.vue'
 const searchQuery = ref('')
 const viewMode = ref('grid')
 
+import { computed } from 'vue'
+
+const selectedPopulation = computed(() => {
+  const found = barangaysInfo.value.find(b => b.name === barangay.value)
+  return found ? found.population : 0
+})
+
+const selectedBarangays = computed(() => {
+  const found = barangaysInfo.value.find(b => b.name === barangay.value)
+  return found ? found.houses : 0
+})
+
+const selectedOfficials = computed(() => {
+  const found = barangaysInfo.value.find(b => b.name === barangay.value)
+  return found ? found.totalOfficials : 0
+})
+
 const barangaysInfo = ref([
   {
     id: 1,
     name: 'Nula-Tula',
     captain: 'Aron Jacob',
     phone: '+1234567890',
-    email: 'barangay1@example.com'
+    email: 'barangay1@example.com',
+    population: '200',
+    houses: '35',
+    totalOfficials: '12'
   },
   {
     id: 2,
     name: 'Caibanan',
     captain: 'Chris Chan The Ang',
     phone: '+1234567891',
-    email: 'barangay2@example.com'
+    email: 'barangay2@example.com',
+    population: '152',
+    houses: '48',
+    totalOfficials: '8'
   }
 ])
 
 const barangay = ref("");
-
-const barangays = [
-    "Barangay 1",
-    "Barangay 2",
-    "Barangay 3",
-    "Barangay 4",
-]
 
 </script>
 
@@ -97,9 +113,31 @@ const barangays = [
 
           <!-- Stats Cards -->
           <div class="grid sm:grid-cols 1 md:grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-            <StatsCard number="248" label="Total Officials" :icon="Users" iconColor="bg-blue-500" />
-            <StatsCard number="12" label="Barangays" :icon="Building2" iconColor="bg-green-500" />
-            <StatsCard number="3000" label="Population" :icon="UsersRound" iconColor="bg-purple-500" />
+            <StatsCard 
+              :number="selectedOfficials" 
+              label="Total Officials" 
+              :icon="Users" 
+              iconColor="bg-blue-500" 
+              :barangay="barangay" 
+              />
+            
+            <StatsCard 
+
+              :number="selectedBarangays" 
+              label="Households" 
+              :icon="Building2" 
+              iconColor="bg-green-500" 
+              :barangay="barangay" 
+            />
+
+            <StatsCard 
+              :number="selectedPopulation" 
+              label="Population" 
+              :icon="UsersRound" 
+              iconColor="bg-purple-500" 
+              :barangay="barangay" 
+              />
+
           </div>
 
           <!-- Search and Filters -->
@@ -142,6 +180,7 @@ const barangays = [
           </div>
 
           <!-- Barangay List -->
+          <!-- Barangay List -->
           <div v-if="viewMode === 'grid'" class="grid grid-cols-3 gap-6">
             <BarangayCard 
               v-for="barangay in barangaysInfo" 
@@ -152,7 +191,7 @@ const barangays = [
               :email="barangay.email"
             />
           </div>
-          <BarangayTable v-else :barangays="barangays" />
+          <BarangayTable v-else :barangays="barangaysInfo" />
         </div>
       </div>
     </div>

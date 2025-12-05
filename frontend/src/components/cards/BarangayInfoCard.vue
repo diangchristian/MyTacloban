@@ -1,13 +1,17 @@
-<script>
-    export default {
-        name: 'StatsCard',
-        props: {
-        number: String,
-        label: String,
-        icon: Object,
-        iconColor: String
-        }
-    }
+<script setup>
+    import { defineProps } from 'vue'
+    
+    const props = defineProps({
+      number: String,
+      label: String,
+      icon: Object,
+      iconColor: String,
+
+      barangay: {
+        type: String,
+        default: ""
+      }
+    });
 </script>
 
 <template>
