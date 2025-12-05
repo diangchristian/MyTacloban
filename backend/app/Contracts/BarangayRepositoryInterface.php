@@ -15,17 +15,17 @@ interface BarangayRepositoryInterface
     /**
      * Create a barangay.
      */
-    public function create(array $data);
+    public function store(array $data);
 
     /**
      * Update a barangay.
      */
-    public function update(int $id, array $data);
+    public function update(array $data, int $id);
 
     /**
      * Delete a barangay.
      */
-    public function delete(int $id);
+    public function destroy(int $id);
 
     /**
      * For dropdown API (lean response: id + name only).

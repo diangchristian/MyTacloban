@@ -23,6 +23,8 @@ class DatabaseSeeder extends Seeder
         $this->call(AnnouncementCategorySeeder::class);
         $this->call(EventCategorySeeder::class);
         $this->call(ReportCategorySeeder::class);
+        $this->call(AnnouncementSeeder::class);
+        $this->call(ReportSeeder::class);
         User::factory()->create([
             'name' => 'Test User',
             'email' => 'test@example.com',

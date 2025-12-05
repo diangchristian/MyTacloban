@@ -26,10 +26,10 @@ Route::post('/forgot-password',[AuthController::class, 'forgotPassword'])->name(
 
 
 Route::apiResource('announcement_categories', AnnouncementCategoryController::class );
-Route::apiResource('announcement', AnnouncementController::class );
+Route::apiResource('announcements', AnnouncementController::class );
 Route::apiResource('barangays', BarangayController::class );
 Route::apiResource('event_categories', EventCategoryController::class );
 Route::apiResource('event', EventController::class );
 Route::apiResource('report_categories', ReportCategoryController::class );
-Route::apiResource('report', ReportController::class );
+Route::apiResource('reports', ReportController::class );
 
