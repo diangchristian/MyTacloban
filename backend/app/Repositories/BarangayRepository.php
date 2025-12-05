@@ -21,22 +21,40 @@ class BarangayRepository implements BarangayRepositoryInterface{
     /**
      * Create a barangay.
      */
-    public function create(array $data){
-        return null;
+    public function store(array $fields){
+        $data = array_merge($fields, [
+            'created_at' => now(),
+            'updated_at' => now()
+        ]);
+        return DB::insert("INSERT INTO barangays (name, barangay_captain, phone_number, created_at, updated_at) VALUES (?, ?, ?, ?, ?)", array_values($data));
     }
 
     /**
      * Update a barangay.
      */
-    public function update(int $id, array $data){
-        return null;
+    public function update(array $fields, int $id)
+    {
+        // Merge the updated_at timestamp
+        $data = array_merge($fields, [
+            'updated_at' => now(),
+        ]);
+    
+
+        $sql = "UPDATE barangays SET name = ?, barangay_captain = ?, phone_number = ?, updated_at = ? WHERE id = ?";
+
+        $values = array_values($data);
+        $values[] = $id;
+    
+        // Execute the raw update
+        return DB::update($sql, $values);
     }
+    
 
     /**
      * Delete a barangay.
      */
-    public function delete(int $id){
-        return null;
+    public function destroy(int $id){
+        return DB::delete("DELETE FROM barangays WHERE id = ?", [$id]);
     }
 }
 
