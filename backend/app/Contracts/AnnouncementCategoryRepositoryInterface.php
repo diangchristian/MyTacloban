@@ -11,3 +11,4 @@ interface AnnouncementCategoryRepositoryInterface
     public function update(int $id, string $name);
     public function destroy(int $id);
 }
+    

@@ -33,3 +33,7 @@ Route::apiResource('event', EventController::class );
 Route::apiResource('report_categories', ReportCategoryController::class );
 Route::apiResource('reports', ReportController::class );
 
+
+
+Route::get('/announcements/category/{id}', [AnnouncementController::class, 'getByCategory']);
+Route::get('/announcements/date/{filter}', [AnnouncementController::class, 'getByCreatedAt']);

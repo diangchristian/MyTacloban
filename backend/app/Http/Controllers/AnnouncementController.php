@@ -19,6 +19,42 @@ class AnnouncementController extends Controller
         return response()->json($this->announcement->getAll());
     }
 
+
+    public function getByCategory($category){
+        return response()->json($this->announcement->getByCategory($category));
+    }
+
+
+    public function getByCreatedAt($filter){
+        $today = now()->toDateString();
+        
+        if ($filter === 'today') {
+            $start = $today;
+            $end = $today;
+    
+        } else if ($filter === 'this_week') {
+            $start = now()->startOfWeek()->toDateString();
+            $end = now()->endOfWeek()->toDateString();
+    
+        } else if ($filter === 'this_month') {
+            $start = now()->startOfMonth()->toDateString();
+            $end = now()->endOfMonth()->toDateString();
+    
+        } else if ($filter === 'this_year') {
+            $start = now()->startOfYear()->toDateString();
+            $end = now()->endOfYear()->toDateString();
+    
+        } else {
+            return response()->json(['error' => 'Invalid date filter'], 400);
+        }
+
+
+
+        return response()->json(
+            $this->announcement->getByDateRange($start, $end)
+        );
+    }
+
     public function show(){
 
     }
