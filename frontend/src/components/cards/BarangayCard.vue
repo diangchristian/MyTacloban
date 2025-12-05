@@ -58,7 +58,7 @@ import {
         <div class="flex flex-col items-center">
           <div class="flex items-center gap-1 text-orange-600 mb-1">
             <MapIcon class="w-4 h-4" />
-            <span class="font-bold text-lg">0.2782 km²</span>
+            <span class="font-bold text-lg">0.27 km²</span>
           </div>
           <span class="text-xs text-gray-500">Area Coverage</span>
         </div>
@@ -93,15 +93,6 @@ import {
         <div class="flex items-center gap-2 text-sm text-gray-700">
           <MailIcon class="w-4 h-4 text-gray-400" />
           johndoe@email.com
-        </div>
-      </div>
-
-      <!-- Address -->
-      <div>
-        <div class="text-xs text-gray-400 mb-1">Address</div>
-        <div class="flex items-center gap-2 text-sm text-gray-700">
-          <MapPinIcon class="w-4 h-4 text-gray-400" />
-          Tacloban City, Leyte
         </div>
       </div>
 
