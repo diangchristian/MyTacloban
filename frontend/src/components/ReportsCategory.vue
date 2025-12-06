@@ -11,7 +11,6 @@ const emit = defineEmits(["update:modelValue"]);
 // Determine if this radio is selected
 const checked = computed(() => props.modelValue === props.category.value);
 
-console.log(props.category.bg)
 function select() {
   emit("update:modelValue", props.category.value);
 }
