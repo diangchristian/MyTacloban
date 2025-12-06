@@ -81,7 +81,7 @@ const newsData = ref([
     date: "December 6, 2024",
     category: "Weather Alert",
     image: images,
-    summary: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Necessitatibus animi ducimus, a repellat rem commodi laboriosam beatae expedita autem voluptas laborum excepturi totam?",
+    summary: "Typhoon Uwan to make landfall, residents advised to evacuate as Signal No. 2 has been raised over Tacloban City and several municipalities",
     content: "The Philippine Atmospheric, Geophysical and Astronomical Services Administration (PAGASA) has upgraded Typhoon Uwan to super typhoon category as it continues to intensify over the Philippine Sea. Signal No. 2 has been raised over Tacloban City and several municipalities in Leyte province. Residents are advised to take necessary precautions and monitor updates from local authorities. Classes at all levels have been suspended, and evacuation centers have been prepared for affected families. The typhoon is expected to bring heavy rainfall and strong winds in the coming days."
   },
   {
