@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('user_id');
             $table->string('title');
             $table->text('description');
-            $table->string('image');
+            $table->string('image')->nullable();
             $table->string('coordinates');
             $table->enum('status', ['pending', 'in_progress', 'resolved'])->default('pending');
             $table->timestamps();

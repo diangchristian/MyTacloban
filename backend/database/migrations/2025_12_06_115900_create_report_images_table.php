@@ -11,21 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('events', function (Blueprint $table) {
+        Schema::create('report_images', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
-            $table->text('description');
-            $table->text('image')->nullable();
-            $table->date('event_date');
+            $table->foreignId('report_id')->constrained('reports')->cascadeOnDelete();
+            $table->string('file_path');
             $table->timestamps();
         });
     }
 
     /**
-     * Reverse the migrations.
+     * Reverse the migrations.  
      */
     public function down(): void
     {
-        Schema::dropIfExists('events');
+        Schema::dropIfExists('reports_images');
     }
 };
