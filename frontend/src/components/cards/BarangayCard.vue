@@ -1,4 +1,7 @@
 <script setup>
+import { defineProps } from 'vue';
+import { ref } from 'vue';
+
 import {
   Card,
   CardHeader,
@@ -18,6 +21,18 @@ import {
   MailIcon
 } from 'lucide-vue-next'
 
+const selectedBarangay = ref(null)
+
+function viewDetails(brgy) {
+  selectedBarangay.value = brgy
+}
+
+const props = defineProps({
+  barangay: {
+    type: Object,
+    required: true
+  }
+})
 </script>
 
 <template>
@@ -25,10 +40,10 @@ import {
 
     <!-- Header -->
     <CardHeader class="bg-primary text-primary-foreground p-4 rounded-tr-lg rounded-tl-lg">
-      <h2 class="text-lg font-bold mb-1">Nula-Tula (Brgy. 3 & 3A)</h2>
+      <h2 class="text-lg font-bold mb-1">{{ barangay.name }}</h2>
       <div class="flex items-center gap-1 text-sm opacity-90">
         <MapPinIcon class="w-4 h-4" />
-        <span>Tacloban City, Leyte</span>
+        <span>{{ barangay.location }}</span>
       </div>
     </CardHeader>
 
@@ -40,7 +55,7 @@ import {
         <div class="flex flex-col items-center">
           <div class="flex items-center gap-1 text-blue-600 mb-1">
             <UsersIcon class="w-4 h-4" />
-            <span class="font-bold text-lg">2,663</span>
+            <span class="font-bold text-lg">{{ barangay.population }}</span>
           </div>
           <span class="text-xs text-gray-500">Population</span>
         </div>
@@ -49,7 +64,7 @@ import {
         <div class="flex flex-col items-center">
           <div class="flex items-center gap-1 text-purple-600 mb-1">
             <HomeIcon class="w-4 h-4" />
-            <span class="font-bold text-lg">2,663</span>
+            <span class="font-bold text-lg">{{ barangay.households }}</span>
           </div>
           <span class="text-xs text-gray-500">Households</span>
         </div>
@@ -58,7 +73,7 @@ import {
         <div class="flex flex-col items-center">
           <div class="flex items-center gap-1 text-orange-600 mb-1">
             <MapIcon class="w-4 h-4" />
-            <span class="font-bold text-lg">0.27 km²</span>
+            <span class="font-bold text-lg">{{ barangay.area }} km²</span>
           </div>
           <span class="text-xs text-gray-500">Area Coverage</span>
         </div>
@@ -74,7 +89,7 @@ import {
         <div class="text-xs text-gray-400 mb-1">Contact Person</div>
         <div class="flex items-center gap-2 text-sm text-gray-700">
           <UserIcon class="w-4 h-4 text-gray-400" />
-          John Doe I
+          {{ barangay.contactPerson }}
         </div>
       </div>
 
@@ -83,7 +98,7 @@ import {
         <div class="text-xs text-gray-400 mb-1">Contact Number</div>
         <div class="flex items-center gap-2 text-sm text-gray-700">
           <PhoneIcon class="w-4 h-4 text-gray-400" />
-          +639062688526
+          {{ barangay.contactNumber }}
         </div>
       </div>
 
@@ -92,7 +107,7 @@ import {
         <div class="text-xs text-gray-400 mb-1">Email</div>
         <div class="flex items-center gap-2 text-sm text-gray-700">
           <MailIcon class="w-4 h-4 text-gray-400" />
-          johndoe@email.com
+          {{ barangay.email }}
         </div>
       </div>
 
@@ -100,11 +115,12 @@ import {
 
     <!-- Footer -->
     <CardFooter class="p-4 pt-2">
-      <Button class="w-full bg-primary text-primary-foreground py-3 rounded-lg hover:opacity-90 transition shadow-md hover:cursor-pointer">
+      <Button
+        @click="$emit('viewDetails', barangay)"
+        class="w-full bg-primary text-primary-foreground py-3 rounded-lg hover:opacity-90 transition shadow-md hover:cursor-pointer">
         View Details
       </Button>
     </CardFooter>
 
   </Card>
 </template>
-
