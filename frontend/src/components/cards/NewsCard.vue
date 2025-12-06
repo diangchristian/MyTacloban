@@ -58,7 +58,7 @@ const emit = defineEmits(['view-details']);
                 variant="ghost" 
                 size="sm"
                 @click.stop="emit('view-details')"
-                class="text-[#54D591] hover:text-[#54D591]/80 hover:bg-[#54D591]/10 transition-colors cursor-pointer"
+                class="text-black hover:text-[#54D591]/80 hover:bg-primary/10 transition-colors cursor-pointer bg-primary"
             >
                 Read More
                 <ArrowRight class="ml-2 h-4 w-4" />
