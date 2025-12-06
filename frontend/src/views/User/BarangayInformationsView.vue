@@ -1,12 +1,9 @@
-<script setup >
+<script setup>
 import BarangayCard from '@/components/cards/BarangayCard.vue';
+import MapLocation from '@/components/MapLocation.vue'
 import { Input } from '@/components/ui/input';
-import { ref } from 'vue';
-import img1 from '@/assets/images/news-sample.png';
-import img2 from '@/assets/images/news-sample.png';
-import img3 from '@/assets/images/news-sample.png';
-import img4 from '@/assets/images/news-sample.png';
-
+import { ref, computed } from 'vue';
+import { MapPin, Users, Home, Map, User, Phone, Mail } from "lucide-vue-next"
 
 const selectedItem = ref(null);
 
@@ -19,30 +16,23 @@ import {
   DialogFooter,
 } from '@/components/ui/dialog'
 
-
-
+// hilaba ini parehas it ak, hardcoded sample data
 const barangays = ref([
   {
     id: 1,
     name: "Nula-Tula (Brgy. 3 & 3A)",
-    location: "Tacloban City, Leyte",
+    coordinates: "11.2489,124.9706",
     population: 2663,
     households: 2663,
     area: 0.27,
     contactPerson: "John Doe I",
     contactNumber: "+639062688526",
     email: "johndoe@email.com",
-    images: [
-      img1,
-      img2,
-      img3,
-      img4,
-    ]
   },
   {
     id: 2,
     name: "Caibanan",
-    location: "Tacloban City, Leyte",
+    coordinates: "11.1939,124.9923",
     population: 1500,
     households: 800,
     area: 0.15,
@@ -53,7 +43,7 @@ const barangays = ref([
   {
     id: 3,
     name: "Sagkahan",
-    location: "Tacloban City, Leyte",
+    coordinates: "11.2160,125.0026",
     population: 1500,
     households: 800,
     area: 0.15,
@@ -64,7 +54,7 @@ const barangays = ref([
   {
     id: 4,
     name: "Brgy. V&G",
-    location: "Tacloban City, Leyte",
+    coordinates: "11.2404,125.0047",
     population: 1500,
     households: 800,
     area: 0.15,
@@ -75,7 +65,7 @@ const barangays = ref([
   {
     id: 5,
     name: "Brgy. San Jose",
-    location: "Tacloban City, Leyte",
+    coordinates: "11.2404,125.0047",
     population: 1500,
     households: 800,
     area: 0.15,
@@ -86,7 +76,7 @@ const barangays = ref([
   {
     id: 6,
     name: "Brgy. San Jose",
-    location: "Tacloban City, Leyte",
+    coordinates: "11.2404,125.0047",
     population: 1500,
     households: 800,
     area: 0.15,
@@ -97,7 +87,7 @@ const barangays = ref([
   {
     id: 7,
     name: "Brgy. San Jose",
-    location: "Tacloban City, Leyte",
+    coordinates: "11.2404,125.0047",
     population: 1500,
     households: 800,
     area: 0.15,
@@ -108,7 +98,7 @@ const barangays = ref([
   {
     id: 8,
     name: "Brgy. San Jose",
-    location: "Tacloban City, Leyte",
+    coordinates: "11.2404,125.0047",
     population: 1500,
     households: 800,
     area: 0.15,
@@ -118,7 +108,34 @@ const barangays = ref([
   },
 ])
 
-// this is for global dialogs
+// adi an pan search query
+const searchQuery = ref('')
+
+// Adi an para search bar
+const filteredBarangays = computed(() => {
+  if (!searchQuery.value) {
+    return barangays.value
+  }
+  
+  const query = searchQuery.value.toLowerCase()
+  return barangays.value.filter(barangay => 
+    barangay.name.toLowerCase().includes(query) ||
+    barangay.contactPerson.toLowerCase().includes(query)
+  )
+})
+
+// adi ye kay gin v-for ko nala didto sa baba kay nagkakalat
+const infoFields = [
+  { icon: MapPin, label: 'Location', key: 'coordinates' },
+  { icon: Users, label: 'Population', key: 'population' },
+  { icon: Home, label: 'Households', key: 'households' },
+  { icon: Map, label: 'Area', key: 'area', suffix: ' km²' },
+  { icon: User, label: 'Contact Person', key: 'contactPerson' },
+  { icon: Phone, label: 'Contact No', key: 'contactNumber' },
+  { icon: Mail, label: 'Email', key: 'email', span: true }
+]
+
+// adi hera bagan trigger/watcher para han pag abri dialog tas pagkuha kun ano na brgy
 const selectedBarangay = ref(null)
 const isDialogOpen = ref(false)
 
@@ -129,69 +146,68 @@ function openDialog(item) {
 </script>
 
 <template>
+  <!-- Search Area -->
+  <div class="relative flex items-center border-b-2 border-b-gray/50 pb-4">
+    <svg class="absolute left-3 h-5 w-5 text-gray-400 focus-within:text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+    </svg>
+    <Input 
+      v-model="searchQuery"
+      type="text" 
+      placeholder="Search Barangay" 
+      class="w-2/3 pl-10 pr-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" 
+    />
+  </div>
 
-    <!-- Search Area -->
-    <div class="relative flex items-center border-b-2 border-b-gray/50 pb-4">
-        <svg class="absolute left-3 h-5 w-5 text-gray-400 focus-within:text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-        </svg>
-        <Input type="text" placeholder="Search Barangay" class="w-2/3 pl-10 pr-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+  <!-- Array listing for barangay details & card -->
+  <div class="mt-5">
+    <div v-if="filteredBarangays.length > 0" class="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+      <BarangayCard
+        class="pt-0"
+        v-for="item in filteredBarangays"
+        :key="item.id"
+        :barangay="item"
+        @viewDetails="openDialog"
+      />
     </div>
-
-    <!-- Array listing for barangay details & card -->
-    <div class="mt-5">
-        <div class="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-            <BarangayCard
-                v-for="item in barangays"
-                :key="item.id"
-                :barangay="item"
-                @viewDetails="openDialog"
-            />
-        </div>
+    <div v-else class="text-center py-10 text-gray-500">
+      No barangays found matching "{{ searchQuery }}"
     </div>
+  </div>
 
-    <!-- ---- GLOBAL DIALOG HERE ---- -->
-    <Dialog v-model:open="isDialogOpen">
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>{{ selectedBarangay?.name }}</DialogTitle>
-          <DialogDescription>
-            Full details of the selected barangay.
-          </DialogDescription>
-        </DialogHeader>
+  <!-- ---- GLOBAL DIALOG HERE ---- -->
+  <Dialog v-model:open="isDialogOpen">
+    <DialogContent>
+      <DialogHeader>
+        <DialogTitle>{{ selectedBarangay?.name }}</DialogTitle>
+        <DialogDescription>
+          Full details of the selected barangay.
+        </DialogDescription>
+      </DialogHeader>
 
-        <div class="space-y-1">
-          <p><strong>Location:</strong> {{ selectedBarangay?.location }}</p>
-          <p><strong>Population:</strong> {{ selectedBarangay?.population }}</p>
-          <p><strong>Households:</strong> {{ selectedBarangay?.households }}</p>
-          <p><strong>Area:</strong> {{ selectedBarangay?.area }} km²</p>
-          <p><strong>Contact Person:</strong> {{ selectedBarangay?.contactPerson }}</p>
-          <p><strong>Contact Number:</strong> {{ selectedBarangay?.contactNumber }}</p>
-          <p><strong>Email:</strong> {{ selectedBarangay?.email }}</p>
+      <div class="grid grid-cols-2 gap-x-6 gap-y-2">
+        <div 
+          v-for="field in infoFields" 
+          :key="field.key"
+          class="flex items-center gap-2"
+          :class="{ 'col-span-2': field.span }"
+        >
+          <component :is="field.icon" class="size-4 text-primary flex-shrink-0" />
+          <span class="text-sm font-semibold whitespace-nowrap">{{ field.label }}:</span> 
+          <span class="text-sm" :class="field.span ? '' : 'truncate'">{{ selectedBarangay?.[field.key] }}{{ field.suffix || '' }}</span>
         </div>
+      </div>
 
-        <div v-if="selectedBarangay?.images?.length" class="grid grid-cols-2 gap-3 mt-4">
-        <img
-            v-for="(img, idx) in selectedBarangay.images"
-            :key="idx"
-            :src="img"
-            class="w-full h-32 object-cover rounded-lg shadow"
-        />
-        </div>
+      <MapLocation :coordinates="selectedBarangay.coordinates" />
 
-        <div v-else class="text-center text-gray-500 text-sm mt-4">
-        No images available for this barangay.
-        </div>
-
-        <DialogFooter>
-          <button 
-            class="px-4 py-2 font-bold text-black bg-primary hover:bg-primary/20 hover:text-primary rounded cursor-pointer" 
-            @click="isDialogOpen = false"
-            >
-            Close
-          </button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
-
+      <DialogFooter>
+        <button 
+          class="px-4 py-2 font-bold text-black bg-primary hover:bg-primary/20 hover:text-primary rounded cursor-pointer" 
+          @click="isDialogOpen = false"
+        >
+          Close
+        </button>
+      </DialogFooter>
+    </DialogContent>
+  </Dialog>
 </template>

@@ -43,7 +43,7 @@ const props = defineProps({
       <h2 class="text-lg font-bold mb-1">{{ barangay.name }}</h2>
       <div class="flex items-center gap-1 text-sm opacity-90">
         <MapPinIcon class="w-4 h-4" />
-        <span>{{ barangay.location }}</span>
+        <span>{{ barangay.coordinates }}</span>
       </div>
     </CardHeader>
 
