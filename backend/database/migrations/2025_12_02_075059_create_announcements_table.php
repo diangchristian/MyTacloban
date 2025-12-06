@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('title');
             $table->text('body');
             $table->string('image');
+            $table->boolean('isHighlight')->default(false);
             $table->enum('status', ['draft', 'published', 'archived'])->default('draft');
             $table->timestamps();
         });
