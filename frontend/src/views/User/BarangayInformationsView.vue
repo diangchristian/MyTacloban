@@ -185,12 +185,12 @@ function openDialog(item) {
         </DialogDescription>
       </DialogHeader>
 
-      <div class="grid grid-cols-2 gap-x-6 gap-y-2">
+      <div class="grid sm:grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-2">
         <div 
           v-for="field in infoFields" 
           :key="field.key"
           class="flex items-center gap-2"
-          :class="{ 'col-span-2': field.span }"
+          :class="{ 'sm:col-span-1 md:col-span-2': field.span }"
         >
           <component :is="field.icon" class="size-4 text-primary flex-shrink-0" />
           <span class="text-sm font-semibold whitespace-nowrap">{{ field.label }}:</span> 
