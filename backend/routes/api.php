@@ -10,6 +10,7 @@ use App\Http\Controllers\EventCategoryController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\ReportCategoryController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\ImageUploadController;
 
 Route::get('/user', function (Request $request) {
     return response()->json([
@@ -37,3 +38,8 @@ Route::apiResource('reports', ReportController::class );
 
 Route::get('/announcements/category/{id}', [AnnouncementController::class, 'getByCategory']);
 Route::get('/announcements/date/{filter}', [AnnouncementController::class, 'getByCreatedAt']);
+Route::get('/reports/user-reports/{id}', [ReportController::class, 'getUserReports']);
+
+
+Route::post('/upload-image', [ImageUploadController::class, 'store']);
+Route::post('/upload-images', [ImageUploadController::class, 'storeMultiple']);

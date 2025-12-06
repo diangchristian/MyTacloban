@@ -11,7 +11,7 @@ class AnnouncementCategory extends Model
 {
     /** @use HasFactory<\Database\Factories\AnnouncementCategoryFactory> */
     use HasFactory;
-
+   
 
     public function announcements(){
         return $this->hasMany(Announcement::class);

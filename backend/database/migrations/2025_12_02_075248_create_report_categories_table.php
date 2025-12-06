@@ -14,6 +14,9 @@ return new class extends Migration
         Schema::create('report_categories', function (Blueprint $table) {
             $table->id();
             $table->string('category_name');
+            $table->string('slug');
+            $table->string('icon_name');
+            $table->string('color');
             $table->timestamps();
         });
     }
