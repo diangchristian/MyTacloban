@@ -7,40 +7,28 @@ import { useMediaQuery } from '@vueuse/core'
 import { ref, onMounted, onBeforeUnmount, defineProps } from "vue";
 import NoSelected from "@/components/NoSelected.vue";
 import ReportsDetailsModal from "@/components/ReportsDetailsModal.vue";
+import {useSubmitReport} from "@/stores/submitReport"
+import { storeToRefs } from "pinia";
+import { debounce } from 'lodash';
 
+const submitReportStore = useSubmitReport()
+const {reports} = storeToRefs(useSubmitReport())
 
-const reports = [
-  {
-    'id': '#1234',
-    'category': 'street light',
-    'title':'Scheduled Water Interruption - District 1',
-    'description': 'Severe flooding during heavy rain. Water accumulates up to knee level, blocking the road.',
-    'location': 'Main Road, Barangay 1',
-    'date': 'November 19, 2025'
-  },
-  {
-    'id': '#4567',
-    'category': 'flooding',
-    'title':'Flooding in barangay 95-caibaanan',
-    'description': 'Severe flooding during heavy rain. Water accumulates up to knee level, blocking the road.',
-    'location': 'Barangay 95-A Caibaan',
-    'date': 'November 19, 2025'
-  },
-  {
-    'id': '#1234',
-    'category': 'street light',
-    'title':'Scheduled Water Interruption - District 1',
-    'description': 'Severe flooding during heavy rain. Water accumulates up to knee level, blocking the road.',
-    'location': 'Main Road, Barangay 1',
-    'date': 'November 19, 2025'
-  }
-]
+onMounted(() => {
+  submitReportStore.getUserReports()
+})
 
 
 const selectedReport = ref(null)
 const isMobile = ref(false)
 const showModal = ref(false)
+const search = ref('')
 
+
+
+const debouncedSearch = debounce(() => {
+  submitReportStore.getBySearchAndStatus(search.value, 'all');
+}, 500);
 
 function updateScreen(){
   isMobile.value = window.innerWidth < 1024
@@ -64,6 +52,13 @@ function openReport(report){
   showModal.value = true;
 }
 
+function handleSearch(){
+  console.log(search.value)
+  debouncedSearch()
+}
+
+
+
 
 </script>
 <template>
@@ -71,15 +66,17 @@ function openReport(report){
     <div class="max-w-7xl mx-auto rounded-xl mt-4 w-full px-2 overflow-x-hidden">
 
       <!-- Filters -->
-      <div class="max-w-4xl flex flex-col sm:flex-row gap-4 sm:items-center w-full">
-        <Input placeholder="Search reports" class="w-full sm:w-1/2" />
+      <form action="" @submit.prevent>
+        <div class="max-w-4xl flex flex-col sm:flex-row gap-4 sm:items-center w-full">
+        <Input placeholder="Search reports" class="w-full sm:w-1/2" v-model="search" @keyup="handleSearch"/>
 
         <div class="flex flex-wrap gap-2">
-          <Button>All Reports (9)</Button>
-          <Button variant="outline">Pending (12)</Button>
-          <Button variant="outline">In Progress (3)</Button>
+          <Button  type="button" @click="submitReportStore.getUserReports()"  class="cursor-pointer">All Reports ({{ reports.length }})</Button>
+          <Button  type="button"  @click="submitReportStore.getBySearchAndStatus(search, 'pending')"    variant="outline" class="cursor-pointer">Pending ({{submitReportStore.pendingCount}})</Button>
+          <Button type="button"  @click="submitReportStore.getBySearchAndStatus(search, 'in_progress')"  variant="outline" class="cursor-pointer">In Progress ({{submitReportStore.inProgressCount}})</Button>
         </div>
       </div>
+      </form>
 
       <!-- Content -->
       <div class="flex flex-col md:flex-row w-full mt-4 gap-4 overflow-x-hidden">
