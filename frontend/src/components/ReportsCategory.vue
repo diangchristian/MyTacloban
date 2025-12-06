@@ -1,18 +1,23 @@
 <script setup>
 import { computed } from "vue";
+import {useCategoriesStore} from '@/stores/categories'
 
 const props = defineProps({
-  modelValue: String,   // current selected category
+  modelValue: Number,   // current selected category
   category: Object,
 });
+
+
+
+const categoriesStore = useCategoriesStore()
 
 const emit = defineEmits(["update:modelValue"]);
 
 // Determine if this radio is selected
-const checked = computed(() => props.modelValue === props.category.value);
+const checked = computed(() => props.modelValue === props.category.id);
 
 function select() {
-  emit("update:modelValue", props.category.value);
+  emit("update:modelValue", props.category.id);
 }
 </script>
 
@@ -31,13 +36,14 @@ function select() {
       :checked="checked"
     />
 
-    <div class=" size-10 md:size-12  border border-gray-400 {{ category.bg }} flex items-center justify-center rounded-md"
-          :class="checked ? 'bg-primary' : category.bg"
+    <div class=" size-10 md:size-12  border border-gray-400  flex items-center justify-center rounded-md"
+          :style="{ backgroundColor: category.color }"      
+    :class="checked ? 'bg-primary' : category.bg"
         
     >
-    <component :is="category.icon"   :class="category.value !=  'other_issues' ? 'text-white' : 'text-black' " />
+    <component :is="categoriesStore.getIcon(category.icon_name)"   :class="category.value !=  'other_issues' ? 'text-white' : 'text-black' " />
     </div>
 
-    <p class="text-sm sm:text-md  mt-2">{{ category.label }}</p>
+    <p class="text-sm sm:text-md  mt-2">{{ category.category_name }}</p>
   </label>
 </template>

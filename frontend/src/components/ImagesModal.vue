@@ -1,63 +1,70 @@
 <script setup lang="ts">
-import type { CarouselApi } from "@/components/ui/carousel";
-import { watchOnce } from "@vueuse/core";
-import { ref, watch } from "vue";
-import { Card, CardContent } from "@/components/ui/card";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
-import { defineProps } from "vue";
-
-const props = defineProps({
-  images: {
-    type: Array
-  },
-  index: {
-    type: Number
-  }
-})
-
-
-const api = ref<CarouselApi>();
-const totalCount = ref(0);
-
-const activeIndex = ref(props.index ?? 0); // 0-based
-const currentSlide = ref(1);
-
-function setApi(val: CarouselApi) {
-  api.value = val;
-}
-
-watchOnce(api, (api) => {
-  if (!api) return;
-
-  totalCount.value = api.scrollSnapList().length;
-
-  api.on("select", () => {
-    currentSlide.value = api.selectedScrollSnap() + 1;
+  import type { CarouselApi } from "@/components/ui/carousel";
+  import { ref, watch, onMounted } from "vue";
+  import {
+    Carousel,
+    CarouselContent,
+    CarouselItem,
+    CarouselNext,
+    CarouselPrevious
+  } from "@/components/ui/carousel";
+  
+  const props = defineProps({
+    images: {
+      type: Array,
+      default: () => []
+    },
+    index: {
+      type: Number,
+      default: 0
+    }
   });
-
-  // ✅ sync initial index
-  api.scrollTo(props.index);
-  currentSlide.value = props.index + 1;
-});
-
-watch(
-  () => props.index,
-  (i) => {
-    if (api.value) {  
-      api.value.scrollTo(i);
-      currentSlide.value = i + 1;
+  
+  const emit = defineEmits(["update:index"]);
+  
+  const api = ref<CarouselApi | null>(null);
+  const totalCount = ref(0);
+  const currentSlide = ref(props.index + 1);
+  
+  function setApi(val: CarouselApi) {
+    api.value = val;
+  
+    // Initialize once API is ready
+    if (api.value && props.images.length) {
+      totalCount.value = api.value.scrollSnapList().length;
+      api.value.scrollTo(props.index);
+      currentSlide.value = props.index + 1;
+  
+      api.value.on("select", () => {
+        currentSlide.value = api.value!.selectedScrollSnap() + 1;
+        emit("update:index", api.value!.selectedScrollSnap());
+      });
     }
   }
-);
-
-
-</script>
+  
+  // Watch for initial index changes from parent
+  watch(
+    () => props.index,
+    (newIndex) => {
+      if (api.value && props.images.length) {
+        api.value.scrollTo(newIndex);
+        currentSlide.value = newIndex + 1;
+      }
+    }
+  );
+  
+  // Watch for images update dynamically
+  watch(
+    () => props.images,
+    (imgs) => {
+      if (api.value && imgs.length) {
+        totalCount.value = api.value.scrollSnapList().length;
+        api.value.scrollTo(props.index);
+        currentSlide.value = props.index + 1;
+      }
+    }
+  );
+  </script>
 
 <template>
   <!-- Main modalh-[calc(100%-1rem)]   -->

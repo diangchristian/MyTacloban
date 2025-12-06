@@ -1,9 +1,13 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import L from "leaflet";
-
+import FieldError from "./forms/FieldError.vue";
 const props = defineProps({
   modelValue: {
+    type: String,
+    default: ""
+  },
+  errorMessage: {
     type: String,
     default: ""
   }
@@ -50,5 +54,6 @@ onMounted(() => {
 
     <!-- Hidden for now, but keeps v-model in sync -->
     <input type="text" v-model="latlngString" class="hidden" />
+    <FieldError class="mt-4"  :errorMessage="errorMessage"/>
   </div>
 </template>

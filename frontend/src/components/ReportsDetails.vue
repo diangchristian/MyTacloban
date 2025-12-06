@@ -1,7 +1,7 @@
 <script setup>
 import { MapPin} from "lucide-vue-next"
 import { onMounted, ref } from "vue";
-import L from "leaflet";
+import MapLocation from "./MapLocation.vue";
 import ImagesModal from "@/components/ImagesModal.vue";
 import { initFlowbite } from 'flowbite'
 import { defineProps } from "vue";
@@ -19,28 +19,10 @@ const props = defineProps({
     report: Object
 })
 
-
 onMounted(() => {
   initFlowbite()
 })
 
-const map = ref(null);
-
-onMounted(() => {
-  map.value = L.map("map").setView([11.2404, 125.0047], 14); // Tacloban center
-
-  // Set map tiles
-  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-    maxZoom: 19,
-    attribution: "© OpenStreetMap contributors",
-  }).addTo(map.value);
-
-  // Add pin
-  L.marker([11.2404, 125.0047])
-    .addTo(map.value)
-    .bindPopup("Pinned Location")
-    .openPopup();
-});
 
 
 </script>
@@ -62,7 +44,7 @@ onMounted(() => {
           <div class="flex flex-wrap gap-2 mt-2 text-sm">
             <h2>Category:</h2>
             <span class="bg-red-500/15 px-2 py-1 text-xs rounded-lg text-destructive">
-              {{ report.category }}
+              {{ report.category_name }}
             </span>
           </div>
         </div>
@@ -74,17 +56,17 @@ onMounted(() => {
         </div>
   
         <!-- Location -->
-        <div>
+        <!-- <div>
           <p class="font-semibold">Location:</p>
           <div class="flex items-center mt-1 ml-0 text-gray-500">
             <MapPin class="size-5 mr-1" />
             <p class="break-words">{{ report.location }}</p>
           </div>
         </div>
-  
+   -->
         <!-- Map -->
         <div>
-          <div class="w-full h-40 sm:h-64 rounded-lg overflow-hidden z-2" id="map"></div>
+          <MapLocation :coordinates="report.coordinates"/>
         </div>
   
         <!-- Images -->
@@ -98,14 +80,14 @@ onMounted(() => {
               class="bg-primary border border-transparent shadow-xs focus:outline-none rounded-lg overflow-hidden"
             >
               <img
-                src="@/assets/images/Mockup.png"
+                :src="report.images[0]"
                 alt="Mockup"
                 class="w-32 sm:w-48 h-auto object-cover cursor-pointer"
               />
             </button>
           </div>
   
-          <ImagesModal :images="images"  />
+          <ImagesModal :images="report.images"  />
         </div>
   
       </div>
