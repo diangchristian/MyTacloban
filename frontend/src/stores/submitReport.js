@@ -9,6 +9,7 @@ export const useSubmitReport = defineStore('submitReport', {
     state: () => {
         return {
             reports: [],
+            reportDetails: null,
             errors: {},
             isLoading: true
             
@@ -25,19 +26,33 @@ export const useSubmitReport = defineStore('submitReport', {
 
 
     actions: {
-        async getAnnouncement(){
-            const { data } = await axios.get("/api/announcements");
+        async getAllReports(){
+            const { data } = await axios.get("/api/reports");
 
             if(data){
-                this.announcement = data
+                this.reports = data
                 this.errors = {}
             }else{
                 this.errors = data.error
             }
 
-            console.log("Fetched news:", this.announcement) 
+            console.log("Fetched reports", this.reports) 
         },
 
+        async getReportById(id){
+            console.log(id)
+            const { data } = await axios.get(`/api/reports/details/${id}`);
+
+            if(data){
+                this.reportDetails = data
+                this.errors = {}
+                this.isLoading = false;
+            }else{
+                this.errors = data.error
+            }
+            
+            console.log("Fetched reports", this.reportDetails) 
+        },
 
         async submitReport(formData) {
             try {
