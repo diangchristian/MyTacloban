@@ -25,7 +25,7 @@ class DatabaseSeeder extends Seeder
         $this->call(EventSeeder::class);
         // $this->call(ReportCategorySeeder::class);
         $this->call(AnnouncementSeeder::class);
-        $this->call(ReportSeeder::class);
+        // $this->call(ReportSeeder::class);
         User::factory()->create([
             'username' => 'Test User',
             'full_name' => 'admin tester',

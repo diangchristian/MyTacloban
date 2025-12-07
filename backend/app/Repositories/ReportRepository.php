@@ -67,7 +67,48 @@ class ReportRepository implements ReportRepositoryInterface {
     }
 
     
-
+    public function getByReportDetails($id){
+        $report = DB::select("
+            SELECT 
+                r.id,
+                r.user_id,
+                r.category_id,
+                r.title,
+                r.coordinates,
+                r.description,
+                r.status,
+                r.created_at,
+                r.updated_at,
+                rc.category_name,
+                GROUP_CONCAT(DISTINCT rm.file_path) AS images,
+                CONCAT('[', GROUP_CONCAT(DISTINCT JSON_OBJECT(
+                    'id', rt.id,
+                    'status', rt.status,
+                    'description', rt.description,
+                    'created_at', rt.created_at,
+                    'updated_at', rt.updated_at
+                )), ']') AS timelines
+            FROM reports r
+            JOIN report_categories rc ON r.category_id = rc.id
+            LEFT JOIN report_images rm ON rm.report_id = r.id
+            LEFT JOIN report_timelines rt ON rt.report_id = r.id
+            WHERE r.id = ?
+            GROUP BY 
+                r.id, r.user_id, r.category_id, r.title, 
+                r.description, r.status, r.created_at, r.updated_at, 
+                r.coordinates, rc.category_name
+        ", [$id]);
+    
+        // Decode the JSON string into an array
+        if(!empty($report)){
+            $report[0]->timelines = json_decode($report[0]->timelines, true);
+            // Optionally decode images too if needed as array
+            $report[0]->images = $report[0]->images ? explode(',', $report[0]->images) : [];
+        }
+    
+        return $report;
+    }
+    
     public function store(array $data)
     {
         DB::beginTransaction();
@@ -108,6 +149,19 @@ class ReportRepository implements ReportRepositoryInterface {
                 }
             }
 
+            DB::insert(
+                "INSERT INTO report_timelines
+                (report_id, status, description, created_at, updated_at)
+                VALUES (?, ?, ?, ?, ?)",
+                [
+                    $reportId,
+                    'Report request is received by the system',
+                    'Initial request has been recorded and is awaiting review.',
+                    now(),
+                    now(),
+                ]
+            );
+    
             DB::commit();
 
             return $reportId;
