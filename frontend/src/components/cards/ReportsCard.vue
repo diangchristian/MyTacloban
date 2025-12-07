@@ -52,7 +52,7 @@ const emit = defineEmits(['view'])
               </CardDescription>
             </CardHeader>
 
-            <CardContent class="-mt-1">
+            <CardContent class="mt-auto">
               <Button variant="outline" size="sm" class="cursor-pointer text-xs" @click="emit('view', report)">
                 View Details
               </Button>

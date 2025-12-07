@@ -2,6 +2,9 @@
 import Input from "@/components/ui/input/Input.vue";
 import Button from "@/components/ui/button/Button.vue";
 import ReportsCard from "@/components/cards/ReportsCard.vue";
+import {useSubmitReport} from "@/stores/submitReport"
+import { storeToRefs } from "pinia";
+import { onMounted } from "vue";
 import {
   Pagination,
   PaginationContent,
@@ -13,104 +16,113 @@ import {
 import PaginatedReports from "@/components/PaginatedReports.vue";
 
 
-const reports = [
-  {
-    'id': '#1234',
-    'category': 'street light',
-    'title':'Scheduled Water Interruption - District 1',
-    'description': 'Severe flooding during heavy rain. Water accumulates up to knee level, blocking the road.',
-    'location': 'Main Road, Barangay 1',
-    'date': 'November 19, 2025'
-  },
-  {
-    'id': '#4567',
-    'category': 'flooding',
-    'title':'Flooding in barangay 95-caibaanan',
-    'description': 'Severe flooding during heavy rain. Water accumulates up to knee level, blocking the road.',
-    'location': 'Barangay 95-A Caibaan',
-    'date': 'November 19, 2025'
-  },
-  {
-    'id': '#1234',
-    'category': 'street light',
-    'title':'Scheduled Water Interruption - District 1',
-    'description': 'Severe flooding during heavy rain. Water accumulates up to knee level, blocking the road.',
-    'location': 'Main Road, Barangay 1',
-    'date': 'November 19, 2025'
-  },
-  {
-    'id': '#1234',
-    'category': 'street light',
-    'title':'Scheduled Water Interruption - District 1',
-    'description': 'Severe flooding during heavy rain. Water accumulates up to knee level, blocking the road.',
-    'location': 'Main Road, Barangay 1',
-    'date': 'November 19, 2025'
-  },
-  {
-    'id': '#1234',
-    'category': 'street light',
-    'title':'Scheduled Water Interruption - District 1',
-    'description': 'Severe flooding during heavy rain. Water accumulates up to knee level, blocking the road.',
-    'location': 'Main Road, Barangay 1',
-    'date': 'November 19, 2025'
-  },
-  {
-    'id': '#4567',
-    'category': 'flooding',
-    'title':'Flooding in barangay 95-caibaanan',
-    'description': 'Severe flooding during heavy rain. Water accumulates up to knee level, blocking the road.',
-    'location': 'Barangay 95-A Caibaan',
-    'date': 'November 19, 2025'
-  },
-  {
-    'id': '#1234',
-    'category': 'street light',
-    'title':'Scheduled Water Interruption - District 1',
-    'description': 'Severe flooding during heavy rain. Water accumulates up to knee level, blocking the road.',
-    'location': 'Main Road, Barangay 1',
-    'date': 'November 19, 2025'
-  },
-  {
-    'id': '#1234',
-    'category': 'street light',
-    'title':'Scheduled Water Interruption - District 1',
-    'description': 'Severe flooding during heavy rain. Water accumulates up to knee level, blocking the road.',
-    'location': 'Main Road, Barangay 1',
-    'date': 'November 19, 2025'
-  },
-  {
-    'id': '#1234',
-    'category': 'street light',
-    'title':'Scheduled Water Interruption - District 1',
-    'description': 'Severe flooding during heavy rain. Water accumulates up to knee level, blocking the road.',
-    'location': 'Main Road, Barangay 1',
-    'date': 'November 19, 2025'
-  },
-  {
-    'id': '#4567',
-    'category': 'flooding',
-    'title':'Flooding in barangay 95-caibaanan',
-    'description': 'Severe flooding during heavy rain. Water accumulates up to knee level, blocking the road.',
-    'location': 'Barangay 95-A Caibaan',
-    'date': 'November 19, 2025'
-  },
-  {
-    'id': '#1234',
-    'category': 'street light',
-    'title':'Scheduled Water Interruption - District 1',
-    'description': 'Severe flooding during heavy rain. Water accumulates up to knee level, blocking the road.',
-    'location': 'Main Road, Barangay 1',
-    'date': 'November 19, 2025'
-  },
-  {
-    'id': '#1234',
-    'category': 'street light',
-    'title':'Scheduled Water Interruption - District 1',
-    'description': 'Severe flooding during heavy rain. Water accumulates up to knee level, blocking the road.',
-    'location': 'Main Road, Barangay 1',
-    'date': 'November 19, 2025'
-  }
-]
+const submitReportStore = useSubmitReport()
+const {reports} = storeToRefs(submitReportStore)
+
+
+onMounted(async () => [
+  submitReportStore.getAllReports()
+])
+
+
+// const reports = [
+//   {
+//     'id': '#1234',
+//     'category': 'street light',
+//     'title':'Scheduled Water Interruption - District 1',
+//     'description': 'Severe flooding during heavy rain. Water accumulates up to knee level, blocking the road.',
+//     'location': 'Main Road, Barangay 1',
+//     'date': 'November 19, 2025'
+//   },
+//   {
+//     'id': '#4567',
+//     'category': 'flooding',
+//     'title':'Flooding in barangay 95-caibaanan',
+//     'description': 'Severe flooding during heavy rain. Water accumulates up to knee level, blocking the road.',
+//     'location': 'Barangay 95-A Caibaan',
+//     'date': 'November 19, 2025'
+//   },
+//   {
+//     'id': '#1234',
+//     'category': 'street light',
+//     'title':'Scheduled Water Interruption - District 1',
+//     'description': 'Severe flooding during heavy rain. Water accumulates up to knee level, blocking the road.',
+//     'location': 'Main Road, Barangay 1',
+//     'date': 'November 19, 2025'
+//   },
+//   {
+//     'id': '#1234',
+//     'category': 'street light',
+//     'title':'Scheduled Water Interruption - District 1',
+//     'description': 'Severe flooding during heavy rain. Water accumulates up to knee level, blocking the road.',
+//     'location': 'Main Road, Barangay 1',
+//     'date': 'November 19, 2025'
+//   },
+//   {
+//     'id': '#1234',
+//     'category': 'street light',
+//     'title':'Scheduled Water Interruption - District 1',
+//     'description': 'Severe flooding during heavy rain. Water accumulates up to knee level, blocking the road.',
+//     'location': 'Main Road, Barangay 1',
+//     'date': 'November 19, 2025'
+//   },
+//   {
+//     'id': '#4567',
+//     'category': 'flooding',
+//     'title':'Flooding in barangay 95-caibaanan',
+//     'description': 'Severe flooding during heavy rain. Water accumulates up to knee level, blocking the road.',
+//     'location': 'Barangay 95-A Caibaan',
+//     'date': 'November 19, 2025'
+//   },
+//   {
+//     'id': '#1234',
+//     'category': 'street light',
+//     'title':'Scheduled Water Interruption - District 1',
+//     'description': 'Severe flooding during heavy rain. Water accumulates up to knee level, blocking the road.',
+//     'location': 'Main Road, Barangay 1',
+//     'date': 'November 19, 2025'
+//   },
+//   {
+//     'id': '#1234',
+//     'category': 'street light',
+//     'title':'Scheduled Water Interruption - District 1',
+//     'description': 'Severe flooding during heavy rain. Water accumulates up to knee level, blocking the road.',
+//     'location': 'Main Road, Barangay 1',
+//     'date': 'November 19, 2025'
+//   },
+//   {
+//     'id': '#1234',
+//     'category': 'street light',
+//     'title':'Scheduled Water Interruption - District 1',
+//     'description': 'Severe flooding during heavy rain. Water accumulates up to knee level, blocking the road.',
+//     'location': 'Main Road, Barangay 1',
+//     'date': 'November 19, 2025'
+//   },
+//   {
+//     'id': '#4567',
+//     'category': 'flooding',
+//     'title':'Flooding in barangay 95-caibaanan',
+//     'description': 'Severe flooding during heavy rain. Water accumulates up to knee level, blocking the road.',
+//     'location': 'Barangay 95-A Caibaan',
+//     'date': 'November 19, 2025'
+//   },
+//   {
+//     'id': '#1234',
+//     'category': 'street light',
+//     'title':'Scheduled Water Interruption - District 1',
+//     'description': 'Severe flooding during heavy rain. Water accumulates up to knee level, blocking the road.',
+//     'location': 'Main Road, Barangay 1',
+//     'date': 'November 19, 2025'
+//   },
+//   {
+//     'id': '#1234',
+//     'category': 'street light',
+//     'title':'Scheduled Water Interruption - District 1',
+//     'description': 'Severe flooding during heavy rain. Water accumulates up to knee level, blocking the road.',
+//     'location': 'Main Road, Barangay 1',
+//     'date': 'November 19, 2025'
+//   }
+// ]
 
 </script>
 
@@ -126,7 +138,7 @@ const reports = [
             <Button variant="outline">In Progress (3)</Button>
           </div>
       </div>
-      <PaginatedReports/>
+      <PaginatedReports :reports="reports"/>
       <!-- <div class="grid grid-cols-4 mt-4 gap-4 h-full">
         <ReportsCard
             v-for="r in reports"
