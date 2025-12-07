@@ -22,7 +22,7 @@ class ImageUploadController extends Controller
         }
 
         return response()->json(['message' => 'No image uploaded'], 400);
-    }
+    }   
 
     public function storeMultiple(Request $request)
     {
