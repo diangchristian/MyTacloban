@@ -11,7 +11,7 @@ class ReportCategory extends Model
 {
     /** @use HasFactory<\Database\Factories\ReportCategoryFactory> */
     use HasFactory;
-
+    protected $fillable = ['category_name', 'slug', 'icon_name', 'color'];
     public function reports(){
         return $this->hasMany(Report::class);
     }

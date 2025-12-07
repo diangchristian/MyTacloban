@@ -28,6 +28,13 @@ const props = defineProps({
 
 <template>
   <Card class="m-0 border-l-4 border-green-400">
+    <div v-if="event.imageUrl" class="relative overflow-hidden h-40">
+      <img
+        :src="event.imageUrl"
+        :alt="event.title"
+        class="h-full w-full object-cover"
+      />
+    </div>
     <CardHeader>
       <CardTitle class="text-md">
         <div class="mb-2">
