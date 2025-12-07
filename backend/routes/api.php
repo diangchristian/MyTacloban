@@ -33,7 +33,7 @@ Route::apiResource('announcement_categories', AnnouncementCategoryController::cl
 Route::apiResource('announcements', AnnouncementController::class );
 Route::apiResource('barangays', BarangayController::class );
 Route::apiResource('event_categories', EventCategoryController::class );
-Route::apiResource('event', EventController::class );
+Route::apiResource('events', EventController::class );
 Route::apiResource('report_categories', ReportCategoryController::class );
 Route::apiResource('reports', ReportController::class );
 

@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
         $this->call(BarangaySeeder::class);
         $this->call(AnnouncementCategorySeeder::class);
         $this->call(EventCategorySeeder::class);
+        $this->call(EventSeeder::class);
         // $this->call(ReportCategorySeeder::class);
         $this->call(AnnouncementSeeder::class);
         $this->call(ReportSeeder::class);
