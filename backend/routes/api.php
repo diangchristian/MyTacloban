@@ -11,6 +11,9 @@ use App\Http\Controllers\EventController;
 use App\Http\Controllers\ReportCategoryController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ImageUploadController;
+use App\Http\Controllers\UserController;
+
+
 
 Route::get('/user', function (Request $request) {
     return response()->json([
@@ -43,3 +46,7 @@ Route::get('/reports/user-reports/{id}', [ReportController::class, 'getUserRepor
 
 Route::post('/upload-image', [ImageUploadController::class, 'store']);
 Route::post('/upload-images', [ImageUploadController::class, 'storeMultiple']);
+
+Route::put('/user-profile/{id}', [UserController::class, 'update']);
+
+Route::delete('/user-profile/{id}', [UserController::class, 'destroy']);
