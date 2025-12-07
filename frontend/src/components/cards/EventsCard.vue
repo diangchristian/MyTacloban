@@ -11,17 +11,16 @@ import { defineProps } from "vue";
 import { Clock, MapPin, Calendar } from "lucide-vue-next";
 import Button from "../ui/button/Button.vue";
 
-// Update the event prop structure to clearly define bannerImageUrl
 const props = defineProps({
   event: {
     type: Object,
     required: true,
-    // Add bannerImageUrl to the shape definition (optional for simple usage)
+   
     validator: (value) => {
         return ['title', 'location', 'date', 'time', 'category', 'description'].every(key => key in value);
     }
   },
-  // The function passed from the parent (openEventDialog)
+ 
   onReadMore: {
     type: Function,
     required: true,
