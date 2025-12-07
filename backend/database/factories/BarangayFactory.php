@@ -17,7 +17,14 @@ class BarangayFactory extends Factory
     public function definition()
     {
         return [
-            'name' => $this->faker->unique()->streetName(),        // or barangay-like name
+            'name' => $this->faker->streetName(),
+            'population' => $this->faker->numberBetween(1000, 20000),
+            'households' => $this->faker->numberBetween(200, 5000),
+            'contact_person' => $this->faker->name(),
+            'contact_no' => $this->faker->phoneNumber(),
+            'coordinates' => $this->faker->latitude() . ',' . $this->faker->longitude(),
+            'area' => $this->faker->randomFloat(2, 1, 20), // e.g., 5.23 km²
+            'email' => $this->faker->unique()->safeEmail(),
             'barangay_captain' => $this->faker->name(),
             'phone_number' => $this->faker->phoneNumber(),
         ];

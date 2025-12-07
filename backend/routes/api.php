@@ -42,6 +42,7 @@ Route::apiResource('reports', ReportController::class );
 Route::get('/announcements/category/{id}', [AnnouncementController::class, 'getByCategory']);
 Route::get('/announcements/date/{filter}', [AnnouncementController::class, 'getByCreatedAt']);
 Route::get('/reports/user-reports/{id}', [ReportController::class, 'getUserReports']);
+Route::get('/search/barangays', [BarangayController::class, 'searchFilter']);
 
 
 Route::post('/upload-image', [ImageUploadController::class, 'store']);

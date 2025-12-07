@@ -16,6 +16,10 @@ return new class extends Migration
         // Reports
         DB::statement("CREATE INDEX idx_rprt_status ON reports(status)");
         DB::statement("CREATE FULLTEXT INDEX idx_rprt_fulltext ON reports(title, description)");
+
+        // Barangays
+        DB::statement("CREATE INDEX idx_brgy_name ON barangays(name);
+");   
     }
 
     public function down(): void
@@ -27,5 +31,11 @@ return new class extends Migration
         // Reports
         DB::statement("DROP INDEX idx_rprt_status ON reports");
         DB::statement("DROP INDEX idx_rprt_fulltext ON reports");
+
+        // Barangays
+        DB::statement("DROP INDEX idx_brgy_name ON barangays");
+
+
+
     }
 };
