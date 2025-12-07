@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { defineStore } from 'pinia'
-
+import { toast } from 'vue-sonner'
 
 
 export const useAuthStore = defineStore('auth', {
@@ -76,6 +76,22 @@ export const useAuthStore = defineStore('auth', {
             }
         },
 
+        async updateUserProfile(formData){
+            const {data} = await axios.put('/api/user-profile/1', formData)
+
+            if(data){
+                this.user = data.user
+                toast.success(data.message || 'Profile updated successfully!');
+            }
+            console.log(data)
+        },
+
+
+        async  deleteAccount(){
+            const id = 2
+            const data = await axios.delete(`/api/user-profile/${id}`)
+            console.log(data)
+        },
         
         async logout(redirect = true){ // Added an optional redirect parameter
         
