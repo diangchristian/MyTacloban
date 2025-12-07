@@ -31,7 +31,9 @@ class ReportController extends Controller
         return response()->json($this->report->getByUser($id, $search, $status));
     }
 
-
+    public function getReportDetail($id){
+        return response()->json($this->report->getByReportDetails($id));
+    }
 
     public function show(Request $request){
        

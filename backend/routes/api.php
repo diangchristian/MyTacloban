@@ -43,7 +43,7 @@ Route::get('/announcements/category/{id}', [AnnouncementController::class, 'getB
 Route::get('/announcements/date/{filter}', [AnnouncementController::class, 'getByCreatedAt']);
 Route::get('/reports/user-reports/{id}', [ReportController::class, 'getUserReports']);
 Route::get('/search/barangays', [BarangayController::class, 'searchFilter']);
-
+Route::get('/reports/details/{id}', [ReportController::class, 'getReportDetail' ]);
 
 Route::post('/upload-image', [ImageUploadController::class, 'store']);
 Route::post('/upload-images', [ImageUploadController::class, 'storeMultiple']);

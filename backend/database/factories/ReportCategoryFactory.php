@@ -16,6 +16,10 @@ class ReportCategoryFactory extends Factory
      */
     public function definition(): array
     {
-        return [];
+        return [
+            'category_name' => $this->faker->words(2, true),
+            'created_at' => now(),
+            'updated_at' => now(),
+        ];
     }
 }
