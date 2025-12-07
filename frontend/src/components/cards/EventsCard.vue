@@ -7,16 +7,19 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-// No need for defineEmits since we're using a function prop
 import { defineProps } from "vue"; 
 import { Clock, MapPin, Calendar } from "lucide-vue-next";
 import Button from "../ui/button/Button.vue";
 
-// Accept two props: the event data, and the function to call on read more
+// Update the event prop structure to clearly define bannerImageUrl
 const props = defineProps({
   event: {
     type: Object,
     required: true,
+    // Add bannerImageUrl to the shape definition (optional for simple usage)
+    validator: (value) => {
+        return ['title', 'location', 'date', 'time', 'category', 'description'].every(key => key in value);
+    }
   },
   // The function passed from the parent (openEventDialog)
   onReadMore: {
@@ -28,12 +31,16 @@ const props = defineProps({
 
 <template>
   <Card class="m-0 border-l-4 border-green-400">
-    <div v-if="event.imageUrl" class="relative overflow-hidden h-40">
+    
+    <div v-if="event.bannerImageUrl" class="relative overflow-hidden h-40">
       <img
-        :src="event.imageUrl"
+        :src="event.bannerImageUrl"
         :alt="event.title"
         class="h-full w-full object-cover"
       />
+    </div>
+    <div v-else class="h-20 bg-green-50/50 flex items-center justify-center">
+        <span class="text-sm text-gray-500 italic">No Banner Image</span>
     </div>
     <CardHeader>
       <CardTitle class="text-md">
