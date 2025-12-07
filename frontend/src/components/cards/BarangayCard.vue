@@ -89,7 +89,7 @@ const props = defineProps({
         <div class="text-xs text-gray-400 mb-1">Contact Person</div>
         <div class="flex items-center gap-2 text-sm text-gray-700">
           <UserIcon class="w-4 h-4 text-gray-400" />
-          {{ barangay.contactPerson }}
+          {{ barangay.contact_person }}
         </div>
       </div>
 
@@ -98,7 +98,7 @@ const props = defineProps({
         <div class="text-xs text-gray-400 mb-1">Contact Number</div>
         <div class="flex items-center gap-2 text-sm text-gray-700">
           <PhoneIcon class="w-4 h-4 text-gray-400" />
-          {{ barangay.contactNumber }}
+          {{ barangay.contact_no }}
         </div>
       </div>
 
@@ -114,7 +114,7 @@ const props = defineProps({
     </CardContent>
 
     <!-- Footer -->
-    <CardFooter class="p-4 pt-2">
+    <CardFooter class="p-4 mt-auto">
       <Button
         @click="$emit('viewDetails', barangay)"
         class="w-full bg-primary text-primary-foreground py-3 rounded-lg hover:opacity-90 transition shadow-md hover:cursor-pointer">
@@ -124,3 +124,10 @@ const props = defineProps({
 
   </Card>
 </template>
+
+<!-- 
+<style scoped>
+*{
+  border: 1px solid red
+}
+</style> -->
