@@ -38,6 +38,10 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(
             \App\Contracts\ReportCategoryRepositoryInterface::class, 
             \App\Repositories\ReportCategoryRepository::class);
+
+        $this->app->bind(
+            \App\Contracts\UserRepositoryInterface::class, 
+            \App\Repositories\UserRepository::class);
     }
 
 

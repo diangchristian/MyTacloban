@@ -26,7 +26,9 @@ class DatabaseSeeder extends Seeder
         $this->call(AnnouncementSeeder::class);
         $this->call(ReportSeeder::class);
         User::factory()->create([
-            'name' => 'Test User',
+            'username' => 'Test User',
+            'full_name' => 'admin tester',
+            'bio' => 'i am the admin of this type shi',
             'email' => 'test@example.com',
         ]);
     }
