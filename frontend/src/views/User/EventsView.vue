@@ -134,148 +134,174 @@ const openEventDialog = (event) => {
 </script>
 
 <template>
-  <div class="space-y-8 p-4 md:p-6 lg:p-8">
+  <div class="space-y-8">
     
-    <div class="flex justify-end mb-4">
+    <div class="w-full mx-auto">
+      <div class="w-full h-52 overflow-hidden rounded-md relative">
+        <img
+          src="@/assets/images/user-bg.jpg"
+          class="w-full h-full object-cover"
+          alt="Events Banner Background"
+        >
+        <div class="w-full h-full bg-gradient-to-l from-green-600 to-primary/80 absolute top-0 left-0 z-2 flex flex-col justify-center px-8 text-white">
+          <h1 class="text-5xl font-bold">EVENTS</h1>
+          <p class="font-semibold">Upcoming schedules and activities in the city</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="p-4 md:px-8 lg:px-12 space-y-8"> 
       
-      <div class="relative w-full md:w-auto">
-        <Button
-          @click="isFilterOpen = !isFilterOpen"
-          class="h-11 px-6 flex items-center justify-between gap-3 rounded-full border-2 transition-all duration-200 shadow-sm w-full"
-          :class="isFilterOpen 
-            ? 'bg-green-600 text-white border-green-600 hover:bg-green-700' 
-            : 'bg-white text-gray-700 border-gray-300 hover:border-green-400'"
-        >
-          <span class="font-medium text-sm">{{ selectedFilter }}</span>
-          <component 
-            :is="isFilterOpen ? ChevronUp : ChevronDown" 
-            size="18" 
-            :class="isFilterOpen ? 'text-white' : 'text-green-500'" 
-          />
-        </Button>
-
-        <div v-if="isFilterOpen" class="absolute mt-2 w-full md:w-48 bg-white shadow-xl rounded-xl border border-gray-100 p-2 z-50 right-0">
-          <button
-            v-for="filter in FILTER_OPTIONS"
-            :key="filter"
-            @click="selectedFilter = filter; isFilterOpen = false"
-            class="w-full text-left px-3 py-2 rounded-lg text-sm text-gray-700 hover:bg-green-100 transition-colors"
-          >
-            {{ filter }}
-          </button>
-        </div>
-      </div>
-    </div>
-    
-    <div class="flex flex-col items-center gap-2">
-
-      <div class="relative">
-        <Button
-          @click="isYearDropdownOpen = !isYearDropdownOpen"
-          class="bg-transparent text-gray-900 text-lg font-semibold px-2 py-1 hover:bg-gray-100 transition-colors"
-        >
-          {{ currentYear }}
-        </Button>
-
-        <div
-          v-if="isYearDropdownOpen"
-          class="absolute mt-1 w-28 bg-white border rounded-lg shadow-lg z-50 left-1/2 transform -translate-x-1/2"
-        >
-          <button
-            v-for="(year, index) in availableYears"
-            :key="year"
-            @click="currentYearIndex = index; isYearDropdownOpen = false"
-            class="w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-green-100 transition-colors"
-          >
-            {{ year }}
-          </button>
-        </div>
-      </div>
-
-      <div class="flex items-center gap-6 mt-1">
-        <Button 
-          @click="prevMonth" 
-          class="p-2 rounded-full bg-white text-green-600 hover:bg-green-50 transition-colors shadow-md border-2 border-green-100"
-          aria-label="Previous Month"
-        >
-          <ChevronLeft size="24" />
-        </Button>
-
-        <p class="text-3xl font-extrabold text-gray-900">{{ months[currentMonthIndex] }}</p>
-
-        <Button 
-          @click="nextMonth" 
-          class="p-2 rounded-full bg-white text-green-600 hover:bg-green-50 transition-colors shadow-md border-2 border-green-100"
-          aria-label="Next Month"
-        >
-          <ChevronRight size="24" />
-        </Button>
-      </div>
-    </div>
-    
-    <hr class="border-gray-200 mt-4" />
-
-    <div class="mt-4">
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <div v-for="event in eventsForCurrentMonth" :key="event.title + event.date">
-          <EventsCard :event="event" :on-read-more="openEventDialog" /> 
-        </div>
-      </div>
-
-      <p v-if="eventsForCurrentMonth.length === 0" class="text-gray-500 text-center mt-10 w-full">
-        No events scheduled for {{ months[currentMonthIndex] }} {{ currentYear }}.
-      </p>
-    </div>
-
-    <Dialog v-model:open="isEventDialogOpen">
-      <DialogContent class="max-w-2xl max-h-[80vh] overflow-y-auto">
+      <div class="flex flex-col md:flex-row md:justify-between items-center mb-6 gap-2">
         
-        <DialogHeader>
-          <div class="space-y-2">
-            <DialogTitle class="text-2xl font-bold text-gray-900">
-              {{ selectedEvent?.title }}
-            </DialogTitle>
-            
-            <div class="flex flex-col gap-1">
-              <div class="flex items-center text-sm text-gray-700">
-                <Calendar class="size-4 mr-2 text-green-600" />
-                <span>{{ selectedEvent?.date }}</span>
-              </div>
-              <div class="flex items-center text-sm text-gray-700">
-                <Clock class="size-4 mr-2 text-green-600" />
-                <span>{{ selectedEvent?.time }}</span>
-              </div>
-            </div>
-            
-            <div class="text-sm text-green-600 font-bold pt-2">
-              {{ selectedEvent?.category }}
+        <div class="relative w-full md:w-auto md:order-1 order-2">
+          <Button
+            @click="isFilterOpen = !isFilterOpen"
+            class="h-11 px-6 flex items-center justify-between gap-3 rounded-full border-2 transition-all duration-200 shadow-sm w-full md:w-auto"
+            :class="isFilterOpen 
+              ? 'bg-green-600 text-white border-green-600 hover:bg-green-700' 
+              : 'bg-white text-gray-700 border-gray-300 hover:border-green-400'"
+          >
+            <span class="font-medium text-sm">{{ selectedFilter }}</span>
+            <component 
+              :is="isFilterOpen ? ChevronUp : ChevronDown" 
+              size="18" 
+              :class="isFilterOpen ? 'text-white' : 'text-green-500'" 
+            />
+          </Button>
+
+          <div 
+            v-if="isFilterOpen" 
+            class="absolute mt-2 w-full md:w-48 bg-white shadow-xl rounded-xl border border-gray-100 p-2 z-50 left-0" 
+          >
+            <button
+              v-for="filter in FILTER_OPTIONS"
+              :key="filter"
+              @click="selectedFilter = filter; isFilterOpen = false"
+              class="w-full text-left px-3 py-2 rounded-lg text-sm text-gray-700 hover:bg-green-100 transition-colors"
+            >
+              {{ filter }}
+            </button>
+          </div>
+        </div>
+        
+        <div class="flex flex-col items-center gap-2 md:order-2 order-1 md:mx-auto mt-4 md:mt-0">
+          
+          <div class="relative mb-2">
+            <Button
+              @click="isYearDropdownOpen = !isYearDropdownOpen"
+              class="bg-transparent text-gray-900 text-lg font-semibold px-2 py-1 hover:bg-gray-100 transition-colors"
+            >
+              {{ currentYear }}
+            </Button>
+
+            <div
+              v-if="isYearDropdownOpen"
+              class="absolute mt-1 w-28 bg-white border rounded-lg shadow-lg z-50 left-1/2 transform -translate-x-1/2"
+            >
+              <button
+                v-for="(year, index) in availableYears"
+                :key="year"
+                @click="currentYearIndex = index; isYearDropdownOpen = false"
+                class="w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-green-100 transition-colors"
+              >
+                {{ year }}
+              </button>
             </div>
           </div>
-        </DialogHeader>
-        
-        <div class="space-y-4">
-          <DialogDescription class="text-base text-gray-700 leading-relaxed">
-            
-            <p class="font-semibold flex items-center gap-2 mb-1 text-gray-900">
-              <MapPin class="size-4 text-green-600" />
-              Location
-            </p>
-            <p class="mb-4">{{ selectedEvent?.location }}</p>
-            
-            <p class="font-semibold text-gray-900">Full Details</p>
-            <p>{{ selectedEvent?.content }}</p> 
-          </DialogDescription>
-          
-          <div class="flex gap-2 pt-4 border-t">
-            <Button
-              class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white transition-colors"
-              @click="isEventDialogOpen = false"
+
+          <div class="flex items-center gap-6">
+            <Button 
+              @click="prevMonth" 
+              class="p-2 rounded-full bg-white text-green-600 hover:bg-green-50 transition-colors shadow-md border-2 border-green-100"
+              aria-label="Previous Month"
             >
-              Close
+              <ChevronLeft size="24" />
+            </Button>
+
+            <p class="text-3xl font-extrabold text-gray-900">{{ months[currentMonthIndex] }}</p>
+
+            <Button 
+              @click="nextMonth" 
+              class="p-2 rounded-full bg-white text-green-600 hover:bg-green-50 transition-colors shadow-md border-2 border-green-100"
+              aria-label="Next Month"
+            >
+              <ChevronRight size="24" />
             </Button>
           </div>
         </div>
-      </DialogContent>
-    </Dialog>
+        
+        <div class="w-full md:w-auto md:order-3 order-3 invisible">
+             <Button class="h-11 px-6 w-full md:w-auto invisible">
+                 <span class="font-medium text-sm">All</span>
+            </Button>
+        </div>
+
+      </div>
+      <hr class="border-gray-200 mt-4" />
+
+      <div class="mt-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div v-for="event in eventsForCurrentMonth" :key="event.title + event.date">
+            <EventsCard :event="event" :on-read-more="openEventDialog" /> 
+          </div>
+        </div>
+
+        <p v-if="eventsForCurrentMonth.length === 0" class="text-gray-500 text-center mt-10 w-full">
+          No events scheduled for {{ months[currentMonthIndex] }} {{ currentYear }}.
+        </p>
+      </div>
+
+      <Dialog v-model:open="isEventDialogOpen">
+        <DialogContent class="max-w-2xl max-h-[80vh] overflow-y-auto">
+          
+          <DialogHeader>
+            <div class="space-y-2">
+              <DialogTitle class="text-2xl font-bold text-gray-900">
+                {{ selectedEvent?.title }}
+              </DialogTitle>
+              
+              <div class="flex flex-col gap-1">
+                <div class="flex items-center text-sm text-gray-700">
+                  <Calendar class="size-4 mr-2 text-green-600" />
+                  <span>{{ selectedEvent?.date }}</span>
+                </div>
+                <div class="flex items-center text-sm text-gray-700">
+                  <Clock class="size-4 mr-2 text-green-600" />
+                  <span>{{ selectedEvent?.time }}</span>
+                </div>
+              </div>
+              
+              <div class="text-sm text-green-600 font-bold pt-2">
+                {{ selectedEvent?.category }}
+              </div>
+            </div>
+          </DialogHeader>
+          
+          <div class="space-y-4">
+            <DialogDescription class="text-base text-gray-700 leading-relaxed">
+              
+              <p class="font-semibold flex items-center gap-2 mb-1 text-gray-900">
+                <MapPin class="size-4 text-green-600" />
+                Location
+              </p>
+              <p class="mb-4">{{ selectedEvent?.location }}</p>
+              
+              <p class="font-semibold text-gray-900">Full Details</p>
+              <p>{{ selectedEvent?.content }}</p> 
+            </DialogDescription>
+            
+            <div class="flex gap-2 pt-4 border-t">
+              <Button
+                class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white transition-colors"
+                @click="isEventDialogOpen = false"
+              >
+                Close
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </div>
   </div>
 </template>
