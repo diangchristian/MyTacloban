@@ -10,7 +10,7 @@ interface BarangayRepositoryInterface
     /**
      * Find barangay by ID.
      */
-    public function findById(int $id);
+    public function searchByName(string $name);
 
     /**
      * Create a barangay.

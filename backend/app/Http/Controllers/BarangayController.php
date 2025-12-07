@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Contracts\BarangayRepositoryInterface;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class BarangayController extends Controller
 {
@@ -20,10 +21,26 @@ class BarangayController extends Controller
         return response()->json($this->barangay->getAll());
     }
 
-    public function show(){
+  
 
-    }
+    // public function show(Request $request){
+    //     $search = $request->query('search');
+    //     // Log a simple informational message
+    //     Log::info('search value:', ['search' => $search]);
 
+
+    //     if($this->barangay->searchByName($search)){
+    //         return response()->json($this->barangay->searchByName($search));
+    //     }
+
+    //     return response()->json([
+    //         'message' => 'Errrorrr'
+    //     ]);
+    
+    //     // return null;
+        
+    
+    // }
     public function store(Request $request){
 
         $fields = $request->validate([
@@ -66,4 +83,23 @@ class BarangayController extends Controller
         }
 
     }
+
+    public function searchFilter(Request $request){
+
+        $search = $request->query('search');
+                // Log a simple informational message
+        Log::info('search value:', ['search' => $search]);
+
+
+        if($this->barangay->searchByName($search)){
+            return response()->json($this->barangay->searchByName($search));
+        }
+
+        return response()->json([
+            'message' => 'Errrorrr'
+        ]);
+
+        
+    }
+
 }
