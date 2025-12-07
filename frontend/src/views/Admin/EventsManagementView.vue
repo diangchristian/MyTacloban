@@ -15,6 +15,7 @@ import {
 import Input from "@/components/ui/input/Input.vue";
 import Textarea from "@/components/ui/textarea/Textarea.vue";
 import Select from "@/components/ui/select/Select.vue";
+import EventsCard from "@/components/cards/EventsCard.vue";
 import SelectContent from "@/components/ui/select/SelectContent.vue";
 import SelectItem from "@/components/ui/select/SelectItem.vue";
 import SelectTrigger from "@/components/ui/select/SelectTrigger.vue";
@@ -168,6 +169,11 @@ function openEditDialog(event: any) {
 }
 
 function openPreviewDialog(event: any) {
+  selectedEvent.value = event;
+  isPreviewDialogOpen.value = true;
+}
+
+function handleReadMore(event: any) {
   selectedEvent.value = event;
   isPreviewDialogOpen.value = true;
 }
