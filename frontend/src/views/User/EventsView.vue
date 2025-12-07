@@ -1,9 +1,7 @@
 <script setup>
 import EventsCard from "@/components/cards/EventsCard.vue";
-// Input component import removed as the search bar is deleted
 import Button from "@/components/ui/button/Button.vue";
-import { ref, computed } from "vue";
-// All necessary Lucide components are imported here
+import { ref, computed, onMounted } from "vue";
 import { ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Clock, Calendar, MapPin } from "lucide-vue-next";
 import {
   Dialog,
@@ -12,8 +10,18 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import {useEventStore} from "@/stores/events"
+import { storeToRefs } from "pinia";
 
-// ---------- Event Data ----------
+
+const eventStore = useEventStore()
+// const {events} = storeToRefs(eventStore)
+
+
+onMounted(() => {
+  eventStore.getEvents()
+})
+
 const events = [
   { 
     category: "Health", 
