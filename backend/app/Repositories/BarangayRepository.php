@@ -14,9 +14,19 @@ class BarangayRepository implements BarangayRepositoryInterface{
     /**
      * Find barangay by ID.
      */
-    public function findById(int $id){
-        return null;
+    public function searchByName($name)
+    {
+        if (trim($name) === '') {
+            return DB::select("SELECT * FROM barangays ORDER BY name ASC");
+        }
+        return DB::select(
+            "SELECT * FROM barangays WHERE name LIKE ? ORDER BY name ASC",
+            ["%{$name}%"]
+        );
+
+   
     }
+
 
     /**
      * Create a barangay.

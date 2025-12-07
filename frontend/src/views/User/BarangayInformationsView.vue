@@ -2,10 +2,32 @@
 import BarangayCard from '@/components/cards/BarangayCard.vue';
 import MapLocation from '@/components/MapLocation.vue'
 import { Input } from '@/components/ui/input';
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { MapPin, Users, Home, Map, User, Phone, Mail } from "lucide-vue-next"
+import {useBarangayStore} from "@/stores/barangay"
+import { storeToRefs } from 'pinia';
+import { debounce } from 'lodash';
 
+
+const barangayStore = useBarangayStore()
+const {barangays} = storeToRefs(barangayStore)
 const selectedItem = ref(null);
+const search = ref('')
+
+onMounted(async () => {
+  barangayStore.getAllBarangay()
+})
+
+
+const debouncedSearch = debounce(() => {
+  barangayStore.getByName(search.value, '');
+}, 500);
+
+
+const handleSearch = () => {
+  debouncedSearch()
+}
+ 
 
 import {
   Dialog,
@@ -16,113 +38,19 @@ import {
   DialogFooter,
 } from '@/components/ui/dialog'
 
-// hilaba ini parehas it ak, hardcoded sample data
-const barangays = ref([
-  {
-    id: 1,
-    name: "Nula-Tula (Brgy. 3 & 3A)",
-    coordinates: "11.2489,124.9706",
-    population: 2663,
-    households: 2663,
-    area: 0.27,
-    contactPerson: "John Doe I",
-    contactNumber: "+639062688526",
-    email: "johndoe@email.com",
-  },
-  {
-    id: 2,
-    name: "Caibanan",
-    coordinates: "11.1939,124.9923",
-    population: 1500,
-    households: 800,
-    area: 0.15,
-    contactPerson: "Chris The Ang",
-    contactNumber: "+639123456789",
-    email: "maria@email.com"
-  },
-  {
-    id: 3,
-    name: "Sagkahan",
-    coordinates: "11.2160,125.0026",
-    population: 1500,
-    households: 800,
-    area: 0.15,
-    contactPerson: "Gcob The Great",
-    contactNumber: "+639123456789",
-    email: "maria@email.com"
-  },
-  {
-    id: 4,
-    name: "Brgy. V&G",
-    coordinates: "11.2404,125.0047",
-    population: 1500,
-    households: 800,
-    area: 0.15,
-    contactPerson: "Yllanna The Grace",
-    contactNumber: "+639123456789",
-    email: "maria@email.com"
-  },
-  {
-    id: 5,
-    name: "Brgy. San Jose",
-    coordinates: "11.2404,125.0047",
-    population: 1500,
-    households: 800,
-    area: 0.15,
-    contactPerson: "Archie The King",
-    contactNumber: "+639123456789",
-    email: "maria@email.com"
-  },
-  {
-    id: 6,
-    name: "Brgy. San Jose",
-    coordinates: "11.2404,125.0047",
-    population: 1500,
-    households: 800,
-    area: 0.15,
-    contactPerson: "Archie The King",
-    contactNumber: "+639123456789",
-    email: "maria@email.com"
-  },
-  {
-    id: 7,
-    name: "Brgy. San Jose",
-    coordinates: "11.2404,125.0047",
-    population: 1500,
-    households: 800,
-    area: 0.15,
-    contactPerson: "Archie The King",
-    contactNumber: "+639123456789",
-    email: "maria@email.com"
-  },
-  {
-    id: 8,
-    name: "Brgy. San Jose",
-    coordinates: "11.2404,125.0047",
-    population: 1500,
-    households: 800,
-    area: 0.15,
-    contactPerson: "Archie The King",
-    contactNumber: "+639123456789",
-    email: "maria@email.com"
-  },
-])
 
-// adi an pan search query
-const searchQuery = ref('')
-
-// Adi an para search bar
-const filteredBarangays = computed(() => {
-  if (!searchQuery.value) {
-    return barangays.value
-  }
+// // Adi an para search bar
+// const filteredBarangays = computed(() => {
+//   if (!searchQuery.value) {
+//     return barangays.value
+//   }
   
-  const query = searchQuery.value.toLowerCase()
-  return barangays.value.filter(barangay => 
-    barangay.name.toLowerCase().includes(query) ||
-    barangay.contactPerson.toLowerCase().includes(query)
-  )
-})
+//   const query = searchQuery.value.toLowerCase()
+//   return barangays.value.filter(barangay => 
+//     barangay.name.toLowerCase().includes(query) ||
+//     barangay.contactPerson.toLowerCase().includes(query)
+//   )
+// })
 
 // adi ye kay gin v-for ko nala didto sa baba kay nagkakalat
 const infoFields = [
@@ -130,8 +58,8 @@ const infoFields = [
   { icon: Users, label: 'Population', key: 'population' },
   { icon: Home, label: 'Households', key: 'households' },
   { icon: Map, label: 'Area', key: 'area', suffix: ' km²' },
-  { icon: User, label: 'Contact Person', key: 'contactPerson' },
-  { icon: Phone, label: 'Contact No', key: 'contactNumber' },
+  { icon: User, label: 'Contact Person', key: 'contact_person' },
+  { icon: Phone, label: 'Contact No', key: 'contact_no' },
   { icon: Mail, label: 'Email', key: 'email', span: true }
 ]
 
@@ -152,8 +80,9 @@ function openDialog(item) {
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
     </svg>
     <Input 
-      v-model="searchQuery"
+      v-model="search"
       type="text" 
+      @keyup="handleSearch"
       placeholder="Search Barangay" 
       class="w-2/3 pl-10 pr-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" 
     />
@@ -161,17 +90,17 @@ function openDialog(item) {
 
   <!-- Array listing for barangay details & card -->
   <div class="mt-5">
-    <div v-if="filteredBarangays.length > 0" class="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+    <div v-if="barangays.length > 0" class="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
       <BarangayCard
         class="pt-0"
-        v-for="item in filteredBarangays"
+        v-for="item in barangays"
         :key="item.id"
         :barangay="item"
         @viewDetails="openDialog"
       />
     </div>
     <div v-else class="text-center py-10 text-gray-500">
-      No barangays found matching "{{ searchQuery }}"
+      No barangays found matching "{{ search }}"
     </div>
   </div>
 
