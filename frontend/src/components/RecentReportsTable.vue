@@ -8,6 +8,10 @@ const props = defineProps({
   reports: {
     type: Array,
     default: () => []
+  },
+  isLoading: {
+    type: Boolean,
+    default: false
   }
 })
 
@@ -30,7 +34,24 @@ const viewReport = (reportId) => {
       </tr>
     </thead>
     <tbody>
+      <!-- loading skeleton rows -->
+      <tr v-if="props.isLoading" v-for="n in 5" :key="'loading-' + n" class="border-b border-default animate-pulse">
+        <td class="px-6 py-4"><div class="h-4 bg-gray-200 rounded w-16"></div></td>
+        <td class="px-6 py-4"><div class="h-4 bg-gray-200 rounded w-24"></div></td>
+        <td class="px-6 py-4"><div class="h-4 bg-gray-200 rounded w-48"></div></td>
+        <td class="px-6 py-4"><div class="h-4 bg-gray-200 rounded w-20"></div></td>
+        <td class="px-6 py-4"><div class="h-4 bg-gray-200 rounded w-28"></div></td>
+        <td class="px-6 py-4"><div class="h-4 bg-gray-200 rounded w-12"></div></td>
+      </tr>
+      <!-- empty state -->
+      <tr v-else-if="!props.isLoading && props.reports.length === 0" class="border-b border-default">
+        <td colspan="6" class="px-6 py-8 text-center text-gray-500">
+          No reports found
+        </td>
+      </tr>
+      <!-- actual report rows -->
       <tr
+        v-else
         v-for="report in props.reports"
         :key="report.id"
         class=" border-b border-default"

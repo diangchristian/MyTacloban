@@ -182,7 +182,7 @@ const stats = computed(() => {
         <div class="mt-4 grid grid-cols-2  md:grid-cols-3 gap-4">
             <div class="col-span-2 bg-white p-4 rounded-xl shadow-sm">
               <h1 class="font-semibold">Recent Reports</h1>
-              <RecentReportsTable :reports="recentReports" class="mt-2"/>
+              <RecentReportsTable :reports="recentReports" :isLoading="isLoading" class="mt-2"/>
             </div>
             <QuickActions class="col-span-2 md:col-span-1"/>
         </div>
