@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\AdminUserMgmtController;
+use App\Http\Controllers\UserManagementController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
@@ -48,6 +50,8 @@ Route::get('/search/barangays', [BarangayController::class, 'searchFilter']);
 Route::get('/reports/details/{id}', [ReportController::class, 'getReportDetail' ]);
 Route::get('/report-timelines/{id}', [ReportTimelineController::class, 'getTimelines' ]);
     
+Route::get('/users', [UserController::class, 'index']);
+
 Route::post('/upload-image', [ImageUploadController::class, 'store']);
 Route::post('/upload-images', [ImageUploadController::class, 'storeMultiple']);
 Route::post('/report-timelines', [ReportTimelineController::class, 'store' ]);
@@ -55,5 +59,6 @@ Route::post('/report-timelines', [ReportTimelineController::class, 'store' ]);
 
 
 Route::put('/user-profile/{id}', [UserController::class, 'update']);
+Route::put('/user-profile/{id}', [UserManagementController::class, 'updateRoleStatus']);
 
 Route::delete('/user-profile/{id}', [UserController::class, 'destroy']);
