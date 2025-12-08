@@ -1,53 +1,45 @@
 import axios from 'axios'
 import { defineStore } from 'pinia'
 
-
-
 export const useBarangayStore = defineStore('barangay', {
-    state: () => {
-        return {
-            barangays: [],
-            errors: {},
-            isLoading: true
-            
-            
-        }
+  state: () => ({
+    barangays: [],
+    errors: {},
+    isLoading: false
+  }),
+
+  actions: {
+
+    async getAllBarangay() {
+      this.isLoading = true
+      this.errors = {}
+
+      try {
+        const { data } = await axios.get("/api/barangays")
+        this.barangays = data
+      } catch (error) {
+        this.errors = error.response?.data || { message: "Error fetching barangays" }
+      } finally {
+        this.isLoading = false
+      }
     },
 
-    actions: {
-        async getAllBarangay(){
-            const { data } = await axios.get("/api/barangays");
-            if(data){
-                this.barangays = data
-                this.errors = {}
-                
-            }else{
-                this.errors = data.error
-            }
+    async getByName(search) {
+      this.isLoading = true
+      this.errors = {}
 
-            console.log("Fetched barangays:", this.barangays) 
-        },
+      try {
+        const { data } = await axios.get(`/api/search/barangays`, {
+          params: { search: search || '' }
+        })
 
-        async getByName(search){
-            console.log(search)
-            const { data } = await axios.get(`/api/search/barangays`, {
-                params: {
-                    search: search || '',  
-                }
-            });
-            console.log(data)
-            if(data){
-                this.barangays = data
-                this.errors = {}
-                
-            }else{
-                this.errors = data.error
-            }
-
-            console.log("Fetched barangays using search queryt:", data) 
-        }
+        this.barangays = data
+      } catch (error) {
+        this.errors = error.response?.data || { message: "Error searching barangays" }
+      } finally {
+        this.isLoading = false
+      }
     }
 
-
-
+  }
 })

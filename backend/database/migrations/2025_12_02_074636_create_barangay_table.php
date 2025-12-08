@@ -21,7 +21,6 @@ return new class extends Migration
             $table->string('contact_no');
             $table->string('coordinates');
             $table->string('email');
-            $table->string('barangay_captain');
             $table->string('phone_number');
             $table->timestamps();
         });

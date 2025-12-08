@@ -13,13 +13,17 @@ return new class extends Migration
     {
         Schema::create('barangay_officials', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('barangay_id');
-            $table->foreign('barangay_id')
-                ->references('id')
-                ->on('barangays')
+            $table->foreignId('barangay_id')
+                ->constrained('barangays')
                 ->onDelete('cascade');
             $table->string('official_name');
-            $table->string('position');
+            $table->enum('position', [
+                'captain',
+                'councilor',
+                'skchairman',
+                'secretary',
+                'treasurer'
+            ]);
             $table->string('email')->unique();
             $table->string('contact_number');
             $table->timestamps();

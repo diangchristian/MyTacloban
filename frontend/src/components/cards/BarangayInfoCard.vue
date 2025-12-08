@@ -11,6 +11,7 @@
         type: String,
         default: ""
       }
+
     });
 </script>
 

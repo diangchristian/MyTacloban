@@ -25,7 +25,6 @@ class BarangayFactory extends Factory
             'coordinates' => $this->faker->latitude() . ',' . $this->faker->longitude(),
             'area' => $this->faker->randomFloat(2, 1, 20), // e.g., 5.23 km²
             'email' => $this->faker->unique()->safeEmail(),
-            'barangay_captain' => $this->faker->name(),
             'phone_number' => $this->faker->phoneNumber(),
         ];
     }
