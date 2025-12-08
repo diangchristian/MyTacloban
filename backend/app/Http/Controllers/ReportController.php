@@ -31,6 +31,17 @@ class ReportController extends Controller
         return response()->json($this->report->getByUser($id, $search, $status));
     }
 
+    public function getReports(Request $request){
+
+
+        $search = $request->query('search');
+        $status = $request->query('status');
+
+        return response()->json($this->report->getReports($search, $status));
+    }
+
+
+
     public function getReportDetail($id){
         return response()->json($this->report->getByReportDetails($id));
     }
@@ -74,8 +85,20 @@ class ReportController extends Controller
         ]);
     }
 
-    public function update(){
+    public function update(Request $request, $id){
+       $fields =  $request->validate([
+            'status' => 'required|string|in:pending,in_progress,assigned,resolved,rejected',
+        ]);
 
+        if($this->report->updateReportStatus($fields, $id)){
+            return response()->json([
+                'message' => 'status updated succesfully!'
+            ]);
+        }
+
+        return response()->json([
+            'message' => 'An error has occured!'
+        ]);
     }
 
     public function destroy(){

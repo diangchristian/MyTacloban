@@ -11,5 +11,11 @@ interface ReportRepositoryInterface
 
 
     public function getByUser($id, $search = null, $status = null);
+    public function getReports( $search = null, $status = null);
     public function getByReportDetails($id);
+
+
+    public function updateReportStatus($data, $id);
 }
+
+
