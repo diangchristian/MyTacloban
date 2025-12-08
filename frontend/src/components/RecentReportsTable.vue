@@ -1,41 +1,19 @@
 <script setup>
-const reports = [
-  {
-    id: "#1234",
-    category: "Flooding",
-    title: "Severe flooding in Barangay 95",
-    status: "Pending",
-    dateSubmitted: "Nov 22, 2025"
-  },
-  {
-    id: "#1235",
-    category: "Street Light",
-    title: "Streetlight not working on Main Road",
-    status: "In Progress",
-    dateSubmitted: "Nov 21, 2025"
-  },
-  {
-    id: "#1236",
-    category: "Garbage",
-    title: "Overflowing trash bins",
-    status: "Resolved",
-    dateSubmitted: "Nov 20, 2025"
-  },
-  {
-    id: "#1237",
-    category: "Road",
-    title: "Potholes causing traffic",
-    status: "Pending",
-    dateSubmitted: "Nov 22, 2025"
-  },
-  {
-    id: "#1238",
-    category: "Flooding",
-    title: "River overflow near Barangay 5",
-    status: "In Progress",
-    dateSubmitted: "Nov 21, 2025"
+import { defineProps } from 'vue'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+
+const props = defineProps({
+  reports: {
+    type: Array,
+    default: () => []
   }
-]
+})
+
+const viewReport = (reportId) => {
+  router.push({ name: 'admin.report.details', params: { id: reportId } })
+}
 </script>
 
 <template>
@@ -53,7 +31,7 @@ const reports = [
     </thead>
     <tbody>
       <tr
-        v-for="report in reports"
+        v-for="report in props.reports"
         :key="report.id"
         class=" border-b border-default"
       >
@@ -74,7 +52,12 @@ const reports = [
         </td>
         <td class="px-6 py-4">{{ report.dateSubmitted }}</td>
         <td class="px-6 py-4">
-          <button class="font-bold hover:underline">View</button>
+          <button 
+            @click="viewReport(report.id)" 
+            class="font-bold hover:underline text-black-600 hover:text-primary cursor-pointer"
+          >
+            View
+          </button>
         </td>
       </tr>
     </tbody>

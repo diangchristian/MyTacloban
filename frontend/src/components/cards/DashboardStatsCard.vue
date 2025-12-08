@@ -7,7 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { Newspaper, TrendingUp, TrendingDown  } from 'lucide-vue-next';
+import { TrendingUp, TrendingDown  } from 'lucide-vue-next';
 import { computed, defineProps } from "vue";
 
 const props = defineProps({
@@ -16,8 +16,10 @@ const props = defineProps({
   }
 })
 
-
-const trend = props.stat.value.lastWeek > props.stat.value.thisWeek ? 'decrease' : 'increase';
+const thisWeek = computed(() => props.stat?.value?.thisWeek ?? 0);
+const lastWeek = computed(() => props.stat?.value?.lastWeek ?? 0);
+const delta = computed(() => thisWeek.value - lastWeek.value);
+const trend = computed(() => delta.value > 0 ? 'increase' : delta.value < 0 ? 'decrease' : 'neutral');
 </script>
 
 
@@ -41,19 +43,23 @@ const trend = props.stat.value.lastWeek > props.stat.value.thisWeek ? 'decrease'
       </CardHeader>
 
       <CardFooter class="flex-col items-start gap-1.5 text-sm">
-        <!-- <div class="line-clamp-1 flex gap-2 font-medium">
-          Trending up this month <TrendingUp  class="size-4 text-primary" />
-        </div> -->
         <div class="text-muted-foreground flex gap-2 items-center font-regular">
-          <div class="flex gap-2" v-if="trend ==='increase'">
-              <span class="text-green-500 flex items-center gap-2">  <TrendingUp  class="size-4 " /> +12</span>
-              from last week
-          </div> 
-          <div class="flex gap-2" v-else>
-              <span class="text-red-500 flex items-center gap-2">  <TrendingDown  class="size-4 " /> -12</span>
-              from last week
-          </div> 
-
+          <template v-if="trend === 'increase'">
+            <span class="text-green-500 flex items-center gap-2">
+              <TrendingUp class="size-4" /> {{ `+${delta}` }}
+            </span>
+            from last week
+          </template>
+          <template v-else-if="trend === 'decrease'">
+            <span class="text-red-500 flex items-center gap-2">
+              <TrendingDown class="size-4" /> {{ `-${Math.abs(delta)}` }}
+            </span>
+            from last week
+          </template>
+          <template v-else>
+            <span class="text-gray-500 flex items-center gap-2">0</span>
+            from last week
+          </template>
         </div>
       </CardFooter>
     </Card>
