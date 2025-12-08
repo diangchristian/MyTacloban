@@ -1,47 +1,89 @@
-<script>
-    import { Phone, Mail } from 'lucide-vue-next';
+<script setup>
+import { defineProps } from 'vue';
 
-    export default {
-        name: 'BarangayCard',
-        components: { Phone, Mail },
-        props: {
-        name: String,
-        captain: String,
-        phone: String,
-        email: String
-        }
-    }
+import {
+  Card,
+  CardHeader,
+  CardContent,
+  CardFooter,
+} from '@/components/ui/card'
+
+import { Button } from '../ui/button';
+
+import {
+  UserIcon,
+  PhoneIcon,
+  MailIcon
+} from 'lucide-vue-next'
+
+const props = defineProps({
+  name: {
+    type: String,
+    required: true
+  },
+  captain: {
+    type: String,
+    required: true
+  },
+  phone: {
+    type: String,
+    required: true
+  },
+  email: {
+    type: String,
+    required: true
+  }
+})
 </script>
+
 <template>
-  <div class="bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
-    <div class="p-4">
-      <div class="flex items-start justify-between mb-3">
-        <div class="flex items-center gap-3">
-          <div class="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center">
-            <span class="text-gray-600 font-semibold text-lg">
-              {{ name.charAt(0) }}
-            </span>
-          </div>
-          <div>
-            <h3 class="font-semibold text-gray-800">{{ name }}</h3>
-            <p class="text-sm text-gray-500">{{ captain }}</p>
-          </div>
+  <Card class="w-full max-w-sm mx-auto overflow-hidden border border-gray-100 shadow-lg rounded-xl">
+
+    <!-- Header -->
+    <CardHeader class="bg-primary text-primary-foreground p-4 rounded-tr-lg rounded-tl-lg">
+      <h2 class="text-lg font-bold mb-1">{{ name }}</h2>
+    </CardHeader>
+
+    <!-- Contact Info -->
+    <CardContent class="p-4 space-y-3">
+
+      <!-- Barangay Captain -->
+      <div>
+        <div class="text-xs text-gray-400 mb-1">Barangay Captain</div>
+        <div class="flex items-center gap-2 text-sm text-gray-700">
+          <UserIcon class="w-4 h-4 text-gray-400" />
+          {{ captain }}
         </div>
       </div>
-      <div class="bg-green-50 text-green-700 text-xs px-3 py-1.5 rounded inline-flex items-center gap-1 mb-3">
-        <span>📍</span>
-        <span>Barangay Name Here</span>
-      </div>
-      <div class="space-y-2">
-        <div class="flex items-center gap-2 text-sm text-gray-600">
-          <Phone class="w-4 h-4" />
-          <span>{{ phone }}</span>
-        </div>
-        <div class="flex items-center gap-2 text-sm text-gray-600">
-          <Mail class="w-4 h-4" />
-          <span>{{ email }}</span>
+
+      <!-- Contact Number -->
+      <div>
+        <div class="text-xs text-gray-400 mb-1">Contact Number</div>
+        <div class="flex items-center gap-2 text-sm text-gray-700">
+          <PhoneIcon class="w-4 h-4 text-gray-400" />
+          {{ phone }}
         </div>
       </div>
-    </div>
-  </div>
+
+      <!-- Email -->
+      <div>
+        <div class="text-xs text-gray-400 mb-1">Email</div>
+        <div class="flex items-center gap-2 text-sm text-gray-700 break-all">
+          <MailIcon class="w-4 h-4 text-gray-400 flex-shrink-0" />
+          {{ email }}
+        </div>
+      </div>
+
+    </CardContent>
+
+    <!-- Footer -->
+    <CardFooter class="p-4 mt-auto">
+      <Button
+        @click="$emit('viewDetails', { name, captain, phone, email })"
+        class="w-full bg-primary text-primary-foreground py-3 rounded-lg hover:opacity-90 transition shadow-md hover:cursor-pointer">
+        View Details
+      </Button>
+    </CardFooter>
+
+  </Card>
 </template>
