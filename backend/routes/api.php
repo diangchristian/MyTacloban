@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\AdminUserMgmtController;
+use App\Http\Controllers\UserManagementController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
@@ -44,10 +46,12 @@ Route::get('/announcements/date/{filter}', [AnnouncementController::class, 'getB
 Route::get('/reports/user-reports/{id}', [ReportController::class, 'getUserReports']);
 Route::get('/search/barangays', [BarangayController::class, 'searchFilter']);
 Route::get('/reports/details/{id}', [ReportController::class, 'getReportDetail' ]);
+Route::get('/users', [UserController::class, 'index']);
 
 Route::post('/upload-image', [ImageUploadController::class, 'store']);
 Route::post('/upload-images', [ImageUploadController::class, 'storeMultiple']);
 
 Route::put('/user-profile/{id}', [UserController::class, 'update']);
+Route::put('/user-profile/{id}', [UserManagementController::class, 'updateRoleStatus']);
 
 Route::delete('/user-profile/{id}', [UserController::class, 'destroy']);

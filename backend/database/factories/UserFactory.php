@@ -30,6 +30,7 @@ class UserFactory extends Factory
             'barangay_id' => 1,
             'bio' => fake()->sentence(2),
             'profile_image' => fake()->imageUrl(640, 480, 'business', true),
+            'status' => fake()->randomElement(['Active', 'Blocked', 'Inactive']),
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),
