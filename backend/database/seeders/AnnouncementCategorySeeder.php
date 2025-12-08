@@ -14,6 +14,17 @@ class AnnouncementCategorySeeder extends Seeder
      */
     public function run(): void
     {
-      
+        $categories = [
+            'Emergency',
+            'Community Event',
+            'Notice',
+            'Public Service',
+            'Holiday',
+            'General Announcement',
+        ];
+
+        foreach ($categories as $category) {
+            AnnouncementCategory::firstOrCreate(['category_name' => $category]);
+        }
     }
 }
