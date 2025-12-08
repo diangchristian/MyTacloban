@@ -23,8 +23,6 @@ export const useSubmitReport = defineStore('submitReport', {
         resolvedCount: (state) => state.reports.filter(r => r.status === 'resolved').length,
     },
     
-
-
     actions: {
         async getAllReports(){
             const { data } = await axios.get("/api/reports");
