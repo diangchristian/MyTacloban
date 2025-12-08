@@ -16,8 +16,17 @@ class AnnouncementCategoryFactory extends Factory
      */
     public function definition(): array
     {
-       return [
-        'category_name' => $this->faker->word()
-       ];
+        $categories = [
+            'Emergency',
+            'Community Event',
+            'Notice',
+            'Public Service',
+            'Holiday',
+            'General Announcement',
+        ];
+
+        return [
+            'category_name' => $this->faker->randomElement($categories),
+        ];
     }
 }

@@ -16,14 +16,40 @@ class AnnouncementController extends Controller
     }
 
     public function index(){
+        return response()->json($this->announcement->getAllPublished());
+    }
+
+    public function getAllAnnouncements(){
         return response()->json($this->announcement->getAll());
     }
 
+
+    public function getAnnouncementById($id){
+        return response()->json($this->announcement->getById($id));
+    }
 
     public function getByCategory($category){
         return response()->json($this->announcement->getByCategory($category));
     }
 
+    public function getAllStats(){
+        return $this->announcement->stats();
+    }
+
+    public function search(Request $request)
+    {
+        $search = $request->query('search');
+        $category = $request->query('category');
+        $start = $request->query('start');
+        $end = $request->query('end');
+
+        $results = $this->announcement->search($search, $category, $start, $end);
+
+        return response()->json([
+            'success' => true,
+            'data' => $results
+        ]);
+    }
 
     public function getByCreatedAt($filter){
         $today = now()->toDateString();
@@ -64,6 +90,7 @@ class AnnouncementController extends Controller
         $fields = $request->validate([
             'category_id' => 'required|integer|exists:announcement_categories,id',
             'announcement_title' => 'required|string|max:255',
+            'isHighlight' => 'nullable',
             'body' => 'required|string',
             'image' => 'nullable|string|max:255', // or url validation if storing URLs
             'status' => 'required|string|in:draft,published,archived',
@@ -76,12 +103,15 @@ class AnnouncementController extends Controller
            ]);
         }
 
+        
+
     }
 
     public function update(Request $request, $id){
         $fields = $request->validate([
             'category_id' => 'required|integer|exists:announcement_categories,id',
             'announcement_title' => 'required|string|max:255',
+            'isHighlight' => 'nullable',
             'body' => 'required|string',
             'image' => 'nullable|string|max:255', // or url validation if storing URLs
             'status' => 'required|string|in:draft,published,archived',

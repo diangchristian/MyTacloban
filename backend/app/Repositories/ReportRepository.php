@@ -76,60 +76,57 @@ class ReportRepository implements ReportRepositoryInterface {
     }
     
     public function getReports($search = null, $status = null)
-{   
-    $sql = "
-        SELECT 
-            r.id,
-            r.user_id,
-            r.category_id,
-            r.title,
-            r.coordinates,
-            r.description,
-            r.status,
-            r.created_at,
-            r.updated_at,
-            rc.category_name,
-            GROUP_CONCAT(DISTINCT rm.file_path) AS images
-        FROM reports r
-        JOIN report_categories rc ON r.category_id = rc.id
-        LEFT JOIN report_images rm ON rm.report_id = r.id
-        WHERE 1 = 1               -- <--- base where so AND works
-    ";
+    {   
+        $sql = "
+            SELECT 
+                r.id,
+                r.user_id,
+                r.category_id,
+                r.title,
+                r.coordinates,
+                r.description,
+                r.status,
+                r.created_at,
+                r.updated_at,
+                rc.category_name,
+                GROUP_CONCAT(DISTINCT rm.file_path) AS images
+            FROM reports r
+            JOIN report_categories rc ON r.category_id = rc.id
+            LEFT JOIN report_images rm ON rm.report_id = r.id
+            WHERE 1 = 1             
+        ";
 
-    $params = [];                // <--- required
+        $params = [];                // <--- required
 
-    // Optional search
-    if ($search) {
-        $sql .= " AND MATCH(r.title, r.description) AGAINST(? IN NATURAL LANGUAGE MODE)";
-        $params[] = $search;
+        // Optional search
+        if ($search) {
+            $sql .= " AND MATCH(r.title, r.description) AGAINST(? IN NATURAL LANGUAGE MODE)";
+            $params[] = $search;
+        }
+
+        // Optional status filter
+        if ($status && $status !== 'all') {
+            $sql .= " AND r.status = ?";
+            $params[] = $status;
+        }
+
+        $sql .= "
+            GROUP BY 
+                r.id, r.user_id, r.category_id, r.title, 
+                r.description, r.status, r.created_at, r.updated_at, 
+                r.coordinates, rc.category_name
+        ";
+
+        $reports = DB::select($sql, $params);
+
+        $reports = collect($reports)->map(function ($report) {
+            $report->images = $report->images ? explode(',', $report->images) : [];
+            return $report;
+        });
+
+        return $reports;
     }
 
-    // Optional status filter
-    if ($status && $status !== 'all') {
-        $sql .= " AND r.status = ?";
-        $params[] = $status;
-    }
-
-    $sql .= "
-        GROUP BY 
-            r.id, r.user_id, r.category_id, r.title, 
-            r.description, r.status, r.created_at, r.updated_at, 
-            r.coordinates, rc.category_name
-    ";
-
-    $reports = DB::select($sql, $params);
-
-    $reports = collect($reports)->map(function ($report) {
-        $report->images = $report->images ? explode(',', $report->images) : [];
-        return $report;
-    });
-
-    return $reports;
-}
-
-
-
-    
     public function getByReportDetails($id){
         $report = DB::select("
             SELECT 

@@ -45,6 +45,10 @@ Route::apiResource('reports', ReportController::class );
 
 Route::get('/announcements/category/{id}', [AnnouncementController::class, 'getByCategory']);
 Route::get('/announcements/date/{filter}', [AnnouncementController::class, 'getByCreatedAt']);
+Route::get('/announcements-search', [AnnouncementController::class, 'search']);
+Route::get('/admin/announcements', [AnnouncementController::class, 'getAllAnnouncements']);
+Route::get('/admin/announcements-stats', [AnnouncementController::class, 'getAllStats']);
+Route::get('/announcement-details/{id}', [AnnouncementController::class, 'getAnnouncementById']);
 Route::get('/reports/user-reports/admin     ', [ReportController::class, 'getReports']);
 Route::get('/reports/user-reports/{id}', [ReportController::class, 'getUserReports']);
 Route::get('/search/barangays', [BarangayController::class, 'searchFilter']);
