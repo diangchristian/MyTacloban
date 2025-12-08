@@ -15,6 +15,7 @@ export const useUploadStore = defineStore('upload', {
 
   actions: {
     async uploadImages(files) {
+      console.log(files)
       if (!files) return;
     
       const formData = new FormData();

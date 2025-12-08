@@ -28,6 +28,12 @@ export default [
         meta: {requiresAuth: true, role: ['admin'], layout: 'sidebar', title: 'Create New Announcements'}
     },
     {
+        path: '/admin/announcements/:id/edit',
+        name: 'admin.announcements-edit',
+        component: CreateAnnouncementView,
+        meta: {requiresAuth: true, role: ['admin'], layout: 'sidebar', title: 'Edit Announcement'}
+    },
+    {
         path: '/admin/user-management',
         name: 'admin.user-management',
         component: UserManagementView,

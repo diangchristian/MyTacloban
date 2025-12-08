@@ -1,82 +1,73 @@
-<script setup lang="ts">
-import { ref, computed, watch, reactive} from 'vue'
-import {useAuthStore} from "@/stores/auth";
-import {useUploadStore} from "@/stores/upload";
-import {useDialogStore} from "@/stores/dialogStore";
-import { storeToRefs } from 'pinia';
-import ConfirmDeleteDialog from '@/components/ConfirmDeleteDialog.vue';
-
-const dialogStore = useDialogStore()
-const authStore = useAuthStore();
-const uploadStore = useUploadStore()
-const {user} =  storeToRefs(authStore )
-
-const formData = reactive({
-  username: user.value?.username || '',
-  fullName: user.value?.fullName || '',
-  bio: user.value?.bio || '',
-  email: user.value?.email || '',
-  profile_image: null
-})
-
-
-console.log(user)
-
-const isSaved = ref(false)
-
-// State for interactive file upload
-const selectedFile = ref<File | null>(null)
-const fileInput = ref<HTMLInputElement | null>(null)
-
-// Computed property to create a URL for the selected image
-const profileImageSrc = computed(() => {
-  if (selectedFile.value) {
-    return URL.createObjectURL(selectedFile.value)
+<script setup>
+  import { ref, computed, reactive, watch } from 'vue'
+  import { storeToRefs } from 'pinia'
+  import { useAuthStore } from '@/stores/auth'
+  import { useUploadStore } from '@/stores/upload'
+  import { useDialogStore } from '@/stores/dialogStore'
+  import ConfirmDeleteDialog from '@/components/ConfirmDeleteDialog.vue'
+  
+  const authStore = useAuthStore()
+  const uploadStore = useUploadStore()
+  const dialogStore = useDialogStore()
+  
+  const { user } = storeToRefs(authStore)
+  
+  const formData = reactive({
+    username: user.value?.username || '',
+    fullName: user.value?.fullName || '',
+    bio: user.value?.bio || '',
+    email: user.value?.email || '',
+    profile_image: null
+  })
+  
+  const isSaved = ref(false)
+  const selectedFile = ref(null)
+  const fileInput = ref(null)
+  
+  const profileImageSrc = computed(() =>
+    selectedFile.value ? URL.createObjectURL(selectedFile.value) : null
+  )
+  
+  watch(selectedFile, (newFile, oldFile) => {
+    if (oldFile) URL.revokeObjectURL(URL.createObjectURL(oldFile))
+  })
+  
+  watch(
+    () => uploadStore.uploadedFiles,
+    (newFiles) => {
+      formData.profile_image = newFiles[0]?.url || null
+    },
+    { immediate: true }
+  )
+  
+  const handleSave = () => {
+    authStore.updateUserProfile(formData)
+    console.log(formData)
   }
-  return null // No image selected, fallback to default icon
-})
-
-// Clean up the object URL when the component unmounts or file changes
-watch(selectedFile, (newFile, oldFile) => {
-  if (oldFile) {
-    // Check if oldFile is not null before trying to revoke its URL
-    URL.revokeObjectURL(URL.createObjectURL(oldFile))
+  
+  const handleFileUpload = (event) => {
+    const target = event.target
+    if (target.files && target.files.length > 0) {
+      uploadStore.uploadImages(target.files[0])
+      selectedFile.value = target.files[0]
+    } else {
+      selectedFile.value = null
+    }
   }
-}, { immediate: true })
-watch(
-  () => uploadStore.uploadedFiles,
-  (newFiles) => {
-    formData.profile_image = newFiles[0]?.url || null
-  },
-  { immediate: true }
-)
-// 3. Update the handleSave function to transfer temp values to original state
-const handleSave = () => {
- authStore.updateUserProfile(formData)
- console.log(formData)
-
-}
-
-const handleDeleteAccount = () => {
-  dialogStore.deleteDialogOpen = true
-  console.log('Delete Account clicked. A modal should appear here.')
-}
-
-const handleFileUpload = (event: Event) => {
-  const target = event.target as HTMLInputElement
-  if (target.files && target.files.length > 0) {
-    uploadStore.uploadImages(target.files[0])
-    selectedFile.value = target.files[0]
-  } else {
-    selectedFile.value = null
+  
+  const triggerFileInput = () => fileInput.value?.click()
+  
+  // Open delete dialog with action
+  const handleDeleteAccount = () => {
+    dialogStore.openConfirm({
+      title: 'Delete Account',
+      description: 'This will permanently delete your account and all associated data.',
+      confirmText: 'Delete Account',
+      onConfirm: () => authStore.deleteAccount()
+    })
   }
-}
-
-const triggerFileInput = () => {
-  fileInput.value?.click()
-}
-
-</script>
+  </script>
+  
 
 <template>
   
@@ -214,7 +205,8 @@ const triggerFileInput = () => {
       </div>
     </div>
 
-    <ConfirmDeleteDialog v-model:open="dialogStore.deleteDialogOpen"/>
+    <ConfirmDeleteDialog/>
+
   </main>
 
 </template>
