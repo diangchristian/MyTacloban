@@ -21,7 +21,7 @@ onMounted(() => {
 });
 
 // ---------- Reactive States ----------
-const selectedFilter = ref("All"); // (No category, but kept for future)
+const selectedFilter = ref("All");
 const isFilterOpen = ref(false);
 const isYearDropdownOpen = ref(false);
 
@@ -29,7 +29,7 @@ const isYearDropdownOpen = ref(false);
 const isEventDialogOpen = ref(false);
 const selectedEvent = ref(null);
 
-// ---------- Since your DB has NO category ----------
+// Filter options (DB has no category)
 const FILTER_OPTIONS = ["All"];
 
 // ---------- Filtered Events ----------
@@ -43,22 +43,38 @@ const months = [
   "July", "August", "September", "October", "November", "December"
 ];
 
-// ---------- Available Years ----------
+// ---------- Available Years (Always includes current year) ----------
 const availableYears = computed(() => {
-  const years = events.value.map(e => new Date(e.event_date).getFullYear());
-  return [...new Set(years)].sort((a, b) => a - b);
+  const eventYears = events.value
+    .map(e => new Date(e.event_date).getFullYear())
+    .filter(y => !isNaN(y));
+
+  const uniqueYears = [...new Set(eventYears)];
+
+  const currentYearValue = new Date().getFullYear();
+  if (!uniqueYears.includes(currentYearValue)) {
+    uniqueYears.push(currentYearValue);
+  }
+
+  return uniqueYears.sort((a, b) => a - b);
 });
 
-// ---------- Page Turner State ----------
-const currentMonthIndex = ref(new Date().getMonth());
+// ---------- Year Index ----------
 const currentYearIndex = ref(
-  availableYears.value.indexOf(new Date().getFullYear()) >= 0
-    ? availableYears.value.indexOf(new Date().getFullYear())
-    : 0
+  availableYears.value.indexOf(new Date().getFullYear())
 );
 
-// ---------- Computed Current Year ----------
-const currentYear = computed(() => availableYears.value[currentYearIndex.value]);
+if (currentYearIndex.value === -1) {
+  currentYearIndex.value = 0;
+}
+
+// ---------- Current Year ----------
+const currentYear = computed(() => {
+  return availableYears.value[currentYearIndex.value];
+});
+
+// ---------- Month Index ----------
+const currentMonthIndex = ref(new Date().getMonth());
 
 // ---------- Events for Current Month ----------
 const eventsForCurrentMonth = computed(() => {
@@ -91,10 +107,9 @@ const openEventDialog = (event) => {
 };
 </script>
 
-
 <template>
   <div class="space-y-8">
-    
+
     <div class="w-full mx-auto">
       <div class="w-full h-52 overflow-hidden rounded-md relative">
         <img src="@/assets/images/user-bg.jpg" class="w-full h-full object-cover" alt="">
@@ -104,11 +119,12 @@ const openEventDialog = (event) => {
         </div>
       </div>
     </div>
-    
-    <div class="p-4 md:px-8 lg:px-12 space-y-8"> 
-      
+
+    <div class="p-4 md:px-8 lg:px-12 space-y-8">
+
       <div class="flex flex-col md:flex-row md:justify-between items-center mb-6 gap-2">
-        
+
+        <!-- Filter Dropdown (All) -->
         <div class="relative w-full md:w-auto md:order-1 order-2">
           <Button
             @click="isFilterOpen = !isFilterOpen"
@@ -139,9 +155,11 @@ const openEventDialog = (event) => {
             </button>
           </div>
         </div>
-        
+
+        <!-- Year and Month Navigation -->
         <div class="flex flex-col items-center gap-2 md:order-2 order-1 md:mx-auto mt-4 md:mt-0">
-          
+
+          <!-- Year Dropdown -->
           <div class="relative mb-2">
             <Button
               @click="isYearDropdownOpen = !isYearDropdownOpen"
@@ -165,11 +183,11 @@ const openEventDialog = (event) => {
             </div>
           </div>
 
+          <!-- Month Switcher -->
           <div class="flex items-center gap-6">
             <Button 
               @click="prevMonth" 
               class="p-2 rounded-full bg-white text-green-600 hover:bg-green-50 transition-colors shadow-md border-2 border-green-100"
-              aria-label="Previous Month"
             >
               <ChevronLeft size="24" />
             </Button>
@@ -179,22 +197,23 @@ const openEventDialog = (event) => {
             <Button 
               @click="nextMonth" 
               class="p-2 rounded-full bg-white text-green-600 hover:bg-green-50 transition-colors shadow-md border-2 border-green-100"
-              aria-label="Next Month"
             >
               <ChevronRight size="24" />
             </Button>
           </div>
         </div>
-        
+
+        <!-- Invisible Spacer -->
         <div class="w-full md:w-auto md:order-3 order-3 invisible">
              <Button class="h-11 px-6 w-full md:w-auto invisible">
                  <span class="font-medium text-sm">All</span>
             </Button>
         </div>
-
       </div>
+
       <hr class="border-gray-200 mt-4" />
 
+      <!-- Event Cards -->
       <div class="mt-4">
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <div v-for="event in eventsForCurrentMonth" :key="event.title + event.date">
@@ -207,6 +226,7 @@ const openEventDialog = (event) => {
         </p>
       </div>
 
+      <!-- Event Dialog -->
       <Dialog v-model:open="isEventDialogOpen">
         <DialogContent class="max-w-2xl w-full overflow-y-auto p-4 rounded-lg">
           <DialogHeader>
