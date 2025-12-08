@@ -8,6 +8,16 @@ import { defineProps } from "vue";
 import mockup1 from '@/assets/images/Mockup.png'
 import mockup2 from '@/assets/images/Mockup2.png'
 import sample from '@/assets/images/news-sample.png'
+import TimelineCard from "./cards/TimelineCard.vue";
+import {useSubmitReport} from "@/stores/submitReport"
+import { Skeleton } from "@/components/ui/skeleton";
+import { storeToRefs } from "pinia";
+import { MessageSquare } from 'lucide-vue-next';
+
+
+const submitReportStore = useSubmitReport()
+const {reportDetails, isLoading} = storeToRefs(submitReportStore)
+
 
 const images = [
   mockup1,
@@ -70,6 +80,7 @@ onMounted(() => {
         </div>
   
         <!-- Images -->
+       <div class="grid grid-cols-1 lg:grid-cols-2">
         <div>
           <p class="font-semibold mb-2">Images:</p>
   
@@ -89,7 +100,21 @@ onMounted(() => {
   
           <ImagesModal :images="report.images"  />
         </div>
-  
+        
+        <div class="bg-white p-4 rounded-xl shadow-sm">
+              <div class="flex justify-between items-center mb-4">
+                <h3 class="inline-flex items-center gap-2">
+                  <MessageSquare class="size-5 text-primary" />
+                  Activity Timeline
+                </h3>
+              </div>
+              
+              <div v-if="!isLoading">
+                <Skeleton v-for="i in 3" :key="i" class="h-12 w-full rounded-md mb-2 bg-gray-200" />
+              </div>
+              <TimelineCard v-if="report" :timelines="report.timelines" />
+        </div>
+       </div>
       </div>
     </div>
   </template>

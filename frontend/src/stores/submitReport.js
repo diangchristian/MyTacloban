@@ -32,6 +32,7 @@ export const useSubmitReport = defineStore('submitReport', {
             if(data){
                 this.reports = data
                 this.errors = {}
+                this.isLoading = false;
             }else{
                 this.errors = data.error
             }
@@ -86,8 +87,8 @@ export const useSubmitReport = defineStore('submitReport', {
         },
 
 
-        async getBySearchAndStatus(search, status){
-            const { data } = await axios.get(`/api/reports/user-reports/1`, {
+        async getBySearchAndStatusUser(search, status, id){
+            const { data } = await axios.get(`/api/reports/user-reports/${id}`, {
                 params: {
                     search: search || '',  // optional
                     status: status || 'all' // optional
@@ -96,6 +97,49 @@ export const useSubmitReport = defineStore('submitReport', {
 
             this.reports = data;
             return data;
+        },
+
+        async getBySearchAndStatusAdmin(search, status){
+            const { data } = await axios.get(`/api/reports/user-reports/admin`, {  // or /reports/admin if you use that route
+                params: {
+                    search: search || '',
+                    status: status || 'all'
+                }
+            });
+        
+            // make sure it's an array
+            this.reports = Array.isArray(data) ? data : [];
+            return this.reports;
+        },
+        
+        async addNewTime(formData){
+            console.log(formData)
+            const { data } = await axios.post(`/api/report-timelines`, formData);
+
+            if(data){
+                this.errors = {}
+                this.isLoading = false;
+            }else{
+                this.errors = data.error
+            }
+
+            console.log(data)
+        },
+
+        async updateReportStatus(id, status){
+            console.log(status)
+            const { data } = await axios.put(`/api/reports/${id}`, {
+                status: status
+              })
+
+            if(data){
+                this.errors = {}
+                this.isLoading = false;
+            }else{
+                this.errors = data.error
+            }
+
+            console.log(data)
         }
         
     }

@@ -22,6 +22,11 @@ onMounted(() => {
     
 })
 
+const refreshTimeline = async () => {
+  await submitReportStore.getReportById(route.params.id)   // reload report + timelines
+  addNewActivity.value = false;                            // close modal automatically
+}
+
 
 const route = useRoute()
 const router = useRouter()
@@ -32,6 +37,11 @@ const addNewActivity = ref(false)
 const addActivity = () => {
     addNewActivity.value = true
 }
+
+const handleClose = () => {
+    addNewActivity.value = false;
+}
+
 
 </script>
 
@@ -56,7 +66,7 @@ const addActivity = () => {
           <!-- Right Column -->
           <div class="flex flex-col gap-4">
             <Skeleton v-if="isLoading" class="h-12 w-full rounded-lg bg-gray-200" />
-            <ReportStatusCard v-else-if="reportDetails" :status="reportDetails[0].status" />
+            <ReportStatusCard v-else-if="reportDetails" :status="reportDetails[0].status" :id="reportDetails[0].id" />
   
             <div class="bg-white p-4 rounded-xl shadow-sm">
               <div class="flex justify-between items-center mb-4">
@@ -67,7 +77,7 @@ const addActivity = () => {
                 <Button size="sm" class="cursor-pointer" @click="addActivity">+ Add</Button>
               </div>
   
-              <AddTimeline v-if="addNewActivity" @close="addNewActivity = false" />
+              <AddTimeline v-if="addNewActivity && !isLoading" @close="addNewActivity = false" :id="reportDetails[0].id" @saved="refreshTimeline"/>
               
               <div v-if="isLoading">
                 <Skeleton v-for="i in 3" :key="i" class="h-12 w-full rounded-md mb-2 bg-gray-200" />

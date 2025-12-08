@@ -26,7 +26,7 @@ const search = ref('')
 
 
 const debouncedSearch = debounce(() => {
-  submitReportStore.getBySearchAndStatus(search.value, 'all');
+  submitReportStore.getBySearchAndStatusUser(search.value, 'all' , 1);
 }, 500);
 
 function updateScreen(){
@@ -71,8 +71,8 @@ function handleSearch(){
 
         <div class="flex flex-wrap gap-2">
           <Button  type="button" @click="submitReportStore.getUserReports()"  class="cursor-pointer">All Reports ({{ reports.length }})</Button>
-          <Button  type="button"  @click="submitReportStore.getBySearchAndStatus(search, 'pending')"    variant="outline" class="cursor-pointer">Pending ({{submitReportStore.pendingCount}})</Button>
-          <Button type="button"  @click="submitReportStore.getBySearchAndStatus(search, 'in_progress')"  variant="outline" class="cursor-pointer">In Progress ({{submitReportStore.inProgressCount}})</Button>
+          <Button  type="button"  @click="submitReportStore.getBySearchAndStatusUser(search, 'pending', 1)"    variant="outline" class="cursor-pointer">Pending ({{submitReportStore.pendingCount}})</Button>
+          <Button type="button"  @click="submitReportStore.getBySearchAndStatusUser(search, 'in_progress', 1)"  variant="outline" class="cursor-pointer">In Progress ({{submitReportStore.inProgressCount}})</Button>
         </div>
       </div>
       </form>

@@ -20,10 +20,6 @@ const props =  defineProps({
         <p class="text-xs font-normal text-gray-500">{{timeline.description}}</p>
         <time class="text-xs font-normal leading-none text-gray-500">{{ timeline.created_at }}</time>
       </li>
-  
-      
-      
-  
       <!-- more items -->
     </ol>
   </template>
