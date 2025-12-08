@@ -10,7 +10,14 @@
   } from '@/components/ui/pagination'
   import ReportsCard from './cards/ReportsCard.vue'
   import { useRoute, useRouter } from 'vue-router'
-  
+  import { Skeleton } from "@/components/ui/skeleton";
+  import {useSubmitReport} from "@/stores/submitReport"
+  import { storeToRefs } from 'pinia';
+
+
+
+
+  const {isLoading} = storeToRefs(useSubmitReport())
   const props = defineProps({
     reports: {
       type: Array,
@@ -25,7 +32,7 @@
   const perPage = 8
   const currentPage = ref(Number(route.query.page) || 1)
   
-  /* ✅ keep page valid if reports change */
+
   watch(
     () => props.reports.length,
     () => {
@@ -36,10 +43,8 @@
     },
   )
   
-  /* ✅ total items */
   const total = computed(() => props.reports.length)
   
-  /* ✅ slice using props */
   const paginatedReports = computed(() => {
     const start = (currentPage.value - 1) * perPage
     const end = start + perPage
@@ -65,7 +70,11 @@
     <div class="space-y-4 mt-4">
   
       <!-- Cards -->
+      <div v-if="isLoading" class="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                <Skeleton v-for="i in 8" :key="i" class="h-96 w-full rounded-md mb-2 bg-gray-200" />
+        </div>
       <div class="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+       
         <ReportsCard
           v-for="r in paginatedReports"
           :key="r.id"

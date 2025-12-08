@@ -1,31 +1,44 @@
 <script setup>
-    import { Label } from '@/components/ui/label'
-    import {
-      Select,
-      SelectContent,
-      SelectItem,
-      SelectTrigger,
-      SelectValue,
-    } from '@/components/ui/select'
-    
-    const props = defineProps({
-      status: {
-        type: String,
-        default: '' // empty if no status provided
-      }
-    })
+import { Label } from '@/components/ui/label'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { useSubmitReport } from "@/stores/submitReport"
+import { ref, watch } from 'vue'
 
-    console.log(props.status)
+const submitReportStore = useSubmitReport()
 
-    // reactive variable for Select
-    import { ref, watch } from 'vue'
-    const selectedStatus = ref(props.status)
-    
-    // update selectedStatus if props.status changes dynamically
-    watch(() => props.status, (newStatus) => {
-      selectedStatus.value = newStatus
-    })
-    </script>
+const props = defineProps({
+  status: {
+    type: String,
+    default: '' // initial status
+  },
+  id: {
+    type: Number,
+    required: true  
+  }
+})
+
+// reactive variable for Select
+const selectedStatus = ref(props.status)
+
+// keep selectedStatus in sync if props.status changes externally
+watch(() => props.status, (newStatus) => {
+  selectedStatus.value = newStatus
+})
+
+// 🔥 watch selectedStatus and update report status immediately when changed
+watch(selectedStatus, (newStatus, oldStatus) => {
+  if (newStatus && newStatus !== oldStatus) {
+    submitReportStore.updateReportStatus(props.id, newStatus)
+  }
+})
+</script>
+  
     
     <template>
       <div class="bg-white shadow-sm rounded-xl p-4">

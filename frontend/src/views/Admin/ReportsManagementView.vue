@@ -4,7 +4,7 @@ import Button from "@/components/ui/button/Button.vue";
 import ReportsCard from "@/components/cards/ReportsCard.vue";
 import {useSubmitReport} from "@/stores/submitReport"
 import { storeToRefs } from "pinia";
-import { onMounted } from "vue";
+import { onMounted, ref } from "vue";
 import {
   Pagination,
   PaginationContent,
@@ -13,11 +13,25 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from '@/components/ui/pagination'
-import PaginatedReports from "@/components/PaginatedReports.vue";
+import PaginatedReports from "@/components/PaginatedReports.vue"; 
+import { debounce } from 'lodash';
 
 
 const submitReportStore = useSubmitReport()
 const {reports} = storeToRefs(submitReportStore)
+
+const search = ref('')
+
+const debouncedSearch = debounce(() => {
+  submitReportStore.getBySearchAndStatusAdmin(search.value, 'all');
+}, 500);
+
+
+
+function handleSearch(){
+  console.log(search.value)
+  debouncedSearch()
+}
 
 
 onMounted(async () => [
@@ -129,15 +143,17 @@ onMounted(async () => [
 <template>
   <main>
     <div class="w-full h-screen">
-      <div
-        class="w-full flex flex-col lg:flex-row gap-4 sm:items-center justify-center">
-        <Input placeholder="Search reports" class="w-full max-w-md" />
-          <div class="flex flex-wrap gap-2">
-            <Button>All Reports (9)</Button>
-            <Button variant="outline">Pending (12)</Button>
-            <Button variant="outline">In Progress (3)</Button>
-          </div>
+      <form action="" @submit.prevent>
+        <div class="max-w-4xl flex flex-col sm:flex-row gap-4 sm:items-center w-full">
+        <Input placeholder="Search reports" class="w-full sm:w-1/2" v-model="search" @keyup="handleSearch"/>
+
+        <div class="flex flex-wrap gap-2">
+          <Button  type="button" @click="submitReportStore.getAllReports()"  class="cursor-pointer">All Reports ({{ reports.length }})</Button>
+          <Button  type="button"  @click="submitReportStore.getBySearchAndStatusAdmin(search, 'pending')"    variant="outline" class="cursor-pointer">Pending ({{submitReportStore.pendingCount}})</Button>
+          <Button type="button"  @click="submitReportStore.getBySearchAndStatusAdmin(search, 'in_progress')"  variant="outline" class="cursor-pointer">In Progress ({{submitReportStore.inProgressCount}})</Button>
+        </div>
       </div>
+      </form>
       <PaginatedReports :reports="reports"/>
       <!-- <div class="grid grid-cols-4 mt-4 gap-4 h-full">
         <ReportsCard
