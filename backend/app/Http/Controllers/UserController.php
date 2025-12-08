@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Contracts\UserRepositoryInterface;
+use App\Models\User;
 use Psy\Reflection\ReflectionLanguageConstruct;
 
 class UserController extends Controller
@@ -18,7 +19,8 @@ class UserController extends Controller
     }
 
     public function index(){
-
+        $users = User::all();
+        return response()->json($users);
     }
 
     public function show(){
