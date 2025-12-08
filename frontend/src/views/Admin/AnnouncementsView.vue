@@ -10,6 +10,7 @@ import {
 } from "lucide-vue-next";
 import Input from "@/components/ui/input/Input.vue";
 import Button from "@/components/ui/button/Button.vue";
+import Label from "@/components/ui/label/Label.vue";
 import { RouterLink } from "vue-router";
 import {
   Select,
@@ -18,119 +19,257 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useAnnouncementStore } from "@/stores/announcements";
+import { Skeleton } from "@/components/ui/skeleton";
+import { storeToRefs } from "pinia";
+import { onMounted, ref, computed, watch } from "vue";
+import { useRouter, useRoute } from "vue-router";
+import { useDialogStore } from "@/stores/dialogStore";
+import ConfirmDeleteDialog from "@/components/ConfirmDeleteDialog.vue";
+import { debounce } from "lodash";
 
-const stats = [
-  {
-    title: "Total Announcements",
-    value: {
-      count: 102,
-      thisWeek: 9,
-      lastWeek: 10,
+const dialogStore = useDialogStore();
+
+const router = useRouter();
+
+const announcementStore = useAnnouncementStore();
+const { announcements, stats, categories, isLoading } =
+  storeToRefs(announcementStore);
+const selectedAnnouncement = ref(null);
+const searchTerm = ref("");
+const selectedCategory = ref(null);
+const selectedDate = ref(null);
+onMounted(() => {
+  announcementStore.getAnnouncement();
+  announcementStore.getStats();
+  announcementStore.getCategories();
+});
+
+const getDateRange = (filter) => {
+  const today = new Date();
+  let start, end;
+  switch (filter) {
+    case "today":
+      start = end = today.toISOString().split("T")[0];
+      break;
+    case "this_week":
+      const firstDay = new Date(
+        today.setDate(today.getDate() - today.getDay())
+      );
+      const lastDay = new Date(
+        today.setDate(today.getDate() - today.getDay() + 6)
+      );
+      start = firstDay.toISOString().split("T")[0];
+      end = lastDay.toISOString().split("T")[0];
+      break;
+    case "this_month":
+      start = new Date(today.getFullYear(), today.getMonth(), 1)
+        .toISOString()
+        .split("T")[0];
+      end = new Date(today.getFullYear(), today.getMonth() + 1, 0)
+        .toISOString()
+        .split("T")[0];
+      break;
+    default:
+      start = end = null;
+  }
+  return { start, end };
+};
+
+const fetchAnnouncements = () => {
+  const { start, end } = getDateRange(selectedDate.value);
+  announcementStore.getBySearch(
+    searchTerm.value,
+    selectedCategory.value,
+    start,
+    end
+  );
+};
+
+// Debounced version of fetch
+const debouncedFetch = debounce(fetchAnnouncements, 300); // 300ms delay
+
+// Watch for changes
+watch([searchTerm, selectedCategory, selectedDate], () => {
+  debouncedFetch();
+});
+
+const deleteHandler = (announcement) => {
+  selectedAnnouncement.value = announcement;
+  dialogStore.openConfirm({
+    title: "Delete Announcement",
+    description: "This will permanently delete the annoucement.",
+    confirmText: "Delete Announcment",
+    onConfirm: () => {
+      console.log(selectedAnnouncement.value);
+      announcementStore.deleteAnnouncment(
+        selectedAnnouncement.value.announcement_id
+      );
+      selectedAnnouncement.value = null;
+      announcementStore.getAnnouncement();
+      announcementStore.getStats();
     },
-    icon: ClipboardList,
-    bg: "bg-blue-400/40",
-    textColor: "text-blue-500",
-    footer: `+${9 - 10} from last week`,
-  },
-  {
-    title: "Posted",
-    value: {
-      count: 34,
-      thisWeek: 12,
-      lastWeek: 15,
+  });
+};
+const announcementStats = computed(() => {
+  if (!stats.value) return [];
+
+  const total = stats.value.total || { count: 0, thisWeek: 0, lastWeek: 0 };
+  const published = stats.value.published || {
+    count: 0,
+    thisWeek: 0,
+    lastWeek: 0,
+  };
+  const draft = stats.value.draft || { count: 0, thisWeek: 0, lastWeek: 0 };
+
+  return [
+    {
+      title: "Total Announcements",
+      value: total,
+      icon: ClipboardList,
+      bg: "bg-blue-400/40",
+      textColor: "text-blue-500",
+      footer: `${total.thisWeek - total.lastWeek >= 0 ? "+" : ""}${
+        total.thisWeek - total.lastWeek
+      } from last week`,
     },
-    icon: Clock,
-    bg: "bg-yellow-400/40",
-    textColor: "text-yellow-500",
-    footer: `-${15 - 12} from last week`,
-  },
-  {
-    title: "Draft",
-    value: {
-      count: 18,
-      thisWeek: 8,
-      lastWeek: 6,
+    {
+      title: "Published",
+      value: published,
+      icon: Clock,
+      bg: "bg-yellow-400/40",
+      textColor: "text-yellow-500",
+      footer: `${published.thisWeek - published.lastWeek >= 0 ? "+" : ""}${
+        published.thisWeek - published.lastWeek
+      } from last week`,
     },
-    icon: CircleDot,
-    bg: "bg-orange-400/40",
-    textColor: "text-orange-500",
-    footer: `+${8 - 6} updated this week`,
-  },
-];
+    {
+      title: "Draft",
+      value: draft,
+      icon: CircleDot,
+      bg: "bg-orange-400/40",
+      textColor: "text-orange-500",
+      footer: `${draft.thisWeek - draft.lastWeek >= 0 ? "+" : ""}${
+        draft.thisWeek - draft.lastWeek
+      } updated this week`,
+    },
+  ];
+});
+
+const clearFilters = () => {
+  searchTerm.value = "";
+  selectedCategory.value = null;
+  selectedDate.value = null;
+
+
+  announcementStore.getAnnouncement();
+
+}
+
+
+
 </script>
 
 <template>
   <div class="w-full mx-auto">
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div
+      class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"
+      v-if="isLoading"
+    >
+      <Skeleton
+        v-for="n in 3"
+        :key="n"
+        class="h-40 w-full bg-gray-200 rounded-md"
+      />
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4" v-else>
       <DashboardStatsCard
-        v-for="stat in stats"
+        v-for="stat in announcementStats"
         :key="stat.title"
         :stat="stat"
       />
     </div>
 
     <div class="w-full flex flex-col lg:flex-row gap-4 sm:items-center mt-8">
-      <Input placeholder="Search reports" class="w-full max-w-md bg-white" />
-      <Button>
-         Search
-      </Button>
+      <Input
+        v-model="searchTerm"
+        placeholder="Search announcements"
+        class="w-full max-w-md bg-white"
+      />
+
+      <Button @click="fetchAnnouncements"> Search </Button>
+
       <div class="flex items-center gap-4">
-          <div class="flex items-center gap-2">
-            <Label for="" class="">Category</Label>
-              <Select>
-                <SelectTrigger class="w-full mt-2">
-                  <SelectValue placeholder="Select a status" class="w-full" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="in_progress"> Emergency </SelectItem>
-                  <SelectItem value="assigned"> Community Event </SelectItem>
-                  <SelectItem value="resolved"> Notice </SelectItem>
-                </SelectContent>
-              </Select>
-          </div>
-          <div class="flex items-center gap-2">
-            <Label for="" class="">Date</Label>
-              <Select>
-                <SelectTrigger class="w-full mt-2">
-                  <SelectValue placeholder="Select a status" class="w-full" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="in_progress"> Today </SelectItem>
-                  <SelectItem value="assigned"> This Week </SelectItem>
-                  <SelectItem value="resolved"> This Month </SelectItem>
-                </SelectContent>
-              </Select>
-          </div>
+        <!-- Category Filter -->
+        <div class="flex items-center gap-2">
+          <Label>Category</Label>
+          <Select v-model="selectedCategory">
+            <SelectTrigger class="w-full ">
+              <SelectValue placeholder="Select category" class="w-full" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem
+                v-for="cat in categories"
+                :key="cat.id"
+                :value="cat.id"
+              >
+                {{ cat.category_name }}
+              </SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        <!-- Date Filter -->
+        <div class="flex items-center gap-2">
+          <Label>Date</Label>
+          <Select v-model="selectedDate">
+            <SelectTrigger class="w-full ">
+              <SelectValue placeholder="Select date" class="w-full" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="today">Today</SelectItem>
+              <SelectItem value="this_week">This Week</SelectItem>
+              <SelectItem value="this_month">This Month</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        <!-- Clear Filters Button -->
+        <Button variant="outline" class="" @click="clearFilters">
+          Clear Filters
+        </Button>
       </div>
     </div>
+
     <div class="mt-4">
       <Button asChild>
         <RouterLink to="/admin/announcements/create">+ Add</RouterLink>
       </Button>
     </div>
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
 
-      <!-- Pwede didi ye if mag v-for kit add computed kanan user role -->
-      <AnnouncementCard role="user" />
-      <AnnouncementCard role="admin" />
-      <AnnouncementCard role="admin" />
-      <AnnouncementCard role="admin" />
-      <AnnouncementCard role="admin" />
-      <AnnouncementCard 
-      role="admin" />
-
-      <!-- SAMPLE V-FOR -->
-
-      <!-- an add lang computed import para userRole para ig pass ha announcement card to get whether user or admin -->
-       
-       <!-- <AnnouncementCard 
-       v-for="announcement in announcements" 
-       :key="announcement.id" 
-       :role="userRole" 
-       @readMore="readmorehandler"
-       @edit="edithandler"
-       @delete="deletehandler"
-       /> -->
+    <div
+      class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4"
+      v-if="isLoading"
+    >
+      <Skeleton
+        v-for="n in 6"
+        :key="n"
+        class="h-60 w-full bg-gray-200 rounded-md"
+      />
     </div>
+    <div
+      class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4"
+      v-else
+    >
+      <AnnouncementCard
+        v-for="announcement in announcements"
+        :key="announcement.id"
+        role="admin"
+        :announcement="announcement"
+        @delete="deleteHandler"
+      />
+    </div>
+
+    <ConfirmDeleteDialog />
   </div>
 </template>

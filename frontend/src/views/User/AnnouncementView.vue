@@ -29,7 +29,7 @@ const openNewsDialog = (news) => {
 
 onMounted(async () => {
   await announcementStore.getAnnouncement()
-  newsData.value = announcementStore.announcement
+  newsData.value = announcementStore.announcements
   isLoading.value = false;
 
 })

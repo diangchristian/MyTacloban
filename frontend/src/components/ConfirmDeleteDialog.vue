@@ -1,45 +1,35 @@
 <script setup>
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from '@/components/ui/alert-dialog'
-import { Button } from '@/components/ui/button'
-import { useAuthStore } from '@/stores/auth';
-import { ref } from 'vue';
-
-
-const authStore =  useAuthStore()
-
-const handleClick = () =>{
-    authStore.deleteAccount()
-}
-
-</script>
-
-
-
-
-<template>
-    <AlertDialog v-model:open="isDialogOpen">
+  import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+  } from '@/components/ui/alert-dialog'
+  
+  import { useDialogStore } from '@/stores/dialogStore'
+  
+  const dialogStore = useDialogStore()
+  </script>
+  
+  <template>
+    <AlertDialog v-model:open="dialogStore.open">
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-          <AlertDialogDescription>
-            This action cannot be undone. This will permanently delete your
-            account and remove your data from our servers.
-          </AlertDialogDescription>
+          <AlertDialogTitle>{{ dialogStore.title }}</AlertDialogTitle>
+          <AlertDialogDescription>{{ dialogStore.description }}</AlertDialogDescription>
         </AlertDialogHeader>
+  
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction class="bg-destructive" @click="handleClick"> Continue</AlertDialogAction>
+          <AlertDialogCancel @click="dialogStore.close">Cancel</AlertDialogCancel>
+          <AlertDialogAction class="bg-destructive" @click="dialogStore.confirm">
+            {{ dialogStore.confirmText }}
+          </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
   </template>
+  
