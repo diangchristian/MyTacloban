@@ -16,7 +16,7 @@ import StartList from "@/components/StartList.vue"
         <img
           width="2000"
           height="1442"
-          src="https://tailwindcss.com/plus-assets/img/component-images/dark-project-app-screenshot.png"
+          src="C:\Users\jacob\Desktop\MyTacloban\frontend\src\assets\images\MYTAC.png"
           alt="Product screenshot"
           class="w-2xl max-w-none rounded-xl shadow-xl ring-1 ring-white/10 -ml-78 sm:w-228 md:-ml-4 lg:-ml-84 order-2 lg:order-1"
         />
