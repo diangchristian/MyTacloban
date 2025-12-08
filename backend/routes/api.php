@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminUserMgmtController;
+use App\Http\Controllers\BarangayOfficialController;
 use App\Http\Controllers\UserManagementController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -62,3 +63,23 @@ Route::put('/user-profile/{id}', [UserController::class, 'update']);
 Route::put('/user-profile/{id}', [UserManagementController::class, 'updateRoleStatus']);
 
 Route::delete('/user-profile/{id}', [UserController::class, 'destroy']);
+
+
+// Incase pangamiton nagpahimo na me daan sa ai
+Route::prefix('barangay-officials')->group(function () {
+    Route::get('/', [BarangayOfficialController::class, 'index']);
+    Route::post('/', [BarangayOfficialController::class, 'store']);
+    Route::get('/statistics', [BarangayOfficialController::class, 'statistics']);
+    Route::get('/missing-positions', [BarangayOfficialController::class, 'missingPositions']);
+    Route::get('/barangay/{barangayId}', [BarangayOfficialController::class, 'getByBarangay']);
+    Route::get('/position/{position}', [BarangayOfficialController::class, 'getByPosition']);
+    Route::get('/{id}', [BarangayOfficialController::class, 'show']);
+    Route::put('/{id}', [BarangayOfficialController::class, 'update']);
+    Route::delete('/{id}', [BarangayOfficialController::class, 'destroy']);
+});
+
+// FOR BARANGAY INFORMATIONS ADMIN
+Route::get('/barangays', [BarangayController::class, 'index']);
+Route::post('/barangays', [BarangayController::class, 'store']);
+Route::put('/barangays/{id}', [BarangayController::class, 'update']);
+Route::delete('/barangays/{id}', [BarangayController::class, 'destroy']);
