@@ -187,7 +187,7 @@ function saveEvent() {
   if (selectedFile.value) {
       newEvent.value.bannerImageUrl = bannerPreviewUrl.value;
   }
-
+  
   if (newEvent.value.id !== null) {
     const index = events.value.findIndex(e => e.id === newEvent.value.id);
     if (index !== -1) {
