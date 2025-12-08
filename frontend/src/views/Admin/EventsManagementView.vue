@@ -15,6 +15,7 @@ import {
 import Input from "@/components/ui/input/Input.vue";
 import Textarea from "@/components/ui/textarea/Textarea.vue";
 import Select from "@/components/ui/select/Select.vue";
+import EventsCard from "@/components/cards/EventsCard.vue";
 import SelectContent from "@/components/ui/select/SelectContent.vue";
 import SelectItem from "@/components/ui/select/SelectItem.vue";
 import SelectTrigger from "@/components/ui/select/SelectTrigger.vue";
@@ -172,6 +173,11 @@ function openPreviewDialog(event: any) {
   isPreviewDialogOpen.value = true;
 }
 
+function handleReadMore(event: any) {
+  selectedEvent.value = event;
+  isPreviewDialogOpen.value = true;
+}
+
 function saveEvent() {
   if (!newEvent.value.title || !newEvent.value.date || !newEvent.value.location) {
     alert("Please fill in Title, Date, and Location.");
@@ -181,7 +187,7 @@ function saveEvent() {
   if (selectedFile.value) {
       newEvent.value.bannerImageUrl = bannerPreviewUrl.value;
   }
-
+  
   if (newEvent.value.id !== null) {
     const index = events.value.findIndex(e => e.id === newEvent.value.id);
     if (index !== -1) {

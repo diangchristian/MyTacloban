@@ -109,12 +109,28 @@ const stats = [
       </Button>
     </div>
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
-      <AnnouncementCard />
-      <AnnouncementCard />
-      <AnnouncementCard />
-      <AnnouncementCard />
-      <AnnouncementCard />
-      <AnnouncementCard />
+
+      <!-- Pwede didi ye if mag v-for kit add computed kanan user role -->
+      <AnnouncementCard role="user" />
+      <AnnouncementCard role="admin" />
+      <AnnouncementCard role="admin" />
+      <AnnouncementCard role="admin" />
+      <AnnouncementCard role="admin" />
+      <AnnouncementCard 
+      role="admin" />
+
+      <!-- SAMPLE V-FOR -->
+
+      <!-- an add lang computed import para userRole para ig pass ha announcement card to get whether user or admin -->
+       
+       <!-- <AnnouncementCard 
+       v-for="announcement in announcements" 
+       :key="announcement.id" 
+       :role="userRole" 
+       @readMore="readmorehandler"
+       @edit="edithandler"
+       @delete="deletehandler"
+       /> -->
     </div>
   </div>
 </template>
