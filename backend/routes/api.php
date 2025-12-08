@@ -12,6 +12,7 @@ use App\Http\Controllers\EventCategoryController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\ReportCategoryController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\ReportTimelineController;
 use App\Http\Controllers\ImageUploadController;
 use App\Http\Controllers\UserController;
 
@@ -43,13 +44,19 @@ Route::apiResource('reports', ReportController::class );
 
 Route::get('/announcements/category/{id}', [AnnouncementController::class, 'getByCategory']);
 Route::get('/announcements/date/{filter}', [AnnouncementController::class, 'getByCreatedAt']);
+Route::get('/reports/user-reports/admin     ', [ReportController::class, 'getReports']);
 Route::get('/reports/user-reports/{id}', [ReportController::class, 'getUserReports']);
 Route::get('/search/barangays', [BarangayController::class, 'searchFilter']);
 Route::get('/reports/details/{id}', [ReportController::class, 'getReportDetail' ]);
+Route::get('/report-timelines/{id}', [ReportTimelineController::class, 'getTimelines' ]);
+    
 Route::get('/users', [UserController::class, 'index']);
 
 Route::post('/upload-image', [ImageUploadController::class, 'store']);
 Route::post('/upload-images', [ImageUploadController::class, 'storeMultiple']);
+Route::post('/report-timelines', [ReportTimelineController::class, 'store' ]);
+
+
 
 Route::put('/user-profile/{id}', [UserController::class, 'update']);
 Route::put('/user-profile/{id}', [UserManagementController::class, 'updateRoleStatus']);
