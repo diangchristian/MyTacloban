@@ -81,7 +81,7 @@ export const useSubmitReport = defineStore('submitReport', {
         
 
         async getUserReports(){
-            const {data} = await axios.get('/api/reports/user-reports/1')
+            const {data} = await axios.get('/api/reports/user-reports/3')
             this.reports = data
             console.log(this.reports)
         },

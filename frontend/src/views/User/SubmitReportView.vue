@@ -25,7 +25,7 @@ const otherIssueText = ref('');
 const requiresOtherInput = computed(() => selectedCategory.value === 6);
 
 const formData = reactive({
-    user_id: 1,
+    user_id: 3,
     title:"",
     category: "",
     coordinates: "",
