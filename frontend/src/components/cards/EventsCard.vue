@@ -7,7 +7,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-import { defineProps } from "vue"; 
 import { Clock, MapPin, Calendar } from "lucide-vue-next";
 import Button from "../ui/button/Button.vue";
 
@@ -15,12 +14,13 @@ const props = defineProps({
   event: {
     type: Object,
     required: true,
-   
+
     validator: (value) => {
-        return ['title', 'location', 'date', 'time', 'category', 'description'].every(key => key in value);
+      return ['title', 'location', 'event_date', 'event_time', 'description', 'content', 'image']
+        .every(key => key in value);
     }
   },
- 
+
   onReadMore: {
     type: Function,
     required: true,
@@ -30,25 +30,24 @@ const props = defineProps({
 
 <template>
   <Card class="m-0 border-l-4 border-green-400">
-    
-    <div v-if="event.bannerImageUrl" class="relative overflow-hidden h-40">
+
+    <!-- Event image -->
+    <div v-if="event.image" class="relative overflow-hidden h-40">
       <img
-        :src="event.bannerImageUrl"
+        :src="event.image"
         :alt="event.title"
         class="h-full w-full object-cover"
       />
     </div>
+
     <div v-else class="h-20 bg-green-50/50 flex items-center justify-center">
-        <span class="text-sm text-gray-500 italic">No Banner Image</span>
+      <span class="text-sm text-gray-500 italic">No Image Available</span>
     </div>
+
     <CardHeader>
       <CardTitle class="text-md">
-        <div class="mb-2">
-          <span class="bg-green-500/15 px-2 py-1 text-xs rounded-lg text-green-700">
-            {{ event.category }}
-          </span>
-        </div>
 
+        <!-- Title -->
         {{ event.title }}
 
         <div class="flex text-gray-600 mt-2 items-center gap-2">
@@ -57,20 +56,22 @@ const props = defineProps({
         </div>
       </CardTitle>
 
-      <CardDescription class="mt-2 line-clamp-2"> 
+      <!-- Description -->
+      <CardDescription class="mt-2 line-clamp-2">
         {{ event.description }}
       </CardDescription>
     </CardHeader>
 
     <CardContent class="-mt-1 space-y-2">
+
       <div class="flex text-gray-600 items-center gap-2">
         <Calendar class="size-4" />
-        <p class="text-sm font-light">{{ event.date }}</p>
+        <p class="text-sm font-light">{{ event.event_date }}</p>
       </div>
 
       <div class="flex text-gray-600 items-center gap-2">
         <Clock class="size-4" />
-        <p class="text-sm font-light">{{ event.time }}</p>
+        <p class="text-sm font-light">{{ event.event_time }}</p>
       </div>
 
       <Button 

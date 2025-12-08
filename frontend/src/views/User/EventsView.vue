@@ -10,90 +10,34 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import {useEventStore} from "@/stores/events"
+import { useEventStore } from "@/stores/events";
 import { storeToRefs } from "pinia";
 
-
-const eventStore = useEventStore()
-// const {events} = storeToRefs(eventStore)
-
+const eventStore = useEventStore();
+const { events } = storeToRefs(eventStore);
 
 onMounted(() => {
-  eventStore.getEvents()
-})
-
-const events = [
-  { 
-    category: "Health", 
-    title: "Free Medical Mission", 
-    location: "Barangay 50 Covered Court", 
-    description: "Free medical services for all residents.",
-    content: "The City Health Office is sponsoring a massive free medical mission offering consultations, dental check-ups, minor surgery, and free medicines for all residents of Barangay 50 and surrounding areas. Please bring any existing medical records. First come, first served.",
-    time: "8:00 AM – 3:00 PM", 
-    date: "2025-11-19" 
-  },
-  { 
-    category: "Sports", 
-    title: "Basketball Finals", 
-    location: "City Gym", 
-    description: "Inter-barangay championship games.",
-    content: "Come and watch the exciting finale of the inter-barangay basketball tournament! The championship game between Barangay 21 and Barangay 6 will determine this year's champion. Tickets are available at the City Youth Affairs Office.",
-    time: "6:00 PM – 10:00 PM", 
-    date: "2025-11-25" 
-  },
-  { 
-    category: "Community", 
-    title: "Clean-Up Drive", 
-    location: "Nula-Tula Seawall", 
-    description: "Join us in keeping our community clean.",
-    content: "The City Environment and Natural Resources Office (CENRO) is organizing a large-scale clean-up drive along the Nula-Tula Seawall. Volunteers are requested to bring gloves and wear appropriate attire. Snacks and water will be provided. Let's protect our coastal environment!",
-    time: "7:00 AM – 11:00 AM", 
-    date: "2025-12-05" 
-  },
-  { 
-    category: "Education", 
-    title: "Scholarship Orientation", 
-    location: "City Hall Lobby", 
-    description: "Information on available scholarships.",
-    content: "An orientation session will be held for students interested in applying for city-funded scholarships for college and vocational courses. Representatives from the City Education Department will discuss eligibility and application requirements. Parents are encouraged to attend.",
-    time: "2:00 PM – 4:00 PM", 
-    date: "2025-12-10" 
-  },
-  { 
-    category: "Festival", 
-    title: "New Year Celebration", 
-    location: "City Plaza", 
-    description: "Welcome the new year!",
-    content: "Ring in the New Year with a spectacular fireworks display and live music at the City Plaza! The event will feature local bands, food stalls, and a countdown to midnight. Gates open at 8:00 PM.",
-    time: "8:00 PM – 1:00 AM", 
-    date: "2026-01-01" 
-  }
-];
+  eventStore.getEvents();
+});
 
 // ---------- Reactive States ----------
-const selectedFilter = ref("All");
+const selectedFilter = ref("All"); // (No category, but kept for future)
 const isFilterOpen = ref(false);
 const isYearDropdownOpen = ref(false);
 
-// Dialog state for event details
+// Dialog state
 const isEventDialogOpen = ref(false);
 const selectedEvent = ref(null);
 
-// ---------- Compute Dynamic Categories ----------
-const FILTER_OPTIONS = computed(() => {
-  const categories = events.map(e => e.category);
-  return ["All", ...new Set(categories)];
-});
+// ---------- Since your DB has NO category ----------
+const FILTER_OPTIONS = ["All"];
 
-// ---------- Filtered Events (Simplified for category filter only) ----------
+// ---------- Filtered Events ----------
 const filteredEvents = computed(() => {
-  return events.filter(e => {
-    const matchesFilter = selectedFilter.value === "All" || e.category === selectedFilter.value;
-    return matchesFilter;
-  });
+  return events.value;
 });
 
-// ---------- Months Array ----------
+// ---------- Months ----------
 const months = [
   "January", "February", "March", "April", "May", "June",
   "July", "August", "September", "October", "November", "December"
@@ -101,22 +45,27 @@ const months = [
 
 // ---------- Available Years ----------
 const availableYears = computed(() => {
-  const years = events.map(e => new Date(e.date).getFullYear());
-  return [...new Set(years)].sort((a,b) => a-b);
+  const years = events.value.map(e => new Date(e.event_date).getFullYear());
+  return [...new Set(years)].sort((a, b) => a - b);
 });
 
 // ---------- Page Turner State ----------
 const currentMonthIndex = ref(new Date().getMonth());
-const currentYearIndex = ref(availableYears.value.indexOf(new Date().getFullYear()) >= 0 ? availableYears.value.indexOf(new Date().getFullYear()) : 0);
+const currentYearIndex = ref(
+  availableYears.value.indexOf(new Date().getFullYear()) >= 0
+    ? availableYears.value.indexOf(new Date().getFullYear())
+    : 0
+);
 
 // ---------- Computed Current Year ----------
 const currentYear = computed(() => availableYears.value[currentYearIndex.value]);
 
-// ---------- Events for Current Month + Year ----------
+// ---------- Events for Current Month ----------
 const eventsForCurrentMonth = computed(() => {
   const monthName = months[currentMonthIndex.value];
+
   return filteredEvents.value.filter(event => {
-    const eventDate = new Date(event.date);
+    const eventDate = new Date(event.event_date);
     return (
       eventDate.getFullYear() === currentYear.value &&
       eventDate.toLocaleString("default", { month: "long" }) === monthName
@@ -129,31 +78,29 @@ function prevMonth() {
   if (currentMonthIndex.value > 0) currentMonthIndex.value--;
   else currentMonthIndex.value = 11;
 }
+
 function nextMonth() {
   if (currentMonthIndex.value < 11) currentMonthIndex.value++;
   else currentMonthIndex.value = 0;
 }
 
-// ---------- Modal Method (Passed to EventsCard via prop) ----------
+// ---------- Modal ----------
 const openEventDialog = (event) => {
   selectedEvent.value = event;
   isEventDialogOpen.value = true;
 };
 </script>
 
+
 <template>
   <div class="space-y-8">
     
     <div class="w-full mx-auto">
       <div class="w-full h-52 overflow-hidden rounded-md relative">
-        <img
-          src="@/assets/images/user-bg.jpg"
-          class="w-full h-full object-cover"
-          alt="Events Banner Background"
-        >
-        <div class="w-full h-full bg-gradient-to-l from-green-600 to-primary/80 absolute top-0 left-0 z-2 flex flex-col justify-center px-8 text-white">
-          <h1 class="text-5xl font-bold">EVENTS</h1>
-          <p class="font-semibold">Upcoming schedules and activities in the city</p>
+        <img src="@/assets/images/user-bg.jpg" class="w-full h-full object-cover" alt="">
+        <div class="w-full h-full bg-gradient-to-l via-green to-primary/70 absolute top-0 left-0 z-2 flex flex-col justify-center px-8 text-white">
+            <h1 class="text-3xl font-bold">EVENTS</h1>
+            <p class="font-semibold">Upcoming schedules and activities in the city</p>
         </div>
       </div>
     </div>
@@ -261,53 +208,35 @@ const openEventDialog = (event) => {
       </div>
 
       <Dialog v-model:open="isEventDialogOpen">
-        <DialogContent class="max-w-2xl max-h-[80vh] overflow-y-auto">
-          
+        <DialogContent class="max-w-2xl w-full overflow-y-auto p-4 rounded-lg">
           <DialogHeader>
-            <div class="space-y-2">
-              <DialogTitle class="text-2xl font-bold text-gray-900">
-                {{ selectedEvent?.title }}
-              </DialogTitle>
-              
-              <div class="flex flex-col gap-1">
-                <div class="flex items-center text-sm text-gray-700">
-                  <Calendar class="size-4 mr-2 text-green-600" />
-                  <span>{{ selectedEvent?.date }}</span>
-                </div>
-                <div class="flex items-center text-sm text-gray-700">
-                  <Clock class="size-4 mr-2 text-green-600" />
-                  <span>{{ selectedEvent?.time }}</span>
-                </div>
-              </div>
-              
-              <div class="text-sm text-green-600 font-bold pt-2">
-                {{ selectedEvent?.category }}
-              </div>
-            </div>
+            <DialogTitle class="text-md font-medium text-gray-900">
+              {{ selectedEvent?.title }}
+            </DialogTitle>
           </DialogHeader>
-          
-          <div class="space-y-4">
-            <DialogDescription class="text-base text-gray-700 leading-relaxed">
-              
-              <p class="font-semibold flex items-center gap-2 mb-1 text-gray-900">
-                <MapPin class="size-4 text-green-600" />
-                Location
-              </p>
-              <p class="mb-4">{{ selectedEvent?.location }}</p>
-              
-              <p class="font-semibold text-gray-900">Full Details</p>
-              <p>{{ selectedEvent?.content }}</p> 
-            </DialogDescription>
-            
-            <div class="flex gap-2 pt-4 border-t">
-              <Button
-                class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white transition-colors"
-                @click="isEventDialogOpen = false"
-              >
-                Close
-              </Button>
+
+          <CardContent class="space-y-2">
+            <div class="flex items-center gap-2 text-gray-600 font-light text-sm">
+              <Calendar class="size-4" /> <span>{{ selectedEvent?.event_date }}</span>
             </div>
-          </div>
+            <div class="flex items-center gap-2 text-gray-600 font-light text-sm">
+              <Clock class="size-4" /> <span>{{ selectedEvent?.event_time }}</span>
+            </div>
+            <div class="flex items-center gap-2 text-gray-600 font-light text-sm">
+              <MapPin class="size-4" /> <span>{{ selectedEvent?.location }}</span>
+            </div>
+
+            <p class="text-gray-700 leading-relaxed">
+              {{ selectedEvent?.content }}
+            </p>
+
+            <Button
+              class="w-full mt-4 px-4 py-2 border rounded-md text-green-600 hover:bg-green-50 transition-colors"
+              @click="isEventDialogOpen = false"
+            >
+              Close
+            </Button>
+          </CardContent>
         </DialogContent>
       </Dialog>
     </div>
