@@ -46,7 +46,7 @@ router.beforeEach(async (to, from, next) => {
 
   // Guest-only pages (login/register)
   if (to.meta.guest && isAuthenticated) {
-    return next({ name: userRole === 'admin' ? 'admin.dashboard' : 'user.dashboard' });
+    return next({ name: userRole === 'Admin' ? 'admin.dashboard' : 'user.dashboard' });
   }
 
   // Protected routes
