@@ -24,9 +24,9 @@ class UserRepository implements UserRepositoryInterface {
                     ", [
                         $data['email'],
                         $data['username'],
-                        $data['fullName'],
+                        $data['full_name'],
                         $data['bio'] ?? null,
-                        $data['profile_image'] ?? null,   
+                        $data['profile_image'] ,   
                         $id
                     ]);
         

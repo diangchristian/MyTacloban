@@ -36,9 +36,9 @@ class UserController extends Controller
         $fields = $request->validate([
             'email'        => "required|email|unique:users,email,$id",
             'username'     => "required|string|min:3|max:20|unique:users,username,$id",
-            'fullName'     => 'required|string|min:2|max:50',
+            'full_name'     => 'required|string|min:2|max:50',
             'bio'          => 'nullable|string',
-            'profile_image'=> 'nullable',  // not required
+            'profile_image'=> 'nullable|string',  // not required
         ]);
         
         $updatedProfile = $this->user->update($fields, $id);
@@ -59,12 +59,14 @@ class UserController extends Controller
     public function destroy($id){
         if($this->user->destroy($id)){
             return response()->json([
-                'message' => 'Account deleted successfully!'
+                'message' => 'Account deleted successfully!',
+                'status' => 'success'
             ]);
         }
 
         return response()->json([
-            'message' => 'Account deleted failed!'
+            'message' => 'Account deleted failed!',
+             'status' => 'failed'
         ]);
     }
 }
