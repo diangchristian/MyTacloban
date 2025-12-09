@@ -85,6 +85,7 @@
   
       <!-- Pagination -->
       <Pagination
+        class="pb-4"
         v-slot="{ page }"
         :items-per-page="perPage"
         :total="total"

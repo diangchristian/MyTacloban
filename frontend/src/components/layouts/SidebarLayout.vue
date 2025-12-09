@@ -30,7 +30,7 @@ const pageTitle = computed(() => {
             <h1 class="ml-4">{{ pageTitle }}</h1>
           </header>
   
-          <section class="flex-1 overflow-y-auto p-4 min-h-0">
+          <section class="flex-1 p-4 min-h-0">
             <slot />
           </section>
         </main>

@@ -161,7 +161,7 @@ const handleSubmit = async () => {
             <Input 
               id="population" 
               v-model="form.population" 
-              type="text"
+              type="number"
               placeholder="Enter population"
               :class="{ 'border-red-500': errors.population }"
             />
@@ -173,7 +173,7 @@ const handleSubmit = async () => {
             <Input 
               id="households" 
               v-model="form.households" 
-              type="text"
+              type="number"
               placeholder="Enter number of households"
               :class="{ 'border-red-500': errors.households }"
             />
