@@ -4,6 +4,27 @@ import AnnouncementCard from "@/components/cards/AnnouncementCard.vue";
 import EventsCard from "@/components/cards/EventsCard.vue";
 import { RouterLink } from "vue-router";
 import { MoveRight } from 'lucide-vue-next';
+import {useAnnouncementStore} from "@/stores/announcements"
+import { onMounted, ref } from "vue";
+import { storeToRefs } from "pinia";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+
+
+const announcementStore = useAnnouncementStore()
+const {announcements} = storeToRefs(announcementStore)
+
+const isNewsDialogOpen = ref(false)
+const selectedItem = ref(null)
+onMounted(() => [
+  announcementStore.getAnnouncement()
+])
+
 
 const dashboardLinks = [
   {
@@ -57,6 +78,14 @@ const events = [
     time: "2:00 PM – 4:00 PM"
   }
 ]
+
+
+const viweAnnouncement = (announcement) => {
+  selectedItem.value = announcement
+  isNewsDialogOpen.value = true
+}
+
+
 </script>
 
 <template>
@@ -91,8 +120,38 @@ const events = [
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-3 space-x-4 space-y-4 gap-4 mt-4">
-          <AnnouncementCard v-for="n in 4" :key="n" />
+          <AnnouncementCard v-for="announcement in announcements.slice(0,3)" 
+              :announcement="announcement"  
+              :key="announcement.id" 
+              @view="viweAnnouncement"
+              />
         </div>
+
+        <Dialog v-model:open="isNewsDialogOpen">
+            <DialogContent class="max-w-2xl max-h-[80vh] overflow-y-auto">
+              <DialogHeader>
+                <DialogTitle class="text-2xl font-bold">
+                  {{ selectedItem?.title }}
+                </DialogTitle>
+                <div class="text-sm text-gray-500">
+                  {{ selectedItem?.date }}
+                </div>
+              </DialogHeader>
+              <div class="space-y-4">
+                <DialogDescription class="text-base text-gray-700 leading-relaxed">
+                  {{ selectedItem?.body }}
+                </DialogDescription>
+                <div class="flex gap-2 pt-4 border-t">
+                  <button 
+                    class="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/90 transition-colors cursor-pointer"
+                    @click="isNewsDialogOpen = false"
+                  >
+                    Close
+                  </button>
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
       </div>
 
       <!-- UPCOMING EVENTS -->

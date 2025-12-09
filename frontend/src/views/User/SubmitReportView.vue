@@ -8,6 +8,7 @@ import Input from '@/components/ui/input/Input.vue';
 import {useUploadStore} from '@/stores/upload'
 import {useCategoriesStore} from '@/stores/categories'
 import {useSubmitReport} from '@/stores/submitReport'
+import { useAuthStore } from '@/stores/auth'
 import { storeToRefs } from 'pinia';
 import FieldError from '@/components/forms/FieldError.vue';
 
@@ -15,6 +16,9 @@ import FieldError from '@/components/forms/FieldError.vue';
 
 const uploadStore = useUploadStore();
 const categoriesStore = useCategoriesStore()
+const authStore = useAuthStore()      // access auth store
+const userId = authStore.user?.id     
+
 
 const submitReportStore = useSubmitReport()
 const {errors} = storeToRefs(useSubmitReport())
@@ -24,8 +28,11 @@ const selectedCategory = ref(null)
 const otherIssueText = ref('');
 const requiresOtherInput = computed(() => selectedCategory.value === 6);
 
+
+
+
 const formData = reactive({
-    user_id: 3,
+    user_id: userId,
     title:"",
     category: "",
     coordinates: "",
@@ -39,7 +46,7 @@ const resetForm = () => {
   otherIssueText.value = '';
   uploadStore.clearUploadedFiles(); // assuming you have a method to clear uploaded files
   Object.assign(formData, {
-    user_id: 1,           // keep user_id if fixed
+    user_id: userId,           // keep user_id if fixed
     title: '',
     category: '',
     coordinates: '',

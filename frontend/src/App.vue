@@ -19,7 +19,7 @@ const layouts = {
 </script>
 
 <template>
-  <component :is="layouts[route.meta.layout || 'default']">
+  <component :is="layouts[route.meta.layout || 'noLayout']">
     <RouterView />  
   </component>
   <Toaster

@@ -2,6 +2,7 @@ import axios from 'axios'
 import { defineStore } from 'pinia'
 import { toast } from 'vue-sonner'
 import { Toaster } from 'sonner'
+import { useAuthStore } from '@/stores/auth'
 
 
 
@@ -56,8 +57,6 @@ export const useSubmitReport = defineStore('submitReport', {
         async submitReport(formData) {
             try {
               const response = await axios.post('/api/reports', formData);
-          
-          
               toast.success(response.data.message || 'Report submitted successfully!');
                 this.errors = {}
               return true; 
@@ -79,7 +78,9 @@ export const useSubmitReport = defineStore('submitReport', {
         
 
         async getUserReports(){
-            const {data} = await axios.get('/api/reports/user-reports/3')
+            const authStore = useAuthStore()      // access auth store
+            const userId = authStore.user?.id   
+            const {data} = await axios.get(`/api/reports/user-reports/${userId}`)
             this.reports = data
             console.log(this.reports)
         },

@@ -13,6 +13,9 @@ import { Input } from '@/components/ui/input'
 import { useAuthStore } from "@/stores/auth"
 import { reactive } from "vue"
 import { RouterLink } from "vue-router"
+import FieldError from "./FieldError.vue"
+import { storeToRefs } from "pinia"
+
 
 const props = defineProps<{
   class?: HTMLAttributes["class"]
@@ -20,18 +23,23 @@ const props = defineProps<{
 
 
 const authStore = useAuthStore();
-
+const {errors} = storeToRefs(authStore)
 const formData = reactive({
   email: '',
   password: ''
 })
 
 
+const handleSubmit = () => {
+  authStore.Authenticate('login',formData )
+}
+
+
 
 </script>
 
 <template>
-  <form :class="cn('flex flex-col gap-6', props.class)" @submit.prevent="">
+  <form :class="cn('flex flex-col gap-6', props.class)" @submit.prevent="handleSubmit">
     <FieldGroup>
       <div class="flex flex-col items-center gap-1 text-center">
         <h1 class="text-2xl font-bold">
@@ -45,7 +53,8 @@ const formData = reactive({
         <FieldLabel for="email">
           Email
         </FieldLabel>
-        <Input id="email" type="email" placeholder="m@example.com" required v-model="formData.email" />
+        <Input id="email" type="email" placeholder="m@example.com"  v-model="formData.email" />
+        <FieldError v-if="errors.email" :errorMessage="errors.email[0]"/>
       </Field>
       <Field>
         <div class="flex items-center">
@@ -59,14 +68,15 @@ const formData = reactive({
             Forgot your password?
           </a>
         </div>
-        <Input id="password" type="password" required v-model="formData.password" />
+        <Input id="password" type="password"  v-model="formData.password" />
+        <FieldError v-if="errors.password" :errorMessage="errors.password[0]"/>
       </Field>
       <Field>
         <Button type="submit">
           Login
         </Button>
       </Field>
-      <RouterLink>Don't have an account?<span></span></RouterLink>
+      <p class="text-sm">Don't have an account?<span><RouterLink to="/register" class="underline text-primary"> Register</RouterLink></span></p>
     </FieldGroup>
   </form>
 </template>

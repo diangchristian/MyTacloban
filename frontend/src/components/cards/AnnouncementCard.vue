@@ -75,7 +75,7 @@ const categoryClass = computed(() => {
                 <Button variant="destructive" class="cursor-pointer" @click="$emit('delete', announcement)">Delete</Button>
             </template>
             <template v-else>
-                <Button variant="outline" class="cursor-pointer">Read More</Button>
+                <Button variant="outline" class="cursor-pointer" @click="$emit('view', announcement)" >Read More</Button>
             </template>
         </CardContent>
     </Card>

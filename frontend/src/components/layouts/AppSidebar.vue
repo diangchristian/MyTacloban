@@ -15,6 +15,14 @@ import NavUser from "./NavUser.vue"
 import getNavigations from "@/utils/navigations.js"
 import { useRoute } from "vue-router"
 import { RouterLink } from "vue-router"
+import {useAuthStore} from "@/stores/auth"
+import { storeToRefs } from "pinia"
+
+
+const authStore = useAuthStore()
+const {user} = storeToRefs(authStore)
+
+
 
 const route = useRoute();
 // Menu items.
@@ -70,7 +78,7 @@ const isActive = (navPath) => {
      
     </SidebarContent>
     <SidebarFooter>
-        <NavUser :user="data.user" />
+        <NavUser :user="user" />
     </SidebarFooter>
   </Sidebar>
 </template>

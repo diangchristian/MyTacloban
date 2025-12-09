@@ -1,6 +1,7 @@
 import HomeView from '../views/HomeView.vue'
 import LoginView from '@/views/Auth/LoginView.vue'
 import RegisterView from '@/views/Auth/RegisterView.vue'
+import UnauthorizedView from '@/views/Error/UnauthorizedView.vue'
 
 export default [
     {
@@ -20,5 +21,11 @@ export default [
         name: 'register',
         component: RegisterView,
         meta: {guest: true, layout: 'noLayout'}
+      },
+      {
+        path: '/unauthorized',
+        name: 'unauthorized',
+        component: UnauthorizedView,
+        meta: {layout: 'noLayout'}
       },
 ]

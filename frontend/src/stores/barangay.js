@@ -17,6 +17,7 @@ export const useBarangayStore = defineStore('barangay', {
       try {
         const { data } = await axios.get("/api/barangays")
         this.barangays = data
+        console.log( this.barangays)
       } catch (error) {
         this.errors = error.response?.data || { message: "Error fetching barangays" }
       } finally {

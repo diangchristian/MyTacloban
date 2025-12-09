@@ -23,7 +23,7 @@ import SignupForm from "@/components/forms/SignupForm.vue"
     </div>
     <div class="bg-muted relative hidden lg:block">
       <img
-        src="https://placehold.co/600x400"
+        src="@/assets/images/MYTAC.png"
         alt="Image"
         class="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
       >

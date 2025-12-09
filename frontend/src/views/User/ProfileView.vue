@@ -14,20 +14,26 @@
   
   const formData = reactive({
     username: user.value?.username || '',
-    fullName: user.value?.fullName || '',
+    full_name: user.value?.full_name || '',
     bio: user.value?.bio || '',
     email: user.value?.email || '',
-    profile_image: null
+    profile_image: null,
+    role: user.value?.role || '',
+    status: user.value?.status || '',
   })
   
   const isSaved = ref(false)
   const selectedFile = ref(null)
   const fileInput = ref(null)
   
-  const profileImageSrc = computed(() =>
-    selectedFile.value ? URL.createObjectURL(selectedFile.value) : null
-  )
-  
+const profileImageSrc = computed(() => {
+  if (selectedFile.value) {
+    return URL.createObjectURL(selectedFile.value)
+  }
+  // fallback to saved profile image from authStore
+  return user.value?.profile_image || null
+})
+
   watch(selectedFile, (newFile, oldFile) => {
     if (oldFile) URL.revokeObjectURL(URL.createObjectURL(oldFile))
   })
@@ -129,7 +135,7 @@
               <input
                 id="firstName"
                 type="text"
-                v-model="formData.fullName"
+                v-model="formData.full_name"
                 class="flex h-10 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm ring-offset-white placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                 placeholder="John"
               />
