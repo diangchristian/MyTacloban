@@ -15,24 +15,28 @@ class AuthController extends Controller
     public function register(Request $request){
         logger($request->all());
         $fields = $request->validate([
-            'name' => 'required|max:255',
+            'full_name' => 'required|max:255',
+            'barangay_id' => 'required',
             'email' => 'required|email|unique:users',
             'password' => 'required|confirmed',
            
         ]);
 
         $user = User::create([
-            'name' => $fields['name'],
+            'username' => $fields['full_name'],
+            'full_name' => $fields['full_name'],
             'email' => $fields['email'],
+            'barangay_id' => $fields['barangay_id'],
             'password' => Hash::make($fields['password']),
             'role' => 'user', 
         ]);
         
-        $token = $user->createToken($request->name);
+        $token = $user->createToken($request->full_name);
         logger($user);
         
         return [
             'user' => $user,
+            'message' => 'Welcome to MyTacloban!',
             'token' => $token->plainTextToken
         ];
     }
@@ -54,11 +58,12 @@ class AuthController extends Controller
             ];
         }
         
-        $token = $user->createToken($user->name);
+        $token = $user->createToken($user->full_name);
 
         
         return [
             'user' => $user,
+            'message' => 'Logged in successfuly!',
             'token' => $token->plainTextToken
         ];
     }

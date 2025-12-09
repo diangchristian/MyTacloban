@@ -63,7 +63,7 @@ Route::post('/report-timelines', [ReportTimelineController::class, 'store' ]);
 
 
 
-Route::put('/user-profile/{id}', [UserController::class, 'update']);
+Route::put('/update/user-profile/{id}', [UserController::class, 'update']);
 Route::put('/user-profile/{id}', [UserManagementController::class, 'updateRoleStatus']);
 
 Route::delete('/user-profile/{id}', [UserController::class, 'destroy']);
