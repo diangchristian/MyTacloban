@@ -12,6 +12,17 @@ class Barangay extends Model
     /** @use HasFactory<\Database\Factories\BarangayFactory> */
     use HasFactory;
 
+    protected $fillable = [
+        'name',
+        'population',
+        'households',
+        'area',
+        'contact_person',
+        'contact_no',
+        'coordinates',
+        'email',
+        'phone_number'
+    ];
 
     public function users(){
         return $this->hasMany(User::class);

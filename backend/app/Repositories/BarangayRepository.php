@@ -36,7 +36,23 @@ class BarangayRepository implements BarangayRepositoryInterface{
             'created_at' => now(),
             'updated_at' => now()
         ]);
-        return DB::insert("INSERT INTO barangays (name, barangay_captain, phone_number, created_at, updated_at) VALUES (?, ?, ?, ?, ?)", array_values($data));
+        
+        return DB::insert(
+            "INSERT INTO barangays (name, population, households, area, contact_person, contact_no, coordinates, email, phone_number, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            [
+                $data['name'],
+                $data['population'] ?? null,
+                $data['households'] ?? null,
+                $data['area'] ?? null,
+                $data['contact_person'],
+                $data['contact_no'] ?? null,
+                $data['coordinates'],
+                $data['email'],
+                $data['phone_number'],
+                $data['created_at'],
+                $data['updated_at']
+            ]
+        );
     }
 
     /**
@@ -44,18 +60,26 @@ class BarangayRepository implements BarangayRepositoryInterface{
      */
     public function update(array $fields, int $id)
     {
-        // Merge the updated_at timestamp
         $data = array_merge($fields, [
             'updated_at' => now(),
         ]);
     
+        $sql = "UPDATE barangays SET name = ?, population = ?, households = ?, area = ?, contact_person = ?, contact_no = ?, coordinates = ?, email = ?, phone_number = ?, updated_at = ? WHERE id = ?";
 
-        $sql = "UPDATE barangays SET name = ?, barangay_captain = ?, phone_number = ?, updated_at = ? WHERE id = ?";
-
-        $values = array_values($data);
-        $values[] = $id;
+        $values = [
+            $data['name'],
+            $data['population'] ?? null,
+            $data['households'] ?? null,
+            $data['area'] ?? null,
+            $data['contact_person'],
+            $data['contact_no'] ?? null,
+            $data['coordinates'],
+            $data['email'],
+            $data['phone_number'],
+            $data['updated_at'],
+            $id
+        ];
     
-        // Execute the raw update
         return DB::update($sql, $values);
     }
     
