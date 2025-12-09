@@ -89,7 +89,7 @@ onBeforeUnmount(() => {
 
         <div class=" flex items-center justify-center">
           <div class="lg:max-w-xl">
-            <Carousel class="relative w-full max-w-xs"  @init-api="setApi">
+            <Carousel class="relative w-full max-w-xs" @init-api="setApi">
               <CarouselContent>
                 <CarouselItem v-for="(step, index) in steps" :key="index">
                   <div class="p-1 ">
@@ -107,9 +107,7 @@ onBeforeUnmount(() => {
                   </div>
                 </CarouselItem>
               </CarouselContent>
-              <CarouselPrevious />
-              <CarouselNext />
-            </Carousel>
+              </Carousel>
           </div>
         </div>
       </div>
