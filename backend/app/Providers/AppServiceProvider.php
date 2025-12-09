@@ -46,6 +46,10 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(
             \App\Contracts\ReportTimelineRepositoryInterface::class, 
             \App\Repositories\ReportTimelineRepository::class);
+
+        $this->app->bind(
+            \App\Contracts\BarangayOfficialRepositoryInterface::class, 
+            \App\Repositories\BarangayOfficialRepository::class);
     }
 
 
