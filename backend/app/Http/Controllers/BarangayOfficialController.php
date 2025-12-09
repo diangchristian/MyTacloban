@@ -46,7 +46,7 @@ class BarangayOfficialController extends Controller
         $validator = Validator::make($request->all(), [
             'barangay_id' => 'required|exists:barangays,id',
             'official_name' => 'required|string|max:255',
-            'position' => ['required', Rule::in(['Captain', 'Councilor', 'SK Chairman', 'Secretary', 'Treasurer'])],
+            'position' => ['required', Rule::in(['captain', 'councilor', 'skchairman', 'secretary', 'treasurer'])],
             'email' => 'nullable|email|max:255',
             'contact_number' => 'nullable|string|max:20',
         ]);

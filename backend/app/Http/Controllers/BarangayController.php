@@ -44,8 +44,14 @@ class BarangayController extends Controller
     public function store(Request $request){
 
         $fields = $request->validate([
-           'name' => 'required|string|max:255',
-            'barangay_captain' => 'required|string|max:255',
+            'name' => 'required|string|max:255',
+            'population' => 'nullable|string|max:255',
+            'households' => 'nullable|string|max:255',
+            'area' => 'nullable|string|max:255',
+            'contact_person' => 'required|string|max:255',
+            'contact_no' => 'nullable|string|max:20',
+            'coordinates' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
             'phone_number' => 'required|string|max:20',
         ]);
 
@@ -62,8 +68,14 @@ class BarangayController extends Controller
     public function update(Request $request, $id){
         $fields = $request->validate([
             'name' => 'required|string|max:255',
-             'barangay_captain' => 'required|string|max:255',
-             'phone_number' => 'required|string|max:20',
+            'population' => 'nullable|string|max:255',
+            'households' => 'nullable|string|max:255',
+            'area' => 'nullable|string|max:255',
+            'contact_person' => 'required|string|max:255',
+            'contact_no' => 'nullable|string|max:20',
+            'coordinates' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'phone_number' => 'required|string|max:20',
          ]);
 
          if($this->barangay->update($fields, $id)){
