@@ -67,7 +67,7 @@ export const useAuthStore = defineStore('auth', {
                     toast.success(data.message)
                     localStorage.setItem('token', data.token);
         
-                    if(data.user.role === 'admin'){
+                    if(data.user.role === 'Admin'){
                         this.router.push({name: "admin.dashboard"});
                     } else {
                         this.router.push({name: "user.dashboard"});
