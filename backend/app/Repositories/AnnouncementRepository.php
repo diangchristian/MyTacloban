@@ -145,10 +145,6 @@ class AnnouncementRepository implements AnnouncementRepositoryInterface {
         return DB::select($sql, $bindings);
     }
 
-    
-
-    
-
 
     //storing values
     public function store(array $data)
