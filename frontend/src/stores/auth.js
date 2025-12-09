@@ -8,6 +8,7 @@ export const useAuthStore = defineStore('auth', {
         return {
             user: null,
             errors: {},
+            userRole: null,
             isLoading: true
             
             
@@ -15,12 +16,10 @@ export const useAuthStore = defineStore('auth', {
     },
 
     getters: {
+        userRole: (state) => state.user?.role?.toLowerCase() || null,
         // Checks if the user object is present (logged in)
         isAuthenticated: (state) => !!state.user,
         
-        // Returns the user's role string or null if not logged in
-        userRole: (state) => state.user ? state.user.role : null,
-
         // Convenience getter to check for admin
         isAdmin: (state) => state.user?.role === 'admin'
     },
@@ -38,7 +37,7 @@ export const useAuthStore = defineStore('auth', {
                     
                     // Assuming a successful response from axios is status 2xx
                     this.user = res.data.user;
-                    console.log(res.data.user)
+                    console.log(this.user)
                 } catch (error) {
                     console.error("Failed to fetch user:", error);
                     // Clear invalid token/state on fetch failure
@@ -52,32 +51,42 @@ export const useAuthStore = defineStore('auth', {
 
 
         async Authenticate(apiRoute, formData){
-            console.log('clicking authenticate')
- 
-            const loginReq = await axios.post(`/api/${apiRoute}`, formData)
-            const data = await loginReq.data
-            console.log(data)
-            if(data.errors){
-                this.errors = data.errors
-
-            }else{
-                this.user = data.user
-                this.errors = {}
-                localStorage.setItem('token', loginReq.data.token)
-                console.log('Login response:', loginReq.data)
-
-                if(data.user.role === 'admin'){
-                    this.router.push({name: "AdminPanel"})
-                }else{
-
-                    this.router.push({name: "dashboard"})
-
+            try {
+                console.log('Sending data:', formData);
+        
+                const response = await axios.post(`/api/${apiRoute}`, formData);
+                const data = response.data;
+                console.log('Login response:', data);
+        
+                if(data.errors){
+                    this.errors = data.errors;
+                } else {
+                    this.user = data.user;
+                    this.userRole = data.user.role.toLowerCase()
+                    this.errors = {};
+                    toast.success(data.message)
+                    localStorage.setItem('token', data.token);
+        
+                    if(data.user.role === 'admin'){
+                        this.router.push({name: "admin.dashboard"});
+                    } else {
+                        this.router.push({name: "user.dashboard"});
+                    }
+                }
+            } catch (error) {
+                if (error.response && error.response.status === 422) {
+                    this.errors = error.response.data.errors; // show Laravel validation errors
+                } else {
+                    console.error(error);
                 }
             }
+
+            console.log(this.errors)
         },
+        
 
         async updateUserProfile(formData){
-            const {data} = await axios.put('/api/user-profile/1', formData)
+            const {data} = await axios.put(`/api/update/user-profile/${this.user.id}`, formData)
 
             if(data){
                 this.user = data.user
@@ -88,9 +97,11 @@ export const useAuthStore = defineStore('auth', {
 
 
         async  deleteAccount(){
-            const id = 2
-            const data = await axios.delete(`/api/user-profile/${id}`)
-            console.log(data)
+            const data = await axios.delete(`/api/user-profile/${this.user.id}`)
+            
+            if(data.status === 'succcess'){
+                this.router.push({name: "home"})
+            }
         },
         
         async logout(redirect = true){ // Added an optional redirect parameter

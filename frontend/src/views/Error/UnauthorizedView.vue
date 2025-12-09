@@ -5,9 +5,11 @@ import { RouterLink } from 'vue-router';
 
 <template>
     <main>
-        <h1>404</h1>
-        <p>Unauthorized Access</p>
-        <RouterLink :to="{name: 'home'}">Go to home</RouterLink>
+        <div class="mt-22">
+            <h1>404</h1>
+            <p>Unauthorized Access</p>
+            <RouterLink :to="{name: 'home'}">Go to home</RouterLink>
+        </div>
     </main>
 
 </template>

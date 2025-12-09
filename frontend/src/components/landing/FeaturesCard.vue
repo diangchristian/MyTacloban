@@ -14,19 +14,19 @@ import FeatruesIcon from "./FeatruesIcon.vue";
 const features = [
     {
         title: "Services",
-        description : "Sed bibendum, sapien a venenatis fermentum, mauris augue cursus turpis, vitae elementum massa orci sit amet massa. Aliquam erat volutpat. Nunc euismod bibendum augue."
+        description : "Access public services with ease—from requesting documents to accessing local assistance programs. Submit requirements online, track progress, and get notified once your request is processed."
     },
     {
         title: "Announcements",
-        description : "Sed bibendum, sapien a venenatis fermentum, mauris augue cursus turpis, vitae elementum massa orci sit amet massa. Aliquam erat volutpat. Nunc euismod bibendum augue."
+        description : "Stay updated with the latest news from the city. View weather alerts, road advisories, community warnings, and important government updates—all in one place."
     },
     {
         title: "Events",
-        description : "Sed bibendum, sapien a venenatis fermentum, mauris augue cursus turpis, vitae elementum massa orci sit amet massa. Aliquam erat volutpat. Nunc euismod bibendum augue."
+        description : "Discover upcoming activities happening around Tacloban. From festivals and public gatherings to government-led programs, you can browse event details, schedules, and locations effortlessly."
     },
     {
         title: "Barangay",
-        description : "Sed bibendum, sapien a venenatis fermentum, mauris augue cursus turpis, vitae elementum massa orci sit amet massa. Aliquam erat volutpat. Nunc euismod bibendum augue."
+        description : "Connect with your barangay effortlessly. View barangay officials, programs, hotlines, community schedules, and updates. You can also report community concerns directly for faster local response."
     },
 ]
 
@@ -37,7 +37,7 @@ const features = [
 
 <template>
    <div v-for="feature in features" :key="feature.title">
-        <Card>
+        <Card class="h-full">
             <CardHeader>
                 <CardTitle class="text-xl">
                     <div class="size-20  rounded-lg mb-2">

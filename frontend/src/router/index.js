@@ -5,6 +5,7 @@ import AnnoucementView from '@/views/User/AnnouncementView.vue'
 
 import { useAuthStore } from '../stores/auth'
 import UnauthorizedView from '@/views/Error/UnauthorizedView.vue'
+import NotFoundView from '@/views/Error/NotFoundView.vue'
 import userRoutes from "./user.js"
 import publicRoutes from "./public.js"
 import adminRoutes from "./admin.js"
@@ -13,12 +14,11 @@ const routes = [
   ...userRoutes,
   ...adminRoutes,
   {
-    path: '/unauthorized',
-    name: 'unauthorized',
-    component: UnauthorizedView,
-
-  },
-
+    path: '/:pathMatch(.*)*',
+    name: 'NotFound',
+    component: NotFoundView,
+    meta: {layout: 'noLayout'}
+  }
 ]
 
 const router = createRouter({
@@ -28,37 +28,39 @@ const router = createRouter({
 
 
 
-// router.beforeEach(async (to, from, next) => {
-//   const authStore = useAuthStore()
+router.beforeEach(async (to, from, next) => {
+  const authStore = useAuthStore();
 
-//   // Ensure user is loaded if token exists
-//   if (!authStore.user && localStorage.getItem('token')) {
-//     await authStore.getUser()
-//   }
+  // If token exists but user not loaded yet
+  if (!authStore.user && localStorage.getItem('token')) {
+    try {
+      await authStore.getUser(); // ensures user is loaded
+    } catch {
+      // optional: clear token if getUser fails
+      localStorage.removeItem('token');
+    }
+  }
 
-//   const isAuthenticated = authStore.isAuthenticated
-//   const userRole = authStore.userRole
+  const isAuthenticated = authStore.isAuthenticated;
+  const userRole = authStore.userRole;
 
-//   // Guest-only pages (like login/register)
-//   if (to.meta.guest && isAuthenticated) {
-//     return next({ name: userRole === 'admin' ? 'AdminPanel' : 'dashboard' })
-//   }
+  // Guest-only pages (login/register)
+  if (to.meta.guest && isAuthenticated) {
+    return next({ name: userRole === 'admin' ? 'admin.dashboard' : 'user.dashboard' });
+  }
 
-//   // Protected routes (require auth)
-//   if (to.meta.requiresAuth && !isAuthenticated) {
-//     return next({ name: 'login' })
-//   }
+  // Protected routes
+  if (to.meta.requiresAuth && !isAuthenticated) {
+    return next({ name: 'login' });
+  }
 
-//   //Role-based protection
-//   if (to.meta.role && !to.meta.role.includes(userRole)) {
-//     return next({ name: 'unauthorized' })
-//   }
+  // Role-based routes
+  if (to.meta.role && !to.meta.role.includes(userRole)) {
+    return next({ name: 'unauthorized' });
+  }
 
-//   // ✅ Allow access
-//   next()
-// })
-
-
+  next();
+});
 
 
 export default router

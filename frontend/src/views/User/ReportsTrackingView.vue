@@ -9,9 +9,15 @@ import ReportsDetailsModal from "@/components/ReportsDetailsModal.vue";
 import {useSubmitReport} from "@/stores/submitReport"
 import { storeToRefs } from "pinia";
 import { debounce } from 'lodash';
+import { useAuthStore } from '@/stores/auth'
+
 
 const submitReportStore = useSubmitReport()
 const {reports} = storeToRefs(useSubmitReport())
+
+const authStore = useAuthStore()      // access auth store
+const userId = authStore.user?.id   
+
 
 onMounted(async() => {
   submitReportStore.getUserReports()
@@ -26,7 +32,7 @@ const search = ref('')
 
 
 const debouncedSearch = debounce(() => {
-  submitReportStore.getBySearchAndStatusUser(search.value, 'all' , 1);
+  submitReportStore.getBySearchAndStatusUser(search.value, 'all' ,userId );
 }, 500);
 
 function updateScreen(){
@@ -71,8 +77,8 @@ function handleSearch(){
 
         <div class="flex flex-wrap gap-2">
           <Button  type="button" @click="submitReportStore.getUserReports()"  class="cursor-pointer">All Reports ({{ reports.length }})</Button>
-          <Button  type="button"  @click="submitReportStore.getBySearchAndStatusUser(search, 'pending', 1)"    variant="outline" class="cursor-pointer">Pending ({{submitReportStore.pendingCount}})</Button>
-          <Button type="button"  @click="submitReportStore.getBySearchAndStatusUser(search, 'in_progress', 1)"  variant="outline" class="cursor-pointer">In Progress ({{submitReportStore.inProgressCount}})</Button>
+          <Button  type="button"  @click="submitReportStore.getBySearchAndStatusUser(search, 'pending', userId)"    variant="outline" class="cursor-pointer">Pending ({{submitReportStore.pendingCount}})</Button>
+          <Button type="button"  @click="submitReportStore.getBySearchAndStatusUser(search, 'in_progress', userId)"  variant="outline" class="cursor-pointer">In Progress ({{submitReportStore.inProgressCount}})</Button>
         </div>
       </div>
       </form>
