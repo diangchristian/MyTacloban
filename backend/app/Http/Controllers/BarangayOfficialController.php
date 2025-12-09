@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\BarangayOfficial;
+use App\Contracts\BarangayOfficialRepositoryInterface;
 use App\Models\Barangay;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -10,30 +10,20 @@ use Illuminate\Validation\Rule;
 
 class BarangayOfficialController extends Controller
 {
+    protected $barangayOfficialRepository;
+
+    public function __construct(BarangayOfficialRepositoryInterface $barangayOfficialRepository)
+    {
+        $this->barangayOfficialRepository = $barangayOfficialRepository;
+    }
+
     /**
      * Display a listing of barangay officials.
      */
     public function index(Request $request)
     {
-        $query = BarangayOfficial::with(['barangay']);
-
-        // Filter by barangay if provided
-        if ($request->has('barangay_id')) {
-            $query->where('barangay_id', $request->barangay_id);
-        }
-
-        // Filter by position if provided
-        if ($request->has('position')) {
-            $query->where('position', $request->position);
-        }
-
-        // Search by name
-        if ($request->has('search')) {
-            $search = $request->search;
-            $query->where('official_name', 'LIKE', "%{$search}%");
-        }
-
-        $officials = $query->orderBy('position')->orderBy('official_name')->paginate(15);
+        $filters = $request->only(['barangay_id', 'position', 'search']);
+        $officials = $this->barangayOfficialRepository->getAll($filters);
 
         return response()->json($officials);
     }
@@ -60,11 +50,7 @@ class BarangayOfficialController extends Controller
 
         // Check if position already exists for this barangay (except Councilor which can have multiple)
         if ($request->position !== 'Councilor') {
-            $existingOfficial = BarangayOfficial::where('barangay_id', $request->barangay_id)
-                ->where('position', $request->position)
-                ->first();
-
-            if ($existingOfficial) {
+            if ($this->barangayOfficialRepository->positionExists($request->barangay_id, $request->position)) {
                 return response()->json([
                     'message' => "A {$request->position} already exists for this barangay",
                     'errors' => [
@@ -74,11 +60,11 @@ class BarangayOfficialController extends Controller
             }
         }
 
-        $official = BarangayOfficial::create($request->all());
+        $official = $this->barangayOfficialRepository->store($request->all());
 
         return response()->json([
             'message' => 'Barangay official created successfully',
-            'data' => $official->load('barangay')
+            'data' => $official
         ], 201);
     }
 
@@ -87,7 +73,7 @@ class BarangayOfficialController extends Controller
      */
     public function show($id)
     {
-        $official = BarangayOfficial::with(['barangay'])->find($id);
+        $official = $this->barangayOfficialRepository->find($id);
 
         if (!$official) {
             return response()->json([
@@ -103,7 +89,7 @@ class BarangayOfficialController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $official = BarangayOfficial::find($id);
+        $official = $this->barangayOfficialRepository->find($id);
 
         if (!$official) {
             return response()->json([
@@ -130,12 +116,7 @@ class BarangayOfficialController extends Controller
         if ($request->has('position') && $request->position !== 'Councilor') {
             $barangayId = $request->barangay_id ?? $official->barangay_id;
             
-            $existingOfficial = BarangayOfficial::where('barangay_id', $barangayId)
-                ->where('position', $request->position)
-                ->where('id', '!=', $id)
-                ->first();
-
-            if ($existingOfficial) {
+            if ($this->barangayOfficialRepository->positionExists($barangayId, $request->position, $id)) {
                 return response()->json([
                     'message' => "A {$request->position} already exists for this barangay",
                     'errors' => [
@@ -145,11 +126,11 @@ class BarangayOfficialController extends Controller
             }
         }
 
-        $official->update($request->all());
+        $updated = $this->barangayOfficialRepository->update($request->all(), $id);
 
         return response()->json([
             'message' => 'Barangay official updated successfully',
-            'data' => $official->load('barangay')
+            'data' => $updated
         ]);
     }
 
@@ -158,15 +139,13 @@ class BarangayOfficialController extends Controller
      */
     public function destroy($id)
     {
-        $official = BarangayOfficial::find($id);
+        $result = $this->barangayOfficialRepository->destroy($id);
 
-        if (!$official) {
+        if (!$result) {
             return response()->json([
                 'message' => 'Barangay official not found'
             ], 404);
         }
-
-        $official->delete();
 
         return response()->json([
             'message' => 'Barangay official deleted successfully'
@@ -186,10 +165,7 @@ class BarangayOfficialController extends Controller
             ], 404);
         }
 
-        $officials = BarangayOfficial::where('barangay_id', $barangayId)
-            ->orderByRaw("FIELD(position, 'Captain', 'SK Chairman', 'Secretary', 'Treasurer', 'Councilor')")
-            ->orderBy('official_name')
-            ->get();
+        $officials = $this->barangayOfficialRepository->getByBarangay($barangayId);
 
         return response()->json([
             'barangay' => $barangay,
@@ -202,50 +178,9 @@ class BarangayOfficialController extends Controller
      */
     public function statistics()
     {
-        $stats = [
-            'total_officials' => BarangayOfficial::count(),
-            'by_position' => BarangayOfficial::selectRaw('position, COUNT(*) as count')
-                ->groupBy('position')
-                ->get(),
-            'by_barangay' => BarangayOfficial::with('barangay:id,name')
-                ->selectRaw('barangay_id, COUNT(*) as count')
-                ->groupBy('barangay_id')
-                ->get(),
-            'barangays_with_complete_officials' => $this->getCompleteBarangays(),
-            'barangays_missing_officials' => $this->getIncompleteBarangays()
-        ];
+        $stats = $this->barangayOfficialRepository->getStatistics();
 
         return response()->json($stats);
-    }
-
-    /**
-     * Get barangays with all required positions filled
-     */
-    private function getCompleteBarangays()
-    {
-        $requiredPositions = ['Captain', 'SK Chairman', 'Secretary', 'Treasurer'];
-        
-        $barangays = Barangay::withCount(['officials as has_all_positions' => function($query) use ($requiredPositions) {
-            $query->whereIn('position', $requiredPositions)
-                  ->selectRaw('COUNT(DISTINCT position)');
-        }])->having('has_all_positions', '=', count($requiredPositions))->count();
-
-        return $barangays;
-    }
-
-    /**
-     * Get barangays with missing required positions
-     */
-    private function getIncompleteBarangays()
-    {
-        $requiredPositions = ['Captain', 'SK Chairman', 'Secretary', 'Treasurer'];
-        
-        $barangays = Barangay::withCount(['officials as has_all_positions' => function($query) use ($requiredPositions) {
-            $query->whereIn('position', $requiredPositions)
-                  ->selectRaw('COUNT(DISTINCT position)');
-        }])->having('has_all_positions', '<', count($requiredPositions))->count();
-
-        return $barangays;
     }
 
     /**
@@ -253,24 +188,7 @@ class BarangayOfficialController extends Controller
      */
     public function missingPositions()
     {
-        $requiredPositions = ['Captain', 'SK Chairman', 'Secretary', 'Treasurer'];
-        $barangays = Barangay::with('officials')->get();
-        
-        $result = [];
-        
-        foreach ($barangays as $barangay) {
-            $existingPositions = $barangay->officials->pluck('position')->toArray();
-            $missingPositions = array_diff($requiredPositions, $existingPositions);
-            
-            if (!empty($missingPositions)) {
-                $result[] = [
-                    'barangay_id' => $barangay->id,
-                    'barangay_name' => $barangay->name,
-                    'missing_positions' => array_values($missingPositions),
-                    'existing_officials_count' => count($existingPositions)
-                ];
-            }
-        }
+        $result = $this->barangayOfficialRepository->getMissingPositions();
 
         return response()->json($result);
     }
@@ -288,10 +206,7 @@ class BarangayOfficialController extends Controller
             ], 400);
         }
 
-        $officials = BarangayOfficial::with('barangay')
-            ->where('position', $position)
-            ->orderBy('official_name')
-            ->get();
+        $officials = $this->barangayOfficialRepository->getByPosition($position);
 
         return response()->json($officials);
     }
