@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('barangays', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('population');
-            $table->string('households');
-            $table->string('area');
+            $table->integer('population');
+            $table->integer('households');
+            $table->decimal('area', 10, 2);
             $table->string('contact_person');
             $table->string('contact_no');
             $table->string('coordinates');

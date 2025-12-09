@@ -45,8 +45,8 @@ class BarangayController extends Controller
 
         $fields = $request->validate([
             'name' => 'required|string|max:255',
-            'population' => 'nullable|string|max:255',
-            'households' => 'nullable|string|max:255',
+            'population' => 'nullable|integer',
+            'households' => 'nullable|integer',
             'area' => 'nullable|string|max:255',
             'contact_person' => 'required|string|max:255',
             'contact_no' => 'nullable|string|max:20',
