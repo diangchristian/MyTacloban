@@ -171,7 +171,7 @@ const clearFilters = () => {
 </script>
 
 <template>
-  <div class="w-full mx-auto">
+  <div class="w-full mx-auto pb-4">
     <div
       class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"
       v-if="isLoading"

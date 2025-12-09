@@ -38,111 +38,11 @@ onMounted(async () => [
   submitReportStore.getAllReports()
 ])
 
-
-// const reports = [
-//   {
-//     'id': '#1234',
-//     'category': 'street light',
-//     'title':'Scheduled Water Interruption - District 1',
-//     'description': 'Severe flooding during heavy rain. Water accumulates up to knee level, blocking the road.',
-//     'location': 'Main Road, Barangay 1',
-//     'date': 'November 19, 2025'
-//   },
-//   {
-//     'id': '#4567',
-//     'category': 'flooding',
-//     'title':'Flooding in barangay 95-caibaanan',
-//     'description': 'Severe flooding during heavy rain. Water accumulates up to knee level, blocking the road.',
-//     'location': 'Barangay 95-A Caibaan',
-//     'date': 'November 19, 2025'
-//   },
-//   {
-//     'id': '#1234',
-//     'category': 'street light',
-//     'title':'Scheduled Water Interruption - District 1',
-//     'description': 'Severe flooding during heavy rain. Water accumulates up to knee level, blocking the road.',
-//     'location': 'Main Road, Barangay 1',
-//     'date': 'November 19, 2025'
-//   },
-//   {
-//     'id': '#1234',
-//     'category': 'street light',
-//     'title':'Scheduled Water Interruption - District 1',
-//     'description': 'Severe flooding during heavy rain. Water accumulates up to knee level, blocking the road.',
-//     'location': 'Main Road, Barangay 1',
-//     'date': 'November 19, 2025'
-//   },
-//   {
-//     'id': '#1234',
-//     'category': 'street light',
-//     'title':'Scheduled Water Interruption - District 1',
-//     'description': 'Severe flooding during heavy rain. Water accumulates up to knee level, blocking the road.',
-//     'location': 'Main Road, Barangay 1',
-//     'date': 'November 19, 2025'
-//   },
-//   {
-//     'id': '#4567',
-//     'category': 'flooding',
-//     'title':'Flooding in barangay 95-caibaanan',
-//     'description': 'Severe flooding during heavy rain. Water accumulates up to knee level, blocking the road.',
-//     'location': 'Barangay 95-A Caibaan',
-//     'date': 'November 19, 2025'
-//   },
-//   {
-//     'id': '#1234',
-//     'category': 'street light',
-//     'title':'Scheduled Water Interruption - District 1',
-//     'description': 'Severe flooding during heavy rain. Water accumulates up to knee level, blocking the road.',
-//     'location': 'Main Road, Barangay 1',
-//     'date': 'November 19, 2025'
-//   },
-//   {
-//     'id': '#1234',
-//     'category': 'street light',
-//     'title':'Scheduled Water Interruption - District 1',
-//     'description': 'Severe flooding during heavy rain. Water accumulates up to knee level, blocking the road.',
-//     'location': 'Main Road, Barangay 1',
-//     'date': 'November 19, 2025'
-//   },
-//   {
-//     'id': '#1234',
-//     'category': 'street light',
-//     'title':'Scheduled Water Interruption - District 1',
-//     'description': 'Severe flooding during heavy rain. Water accumulates up to knee level, blocking the road.',
-//     'location': 'Main Road, Barangay 1',
-//     'date': 'November 19, 2025'
-//   },
-//   {
-//     'id': '#4567',
-//     'category': 'flooding',
-//     'title':'Flooding in barangay 95-caibaanan',
-//     'description': 'Severe flooding during heavy rain. Water accumulates up to knee level, blocking the road.',
-//     'location': 'Barangay 95-A Caibaan',
-//     'date': 'November 19, 2025'
-//   },
-//   {
-//     'id': '#1234',
-//     'category': 'street light',
-//     'title':'Scheduled Water Interruption - District 1',
-//     'description': 'Severe flooding during heavy rain. Water accumulates up to knee level, blocking the road.',
-//     'location': 'Main Road, Barangay 1',
-//     'date': 'November 19, 2025'
-//   },
-//   {
-//     'id': '#1234',
-//     'category': 'street light',
-//     'title':'Scheduled Water Interruption - District 1',
-//     'description': 'Severe flooding during heavy rain. Water accumulates up to knee level, blocking the road.',
-//     'location': 'Main Road, Barangay 1',
-//     'date': 'November 19, 2025'
-//   }
-// ]
-
 </script>
 
 <template>
-  <main>
-    <div class="w-full h-screen">
+  <main class="h-full">
+    <div class="w-full">
       <form action="" @submit.prevent>
         <div class="max-w-4xl flex flex-col sm:flex-row gap-4 sm:items-center w-full">
         <Input placeholder="Search reports" class="w-full sm:w-1/2" v-model="search" @keyup="handleSearch"/>
@@ -155,14 +55,14 @@ onMounted(async () => [
       </div>
       </form>
       <PaginatedReports :reports="reports"/>
-      <!-- <div class="grid grid-cols-4 mt-4 gap-4 h-full">
-        <ReportsCard
-            v-for="r in reports"
-            :key="r.id"
-            :report="r"
-          />
-      </div> -->
       <div class="mt-4"></div>
     </div>
   </main>
 </template>
+
+
+<!-- <style  scoped>
+*{
+  border: 1px solid red
+}
+</style> -->

@@ -127,7 +127,7 @@ const handleSubmit = () => {
         <FieldDescription>Please confirm your password.</FieldDescription>
       </Field>
       <Field>
-        <Button type="submit">
+        <Button type="submit" class="cursor-pointer">
           Create Account
         </Button>
       </Field>

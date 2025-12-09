@@ -72,7 +72,7 @@ const handleSubmit = () => {
         <FieldError v-if="errors.password" :errorMessage="errors.password[0]"/>
       </Field>
       <Field>
-        <Button type="submit">
+        <Button type="submit" class="cursor-pointer">
           Login
         </Button>
       </Field>
