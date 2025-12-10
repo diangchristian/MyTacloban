@@ -16,6 +16,7 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ReportTimelineController;
 use App\Http\Controllers\ImageUploadController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\SystemSettingsController;
 
 
 
@@ -54,8 +55,10 @@ Route::get('/reports/user-reports/{id}', [ReportController::class, 'getUserRepor
 Route::get('/search/barangays', [BarangayController::class, 'searchFilter']);
 Route::get('/reports/details/{id}', [ReportController::class, 'getReportDetail' ]);
 Route::get('/report-timelines/{id}', [ReportTimelineController::class, 'getTimelines' ]);
-    
 Route::get('/users', [UserController::class, 'index']);
+Route::get('/system-settings', [SystemSettingsController::class, 'index']);
+
+
 
 Route::post('/upload-image', [ImageUploadController::class, 'store']);
 Route::post('/upload-images', [ImageUploadController::class, 'storeMultiple']);
@@ -65,6 +68,11 @@ Route::post('/report-timelines', [ReportTimelineController::class, 'store' ]);
 
 Route::put('/update/user-profile/{id}', [UserController::class, 'update']);
 Route::put('/user-profile/{id}', [UserManagementController::class, 'updateRoleStatus']);
+Route::put('/system-settings', [SystemSettingsController::class, 'update']);
+
+
+
+
 
 Route::delete('/user-profile/{id}', [UserController::class, 'destroy']);
 

@@ -50,6 +50,10 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(
             \App\Contracts\BarangayOfficialRepositoryInterface::class, 
             \App\Repositories\BarangayOfficialRepository::class);
+        
+        $this->app->bind(
+            \App\Contracts\SystemSettingsRepositoryInterface::class, 
+            \App\Repositories\SystemSettingsRepository::class);
     }
 
 

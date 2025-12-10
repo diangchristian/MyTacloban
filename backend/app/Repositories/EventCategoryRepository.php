@@ -19,7 +19,7 @@ class EventCategoryRepository implements EventCategoryRepositoryInterface {
     public function store($name)
     {
         DB::table('event_categories')->insert([
-            'name' => $name,
+            'category_name' => $name,
             'created_at' => now(),
             'updated_at' => now(),
         ]);
@@ -27,7 +27,7 @@ class EventCategoryRepository implements EventCategoryRepositoryInterface {
 
     public function update($name, $id)
     {
-        $updated = DB::update("UPDATE event_categories SET name = ?, updated_at = ? WHERE id = ?", 
+        $updated = DB::update("UPDATE event_categories SET category_name = ?, updated_at = ? WHERE id = ?", 
         [$name, now(), $id]);
         
         return $updated;

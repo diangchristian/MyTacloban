@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
       
 
         $this->call(BarangaySeeder::class);
+        $this->call(SystemSettingsSeeder::class);
         // $this->call(AnnouncementCategorySeeder::class);
         $this->call(EventCategorySeeder::class);
         $this->call(EventSeeder::class);

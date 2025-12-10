@@ -19,7 +19,7 @@ class ReportCategoryRepository implements ReportCategoryRepositoryInterface {
     public function store($name)
     {
         DB::table('report_categories')->insert([
-            'name' => $name,
+            'category_name' => $name,
             'created_at' => now(),
             'updated_at' => now(),
         ]);
@@ -27,7 +27,7 @@ class ReportCategoryRepository implements ReportCategoryRepositoryInterface {
 
     public function update($name, $id)
     {
-        $updated = DB::update("UPDATE report_categories SET name = ?, updated_at = ? WHERE id = ?", 
+        $updated = DB::update("UPDATE report_categories SET category_name = ?, updated_at = ? WHERE id = ?", 
         [$name, now(), $id]);
         
         return $updated;
