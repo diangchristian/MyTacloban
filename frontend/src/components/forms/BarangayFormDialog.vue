@@ -13,7 +13,7 @@ import {
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import LocationPicker from '@/components/LocationPicker.vue'
+import LocationPicker from '@/components/location/LocationPicker.vue'
 import FieldError from '@/components/forms/FieldError.vue'
 
 const props = defineProps({

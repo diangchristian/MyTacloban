@@ -4,8 +4,8 @@ import { storeToRefs } from "pinia"
 import Button from "@/components/ui/button/Button.vue"
 import { useEventStore } from "@/stores/events"
 import EventFormDialog from "@/components/forms/EventFormDialog.vue"
-import EventPreview from "@/components/EventPreview.vue"
-import EventsTable from "@/components/EventsTable.vue"
+import EventPreview from "@/components/others/EventPreview.vue"
+import EventsTable from "@/components/tables/EventsTable.vue"
 import EventDashboardCard from "@/components/cards/EventDashboardCard.vue"
 import {
   Clock, Calendar, MapPin,

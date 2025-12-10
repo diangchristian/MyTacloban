@@ -1,6 +1,6 @@
 <script setup>
 import { Image } from 'lucide-vue-next';
-import ImagesModal from '@/components/ImagesModal.vue';
+import ImagesModal from '@/components/others/ImagesModal.vue';
 import { ref } from 'vue';
 import mockup1 from '@/assets/images/Mockup.png'
 import mockup2 from '@/assets/images/Mockup2.png'

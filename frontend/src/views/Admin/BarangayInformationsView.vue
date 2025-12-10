@@ -6,7 +6,7 @@ import { useDialogStore } from '@/stores/dialogStore'
 import StatsCard from '@/components/cards/BarangayInfoCard.vue'
 import BarangayFormDialog from '@/components/forms/BarangayFormDialog.vue'
 import OfficialFormDialog from '@/components/forms/OfficialFormDialog.vue'
-import ConfirmDeleteDialog from '@/components/ConfirmDeleteDialog.vue'
+import ConfirmDeleteDialog from '@/components/others/ConfirmDeleteDialog.vue'
 import { Users, Building2, UsersRound, Search, Shield, UserCircle, FileText, Wallet, UserCheck, Star, Plus, Pencil, Trash2 } from 'lucide-vue-next'
 import { toast } from 'vue-sonner'
 import {

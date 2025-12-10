@@ -13,7 +13,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from '@/components/ui/pagination'
-import PaginatedReports from "@/components/PaginatedReports.vue"; 
+import PaginatedReports from "@/components/reports/PaginatedReports.vue"; 
 import { debounce } from 'lodash';
 
 

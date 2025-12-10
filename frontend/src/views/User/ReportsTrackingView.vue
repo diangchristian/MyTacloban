@@ -2,10 +2,10 @@
 import Input from "@/components/ui/input/Input.vue";
 import Button from "@/components/ui/button/Button.vue";
 import ReportsCard from "@/components/cards/ReportsCard.vue";
-import ReportsDetails from "@/components/ReportsDetails.vue";
+import ReportsDetails from "@/components/reports/ReportsDetails.vue";
 import { ref, onMounted, onBeforeUnmount } from "vue";
-import NoSelected from "@/components/NoSelected.vue";
-import ReportsDetailsModal from "@/components/ReportsDetailsModal.vue";
+import NoSelected from "@/components/others/NoSelected.vue";
+import ReportsDetailsModal from "@/components/reports/ReportsDetailsModal.vue";
 import {useSubmitReport} from "@/stores/submitReport"
 import { storeToRefs } from "pinia";
 import { debounce } from 'lodash';

@@ -1,8 +1,8 @@
 <script setup>
 import { ref, computed, reactive, watch, onMounted } from 'vue';
-import ReportsCategory from '@/components/ReportsCategory.vue';
+import ReportsCategory from '@/components/reports/ReportsCategory.vue';
 import { Textarea } from '@/components/ui/textarea'
-import LocationPicker from '@/components/LocationPicker.vue';
+import LocationPicker from '@/components/location/LocationPicker.vue';
 import Button from '@/components/ui/button/Button.vue';
 import Input from '@/components/ui/input/Input.vue';
 import {useUploadStore} from '@/stores/upload'

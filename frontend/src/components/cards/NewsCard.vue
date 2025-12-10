@@ -57,7 +57,7 @@ const emit = defineEmits(['view-details']);
                 </span>
 
                 <CardDescription v-if="news.body" class="text-sm text-gray-600 line-clamp-2">
-                    {{ news.body }}
+                    <div v-html="news.body"></div>
                 </CardDescription>
             </div>
 

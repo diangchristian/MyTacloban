@@ -25,7 +25,7 @@ import { storeToRefs } from "pinia";
 import { onMounted, ref, computed, watch } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useDialogStore } from "@/stores/dialogStore";
-import ConfirmDeleteDialog from "@/components/ConfirmDeleteDialog.vue";
+import ConfirmDeleteDialog from "@/components/others/ConfirmDeleteDialog.vue";
 import { debounce } from "lodash";
 
 const dialogStore = useDialogStore();

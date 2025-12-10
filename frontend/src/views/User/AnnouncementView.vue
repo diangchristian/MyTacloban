@@ -8,7 +8,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import LatestNews from '@/components/LatestNews.vue';
+import LatestNews from '@/components/others/LatestNews.vue';
 import {useAnnouncementStore} from "@/stores/announcements";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -88,7 +88,7 @@ onMounted(async () => {
         </DialogHeader>
         <div class="space-y-4">
           <DialogDescription class="text-base text-gray-700 leading-relaxed">
-            {{ selectedItem?.body }}
+            <div v-html="selectedItem?.body" class="news"></div>
           </DialogDescription>
           <div class="flex gap-2 pt-4 border-t">
             <button 

@@ -8,7 +8,7 @@
     PaginationNext,
     PaginationPrevious,
   } from '@/components/ui/pagination'
-  import ReportsCard from './cards/ReportsCard.vue'
+  import ReportsCard from '@/components/cards/ReportsCard.vue'
   import { useRoute, useRouter } from 'vue-router'
   import { Skeleton } from "@/components/ui/skeleton";
   import {useSubmitReport} from "@/stores/submitReport"

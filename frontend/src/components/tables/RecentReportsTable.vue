@@ -35,14 +35,17 @@ const viewReport = (reportId) => {
     </thead>
     <tbody>
       <!-- loading skeleton rows -->
-      <tr v-if="props.isLoading" v-for="n in 5" :key="'loading-' + n" class="border-b border-default animate-pulse">
-        <td class="px-6 py-4"><div class="h-4 bg-gray-200 rounded w-16"></div></td>
-        <td class="px-6 py-4"><div class="h-4 bg-gray-200 rounded w-24"></div></td>
-        <td class="px-6 py-4"><div class="h-4 bg-gray-200 rounded w-48"></div></td>
-        <td class="px-6 py-4"><div class="h-4 bg-gray-200 rounded w-20"></div></td>
-        <td class="px-6 py-4"><div class="h-4 bg-gray-200 rounded w-28"></div></td>
-        <td class="px-6 py-4"><div class="h-4 bg-gray-200 rounded w-12"></div></td>
-      </tr>
+       <div class="" v-if="props.isLoading">
+        <tr  v-for="n in 5" :key="'loading-' + n" class="border-b border-default animate-pulse">
+          <td class="px-6 py-4"><div class="h-4 bg-gray-200 rounded w-16"></div></td>
+          <td class="px-6 py-4"><div class="h-4 bg-gray-200 rounded w-24"></div></td>
+          <td class="px-6 py-4"><div class="h-4 bg-gray-200 rounded w-48"></div></td>
+          <td class="px-6 py-4"><div class="h-4 bg-gray-200 rounded w-20"></div></td>
+          <td class="px-6 py-4"><div class="h-4 bg-gray-200 rounded w-28"></div></td>
+          <td class="px-6 py-4"><div class="h-4 bg-gray-200 rounded w-12"></div></td>
+        </tr>
+       </div>
+    
       <!-- empty state -->
       <tr v-else-if="!props.isLoading && props.reports.length === 0" class="border-b border-default">
         <td colspan="6" class="px-6 py-8 text-center text-gray-500">

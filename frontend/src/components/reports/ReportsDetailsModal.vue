@@ -1,5 +1,5 @@
 <script setup>
-import ReportsDetails from "@/components/ReportsDetails.vue";
+import ReportsDetails from "@/components/reports/ReportsDetails.vue";
 const props = defineProps({
   report: Object
 })
