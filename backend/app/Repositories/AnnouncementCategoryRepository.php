@@ -19,7 +19,7 @@ class AnnouncementCategoryRepository implements AnnouncementCategoryRepositoryIn
     public function store($name)
     {
         DB::table('announcement_categories')->insert([
-            'name' => $name,
+            'category_name' => $name,
             'created_at' => now(),
             'updated_at' => now(),
         ]);
@@ -27,7 +27,7 @@ class AnnouncementCategoryRepository implements AnnouncementCategoryRepositoryIn
 
     public function update($name, $id)
     {
-        $updated = DB::update("UPDATE announcement_categories SET name = ?, updated_at = ? WHERE id = ?", 
+        $updated = DB::update("UPDATE announcement_categories SET category_name = ?, updated_at = ? WHERE id = ?", 
         [$name, now(), $id]);
         
         return $updated;
