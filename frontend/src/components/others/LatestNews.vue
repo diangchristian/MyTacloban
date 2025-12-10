@@ -1,5 +1,5 @@
 <script setup>
-import NewsCard from './cards/NewsCard.vue';
+import NewsCard from '@/components/cards/NewsCard.vue';
 import { ref } from 'vue';
 import {
   Dialog,
@@ -44,7 +44,7 @@ const props = defineProps({
               {{ latestNews[0]?.body  }}
             </div>
           </div>
-          <div class="mt-5 lg:mt-5 flex-shrink-0 lg:w-1/3">
+          <div class="mt-5 lg:mt-5 shrink-0 lg:w-1/3">
             <img 
               :src="images" 
               class="w-full h-64 object-cover rounded-lg"

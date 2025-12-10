@@ -2,8 +2,7 @@
     <div class="size-8 flex items-center justify-center rouded bg-primary rounded-full">
         <svg viewBox="0 0 24 24" 
         fill="none" 
-        class="size-6"
-        xmlns="http://www.w3.org/2000/svg "
+        class="size-6" xmlns="http://www.w3.org/2000/svg"
         >
         <g 
         id="SVGRepo_bgCarrier" 

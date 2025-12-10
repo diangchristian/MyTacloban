@@ -4,7 +4,7 @@
   import { useAuthStore } from '@/stores/auth'
   import { useUploadStore } from '@/stores/upload'
   import { useDialogStore } from '@/stores/dialogStore'
-  import ConfirmDeleteDialog from '@/components/ConfirmDeleteDialog.vue'
+  import ConfirmDeleteDialog from '@/components/others/ConfirmDeleteDialog.vue'
   
   const authStore = useAuthStore()
   const uploadStore = useUploadStore()

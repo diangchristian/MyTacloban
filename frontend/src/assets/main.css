@@ -149,3 +149,16 @@
   -webkit-user-drag: none; /* WebKit/Blink browsers */
   user-drag: none;
 }
+
+
+
+.news p{
+  margin-top: 1rem;
+}
+
+
+
+.news h1{
+  font-size: 2em;
+  font-weight: bold;
+}

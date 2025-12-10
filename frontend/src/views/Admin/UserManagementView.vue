@@ -3,7 +3,7 @@ import { ref, computed, onMounted } from 'vue';
 import { useUserStore } from '@/stores/userStore'; // Import the store
 import { toast } from 'vue-sonner';
 import StatsCard from '@/components/cards/UserManagementCard.vue';
-import UserRow from '@/components/UserRow.vue';
+import UserRow from '@/components/others/UserRow.vue';
 import { Users, Radio, Clock, Search, UserCircle, Mail, Shield, Calendar } from 'lucide-vue-next';
 import { Button } from '@/components/ui/button'
 

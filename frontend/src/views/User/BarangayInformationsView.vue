@@ -1,6 +1,6 @@
 <script setup>
 import BarangayCard from '@/components/cards/BarangayCard.vue';
-import MapLocation from '@/components/MapLocation.vue'
+import MapLocation from '@/components/location/MapLocation.vue'
 import { Input } from '@/components/ui/input';
 import { ref, computed, onMounted } from 'vue';
 import { MapPin, Users, Home, Map, User, Phone, Mail } from "lucide-vue-next"

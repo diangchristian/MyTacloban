@@ -1,7 +1,7 @@
 <script setup >
 import DashboardStatsCard from '@/components/cards/DashboardStatsCard.vue';
-import RecentReportsTable from '@/components/RecentReportsTable.vue';
-import QuickActions from '@/components/QuickActions.vue';
+import RecentReportsTable from '@/components/tables/RecentReportsTable.vue';
+import QuickActions from '@/components/others/QuickActions.vue';
 import { ref, onMounted, computed } from "vue";
 import { ClipboardList, Clock, CircleDot, CircleCheckBig, Users  } from 'lucide-vue-next';
 import { useSubmitReport } from '@/stores/submitReport';

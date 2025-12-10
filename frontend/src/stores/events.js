@@ -30,8 +30,6 @@ export const useEventStore = defineStore("events", {
                 const { data } = await axios.post("/api/events", formData, {
                     headers: { "Content-Type": "multipart/form-data" },
                 });
-
-                // ✅ reactive update
                 this.events.push(data);
 
                 this.errors = {};

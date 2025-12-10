@@ -1,5 +1,5 @@
 <script setup>
-import StartList from "@/components/StartList.vue"
+import StartList from "@/components/others/StartList.vue"
 </script>
 
 <template>

@@ -2,16 +2,16 @@
 import ReportHeaderCard from '@/components/cards/ReportHeaderCard.vue';
 import ReportStatusCard from '@/components/cards/ReportStatusCard.vue';
 import TimelineCard from '@/components/cards/TimelineCard.vue';
-import ReportImages from '@/components/ReportImages.vue';
-import MapLocation from '@/components/MapLocation.vue';
+import ReportImages from '@/components/reports/ReportImages.vue';
+import MapLocation from '@/components/location/MapLocation.vue';
 import Button from '@/components/ui/button/Button.vue';
-import AddTimeline from '@/components/AddTimeline.vue';
+import AddTimeline from '@/components/reports/AddTimeline.vue';
 import { ref, onMounted, computed } from 'vue';
 import { MessageSquare } from 'lucide-vue-next';
 import {useSubmitReport} from "@/stores/submitReport"
 import { useRoute, useRouter } from 'vue-router';
 import { storeToRefs } from 'pinia';
-import ReportsDetails from '@/components/ReportsDetails.vue';
+import ReportsDetails from '@/components/reports/ReportsDetails.vue';
 import { Skeleton } from "@/components/ui/skeleton";
 
 const submitReportStore = useSubmitReport()

@@ -1,7 +1,7 @@
 <script setup>
   import { reactive, ref, watch, onBeforeUnmount, onMounted } from "vue";
   import { useRoute, useRouter } from "vue-router";
-  import TinyMCE from "@/components/TinyMCE.vue";
+  import TinyMCE from "@/components/others/TinyMCE.vue";
   import Input from "@/components/ui/input/Input.vue";
   import Button from "@/components/ui/button/Button.vue";
   import Label from "@/components/ui/label/Label.vue";
@@ -39,7 +39,7 @@ const formData = reactive({
   category_id: null,
   isHighlight: false,
   image: uploadStore.uploadedFiles[0]?.url ?? null,
-  status: "",
+  status: "published",
 });
 const editorLoaded = ref(false);
 

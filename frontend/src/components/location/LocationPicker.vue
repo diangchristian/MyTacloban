@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import L from "leaflet";
-import FieldError from "./forms/FieldError.vue";
+import FieldError from "../forms/FieldError.vue";
 const props = defineProps({
   modelValue: {
     type: String,

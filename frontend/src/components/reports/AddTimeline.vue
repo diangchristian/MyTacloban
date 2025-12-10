@@ -1,8 +1,8 @@
 <script setup>
-    import Button from './ui/button/Button.vue';
-    import Textarea from './ui/textarea/Textarea.vue';
-    import Label from './ui/label/Label.vue';
-    import Input from './ui/input/Input.vue';
+    import Button from '../ui/button/Button.vue';
+    import Textarea from '../ui/textarea/Textarea.vue';
+    import Label from '../ui/label/Label.vue';
+    import Input from '../ui/input/Input.vue';
     import { reactive } from 'vue';
     import { useSubmitReport } from "@/stores/submitReport"
     

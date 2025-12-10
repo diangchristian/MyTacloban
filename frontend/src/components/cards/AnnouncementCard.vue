@@ -64,7 +64,7 @@ const categoryClass = computed(() => {
                 {{announcement.title}}
             </CardTitle>
             <CardDescription class="mt-2">
-                {{ announcement.body }}
+                <div v-html="announcement.body"></div>
             </CardDescription>
         </CardHeader>
         <CardContent class="mt-auto">

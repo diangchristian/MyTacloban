@@ -1,14 +1,14 @@
 <script setup>
 import { MapPin} from "lucide-vue-next"
 import { onMounted, ref } from "vue";
-import MapLocation from "./MapLocation.vue";
-import ImagesModal from "@/components/ImagesModal.vue";
+import MapLocation from "../location/MapLocation.vue";
+import ImagesModal from "@/components/others/ImagesModal.vue";
 import { initFlowbite } from 'flowbite'
 import { defineProps } from "vue";
 import mockup1 from '@/assets/images/Mockup.png'
 import mockup2 from '@/assets/images/Mockup2.png'
 import sample from '@/assets/images/news-sample.png'
-import TimelineCard from "./cards/TimelineCard.vue";
+import TimelineCard from "../cards/TimelineCard.vue";
 import {useSubmitReport} from "@/stores/submitReport"
 import { Skeleton } from "@/components/ui/skeleton";
 import { storeToRefs } from "pinia";
