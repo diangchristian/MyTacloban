@@ -26,12 +26,15 @@ class ReportCategoryController extends Controller
 
     public function store(Request $request){
         $fields = $request->validate([
-            'name' => 'required'
+            'name' => 'required',
+            'slug'       => 'required|string|max:255|',
+            'icon_name'  => 'required|string|max:255',
+            'color' => 'required|string|max:255',
         ]);
 
 
         if($fields){
-            $this->category->store($fields['name']);
+            $this->category->store($fields);
 
             return response()->json([
                 'message' => 'Category created successfully',
@@ -50,10 +53,13 @@ class ReportCategoryController extends Controller
     public function update(Request $request, $id){
 
         $fields = $request->validate([
-            'name' => 'required'
+            'name' => 'required',
+            'slug'       => 'required|string|max:255|',
+            'icon_name'  => 'required|string|max:255',
+            'color' => 'required|string|max:255',
         ]);
 
-        $updated = $this->category->update($fields['name'], $id);
+        $updated = $this->category->update($id, $fields);
 
         if ($updated) {
             return response()->json([

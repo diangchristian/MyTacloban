@@ -16,22 +16,44 @@ class ReportCategoryRepository implements ReportCategoryRepositoryInterface {
         throw new \Exception('Not implemented');
     }
 
-    public function store($name)
+    public function store($data)
     {
-        DB::table('report_categories')->insert([
-            'category_name' => $name,
-            'created_at' => now(),
-            'updated_at' => now(),
+        DB::insert("
+            INSERT INTO report_categories (category_name, slug, icon_name, color, created_at, updated_at)
+            VALUES (?, ?, ?, ?, ?, ?)
+        ", [
+            $data['name'],
+            $data['slug'] ?? null,
+            $data['icon_name'] ?? null,
+            $data['color'] ?? null,
+            now(),
+            now(),
         ]);
     }
+    
 
-    public function update($name, $id)
+    public function update($id, $data)
     {
-        $updated = DB::update("UPDATE report_categories SET category_name = ?, updated_at = ? WHERE id = ?", 
-        [$name, now(), $id]);
-        
+        $updated = DB::update("
+            UPDATE report_categories 
+            SET category_name = ?, 
+                slug = ?, 
+                icon_name = ?, 
+                color = ?, 
+                updated_at = ? 
+            WHERE id = ?
+        ", [
+            $data['name'],
+            $data['slug'] ?? null,
+            $data['icon_name'] ?? null,
+            $data['color'] ?? null,
+            now(),
+            $id
+        ]);
+    
         return $updated;
     }
+    
 
     public function destroy($id)
     {

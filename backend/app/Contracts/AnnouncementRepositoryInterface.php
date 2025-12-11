@@ -17,5 +17,5 @@ interface AnnouncementRepositoryInterface
 
     public function store(array $fields);
     public function update(array $fields, int $id);
-    public function destroy(int $id);
+    public function destroy(int $id, $userId);
 }

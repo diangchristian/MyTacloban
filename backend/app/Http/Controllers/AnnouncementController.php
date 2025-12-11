@@ -94,6 +94,7 @@ class AnnouncementController extends Controller
             'body' => 'required|string',
             'image' => 'nullable|string|max:255', // or url validation if storing URLs
             'status' => 'required|string|in:draft,published,archived',
+            'user_id' => 'required'
         ]);
 
         // if okay it input
@@ -115,6 +116,7 @@ class AnnouncementController extends Controller
             'body' => 'required|string',
             'image' => 'nullable|string|max:255', // or url validation if storing URLs
             'status' => 'required|string|in:draft,published,archived',
+            'user_id' => 'required'
         ]);
 
 
@@ -125,8 +127,8 @@ class AnnouncementController extends Controller
         }
     }
 
-    public function destroy($id){
-        if($this->announcement->destroy($id)){
+    public function destroy(Request $request, $id){
+        if($this->announcement->destroy($id, $request->query('user_id'))){
             return response()->json([
                 'message' => 'Announcement deleted successfully!'
             ]);
