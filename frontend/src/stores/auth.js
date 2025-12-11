@@ -37,7 +37,7 @@ export const useAuthStore = defineStore('auth', {
                     
                     // Assuming a successful response from axios is status 2xx
                     this.user = res.data.user;
-                    console.log(this.user)
+                    console.log(this.user.id)
                 } catch (error) {
                     console.error("Failed to fetch user:", error);
                     // Clear invalid token/state on fetch failure

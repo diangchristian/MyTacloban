@@ -29,10 +29,12 @@ const state = reactive({
     categoryId: '',
     activeType: "event",
     categoryInput: "",
+    slug: "",
+    icon_name: "",
+    color: "",
     editingCategory: null,
     isFormVisible: false,
-});
-
+})
 
 
 onMounted(() => {
@@ -87,6 +89,14 @@ const saveCategory = () => {
         type: state.activeType
     }
 
+    if(state.activeType === 'report'){
+        formData.slug = state.slug.trim();
+        formData.icon_name = state.icon_name.trim();
+        formData.color = state.color.trim();
+    }
+
+    console.log(formData)
+
     if(!state.editingCategory ){
         console.log('you are creating state')
         categoriesStore.createCategory(formData)
@@ -101,12 +111,18 @@ const editCategory = (category) => {
     console.log(category)
     state.categoryId = category.id
     state.editingCategory = category;
+    state.slug = category.slug
+    state.icon_name = category.icon_name
+    state.color = category.color
     state.categoryInput = category.category_name;
     state.isFormVisible = true;
 };
 
 const cancelOperation = () => {
     state.categoryInput = "";
+    state.slug = ""
+    state.icon_name = ""
+    state.color = ""
     state.editingCategory = null;
     state.isFormVisible = false;
 };
@@ -196,6 +212,7 @@ const deleteCategory = (id) => {
                   <div class="">
                     <Label class="font-semibold mb-2">Category Slug</Label>
                     <Input
+                        v-model="state.slug"
                         class="w-full p-3 border rounded-lg mb-4 bg-white"
                         :placeholder="formTitle"
                     />
@@ -217,11 +234,13 @@ const deleteCategory = (id) => {
                     <Input
                         class="w-full p-3 border rounded-lg mb-4 bg-white"
                         :placeholder="formTitle"
+                        v-model="state.icon_name"
                     />
                   </div>
                   <div class="">
                     <Label class="font-semibold mb-2">Color</Label>
                     <Input
+                        v-model="state.color"
                         class="w-full p-3 border rounded-lg mb-4 bg-white"
                         :placeholder="formTitle"
                     />
