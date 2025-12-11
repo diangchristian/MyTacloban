@@ -41,7 +41,7 @@ function select() {
     :class="checked ? 'bg-primary' : category.bg"
         
     >
-    <component :is="categoriesStore.getIcon(category.icon_name)"   :class="category.value !=  'other_issues' ? 'text-white' : 'text-black' " />
+    <component :is="categoriesStore.getIcon(category.icon_name)" class="text-white" />
     </div>
 
     <p class="text-sm sm:text-md  mt-2">{{ category.category_name }}</p>

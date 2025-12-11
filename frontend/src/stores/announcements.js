@@ -1,7 +1,11 @@
-import { categories } from '@vueuse/core/metadata.mjs';
+
 import axios from 'axios'
 import { defineStore } from 'pinia'
 import { toast } from 'vue-sonner'
+import {useAuthStore} from "@/stores/auth"
+
+
+
 
 export const useAnnouncementStore = defineStore('announcement', {
     state: () => {
@@ -91,7 +95,7 @@ export const useAnnouncementStore = defineStore('announcement', {
 
 
         async createAnnouncement(formData) {
-
+            console.log(formData)
             try {
               const { data } = await axios.post("/api/announcements", formData);
           
@@ -139,8 +143,11 @@ export const useAnnouncementStore = defineStore('announcement', {
         },
 
         async deleteAnnouncment(id){
+            const authStore = useAuthStore()
             console.log(id)
-            const { data } = await axios.delete(`/api/announcements/${id}`);
+            const currentUser = authStore.user.id
+            console.log(currentUser)
+            const { data } = await axios.delete(`/api/announcements/${id}?user_id=${currentUser}`)
             if(data){
                 this.errors = {}
                 this.isLoading = false

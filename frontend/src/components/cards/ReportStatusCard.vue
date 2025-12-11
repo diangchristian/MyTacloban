@@ -9,6 +9,11 @@ import {
 } from '@/components/ui/select'
 import { useSubmitReport } from "@/stores/submitReport"
 import { ref, watch } from 'vue'
+import {useAuthStore} from "@/stores/auth"
+
+
+const authStore = useAuthStore()
+
 
 const submitReportStore = useSubmitReport()
 
@@ -34,7 +39,7 @@ watch(() => props.status, (newStatus) => {
 // 🔥 watch selectedStatus and update report status immediately when changed
 watch(selectedStatus, (newStatus, oldStatus) => {
   if (newStatus && newStatus !== oldStatus) {
-    submitReportStore.updateReportStatus(props.id, newStatus)
+    submitReportStore.updateReportStatus(props.id, newStatus, authStore.user.id)
   }
 })
 </script>
