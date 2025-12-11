@@ -18,7 +18,7 @@ return new class extends Migration
             $table->text('description');
             $table->string('image')->nullable();
             $table->string('coordinates');
-            $table->enum('status', ['pending', 'in_progress', 'resolved'])->default('pending');
+            $table->enum('status', ['pending', 'in_progress', 'resolved', 'assigned'])->default('pending');
             $table->timestamps();
         });
     }

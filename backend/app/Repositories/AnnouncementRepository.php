@@ -34,7 +34,7 @@ class AnnouncementRepository implements AnnouncementRepositoryInterface {
                 ac.category_name
             FROM announcements a
             JOIN announcement_categories ac
-                ON a.category_id = ac.id
+            ON a.category_id = ac.id
         ");
         
         }
@@ -156,8 +156,8 @@ class AnnouncementRepository implements AnnouncementRepositoryInterface {
         ]);
 
         return DB::insert(
-            "INSERT INTO announcements (category_id, title, isHighlight, body, image, status, created_at, updated_at) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+            "INSERT INTO announcements (category_id, title, isHighlight, body, image, status, user_id, created_at, updated_at) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
             array_values($data)
         );
     }
@@ -171,12 +171,13 @@ class AnnouncementRepository implements AnnouncementRepositoryInterface {
 
         
         return DB::update("UPDATE announcements 
-            SET category_id = ?, title = ?, isHighlight = ?, body = ?, image = ?, status = ?, updated_at = ? 
+            SET category_id = ?, title = ?, isHighlight = ?, body = ?, image = ?, status = ?, user_id = ?, updated_at = ? 
             WHERE id = ?", array_values($data));
     }
 
     //deleting a row
-    public function destroy(int $id){
+    public function destroy(int $id, $userId){
+        DB::statement("SET @current_user_id = ?", [$userId]);
         return DB::delete("DELETE FROM announcements WHERE id = ?", [$id]);
     }
 

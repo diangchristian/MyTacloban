@@ -31,6 +31,7 @@ class DatabaseSeeder extends Seeder
             'username' => 'Test User',
             'full_name' => 'admin tester',
             'bio' => 'i am the admin of this type shi',
+            'role' => 'Admin',
             'email' => 'test@example.com',
         ]);
     }
