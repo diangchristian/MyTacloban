@@ -7,6 +7,7 @@ import FeastruesCard from '@/components/landing/FeaturesCard.vue'
   <div class="overflow-hidden py-16  ">
     <div class="mx-auto max-w-7xl px-6 lg:px-8 ">
       <h1
+       data-aos="fade-down"
         class="mt-2 text-4xl font-semibold tracking-tight text-pretty sm:text-5xl text-center">
         What You Can Do With <span class="text-primary">MyTacloban</span> 
       </h1>

@@ -7,6 +7,7 @@ import {useAuthStore} from "@/stores/auth"
 
 
 
+
 export const useAnnouncementStore = defineStore('announcement', {
     state: () => {
         return {
@@ -20,13 +21,15 @@ export const useAnnouncementStore = defineStore('announcement', {
     },
     actions: {
         async getAnnouncement(){
-            const role = 'admin';
-            const { data } = role === 'user' ? 
+            const authStore = useAuthStore()      // access auth store
+            const role = authStore.user?.role;
+            const { data } = role === 'User' ? 
                                 await axios.get("/api/announcements")
                             :   await axios.get("/api/admin/announcements")
 
             if(data){
                 this.announcements = data
+                console.log(this.announcements)
                 this.errors = {}
                 this.isLoading = false
             }else{
@@ -72,7 +75,7 @@ export const useAnnouncementStore = defineStore('announcement', {
         },
 
 
-        async getBySearch(search = null, category = null, start = null, end = null){
+        async getBySearch(search = null, category = null, start = null, end = null, status='published'){
 
             console.log(search, category, start, end)
             try {
@@ -82,6 +85,7 @@ export const useAnnouncementStore = defineStore('announcement', {
                     category: category,
                     start: start,
                     end: end,
+                    status: status
                   },
                 });
                 this.announcements = data.data;

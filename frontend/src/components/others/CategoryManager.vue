@@ -12,6 +12,9 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
+import FieldError from "../forms/FieldError.vue";
+
+
 
 const categoriesStore = useCategoriesStore()
 const { 
@@ -20,7 +23,8 @@ const {
   reportCategories,
   eventCount,
   announcementCount,
-  reportsCount
+  reportsCount,
+  errors
 } = storeToRefs(categoriesStore);
 // =====================
 // Reactive State
@@ -41,6 +45,7 @@ onMounted(() => {
     categoriesStore.getAnnouncementCategories()
     categoriesStore.getEventCategories()
     categoriesStore.getReportCategories()
+    console.log(errors.value)
 })
 
 
@@ -79,10 +84,8 @@ const toggleForm = () => {
     }
 };
 
-const saveCategory = () => {
+const saveCategory = async () => {
     const trimmed = state.categoryInput.trim();
-    if (!trimmed) return;
-
     const formData = {
         id: state.categoryId,
         name: trimmed,
@@ -99,12 +102,19 @@ const saveCategory = () => {
 
     if(!state.editingCategory ){
         console.log('you are creating state')
-        categoriesStore.createCategory(formData)
+        await categoriesStore.createCategory(formData)
     }else{
         console.log('you are editing state')
-        categoriesStore.updateCategory(formData)
+        await categoriesStore.updateCategory(formData)
     }
-    cancelOperation();
+
+    if (Object.values(errors.value).some(arr => arr.length > 0)) {
+
+        return
+    // has errors
+    }
+
+    cancelOperation()
 };
 
 const editCategory = (category) => {
@@ -125,6 +135,7 @@ const cancelOperation = () => {
     state.color = ""
     state.editingCategory = null;
     state.isFormVisible = false;
+    errors.value = {}
 };
 
 const deleteCategory = (id) => {
@@ -151,7 +162,7 @@ const deleteCategory = (id) => {
                     <button
                         @click="switchType('event')"
                         :disabled="state.isFormVisible"
-                        class="px-4 py-3 font-semibold border-b-2 transition"
+                        class="px-4 py-3 font-semibold border-b-2 transition cursor-pointer"
                         :class="state.activeType === 'event' 
                             ? 'text-green-600 border-green-600' 
                             : 'text-gray-500 border-transparent'"
@@ -163,7 +174,7 @@ const deleteCategory = (id) => {
                     <button
                         @click="switchType('announcement')"
                         :disabled="state.isFormVisible"
-                        class="px-4 py-3 font-semibold border-b-2 transition"
+                        class="px-4 py-3 font-semibold border-b-2 transition cursor-pointer"
                         :class="state.activeType === 'announcement' 
                             ? 'text-green-600 border-green-600' 
                             : 'text-gray-500 border-transparent'"
@@ -174,7 +185,7 @@ const deleteCategory = (id) => {
                     <button
                         @click="switchType('report')"
                         :disabled="state.isFormVisible"
-                        class="px-4 py-3 font-semibold border-b-2 transition"
+                        class="px-4 py-3 font-semibold border-b-2 transition cursor-pointer"
                         :class="state.activeType === 'report' 
                             ? 'text-green-600 border-green-600' 
                             : 'text-gray-500 border-transparent'"
@@ -187,7 +198,7 @@ const deleteCategory = (id) => {
                 <Button 
                     @click="toggleForm" 
                     v-if="!state.isFormVisible"
-                    class="bg-green-500 hover:bg-green-600 text-white flex items-center gap-1 px-4 py-2 rounded-xl"
+                    class="bg-green-500 hover:bg-green-600 text-white flex items-center gap-1 px-4 py-2 rounded-md cursor-pointer"
                 >
                     <Plus class="size-5" /> Add New
                 </Button>
@@ -202,10 +213,11 @@ const deleteCategory = (id) => {
                 <Label class="font-semibold mb-2">Category Name</Label>
                 <Input
                     v-model="state.categoryInput"
-                    class="w-full p-3 border rounded-lg mb-4 bg-white"
+                    class="w-full p-3 border rounded-lg mb-2 bg-white"
                     :placeholder="formTitle"
                     @keyup.enter="saveCategory"
                 />
+                <FieldError v-if="errors?.name" :errorMessage="errors?.name[0]" class="mb-2"/>
               </div>
                 
                 <div class="" v-if="state.activeType === 'report'">
@@ -216,6 +228,7 @@ const deleteCategory = (id) => {
                         class="w-full p-3 border rounded-lg mb-4 bg-white"
                         :placeholder="formTitle"
                     />
+                    <FieldError v-if="errors?.slug" :errorMessage="errors?.slug[0]" class="mb-2"/>
                   </div>
                   <div class="">
                     <div class="flex items-center gap-2 mb-2">
@@ -236,6 +249,7 @@ const deleteCategory = (id) => {
                         :placeholder="formTitle"
                         v-model="state.icon_name"
                     />
+                    <FieldError v-if="errors?.icon_name" :errorMessage="errors?.icon_name[0]" class="mb-2"/>
                   </div>
                   <div class="">
                     <Label class="font-semibold mb-2">Color</Label>
@@ -244,16 +258,17 @@ const deleteCategory = (id) => {
                         class="w-full p-3 border rounded-lg mb-4 bg-white"
                         :placeholder="formTitle"
                     />
+                    <FieldError v-if="errors?.color" :errorMessage="errors?.color[0]" class="mb-2"/>
                   </div>
                 </div>
 
 
 
                 <div class="flex gap-3">
-                    <Button class="bg-green-600 text-white px-4" @click="saveCategory">
+                    <Button class="bg-primary text-white px-4 cursor-pointer" @click="saveCategory">
                         <Save class="size-4 mr-1" /> Save
                     </Button>
-                    <Button class="bg-gray-300 text-gray-800 px-4" @click="cancelOperation">
+                    <Button variant="outline" class=" text-gray-800 px-4 cursor-pointer" @click="cancelOperation">
                         <XCircle class="size-4 mr-1" /> Cancel
                     </Button>
                 </div>
@@ -269,10 +284,10 @@ const deleteCategory = (id) => {
                     <span class="font-medium">{{ category.category_name }}</span>
     
                     <div class="flex gap-2">
-                        <button class="p-2 text-blue-500" @click="editCategory(category)">
+                        <button class="p-2 text-blue-500 cursor-pointer" @click="editCategory(category)">
                             <Pencil class="size-4" />
                         </button>
-                        <button class="p-2 text-red-500" @click="deleteCategory(category.id)">
+                        <button class="p-2 text-red-500 cursor-pointer" @click="deleteCategory(category.id)">
                             <Trash2 class="size-4" />
                         </button>
                     </div>

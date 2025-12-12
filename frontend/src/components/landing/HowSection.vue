@@ -11,6 +11,8 @@ import {
 } from "@/components/ui/carousel";
 // Make sure this path is correct for your project structure
 import StepCard from "@/components/landing/StepCard.vue"; 
+import StepImg1 from "@/assets/images/create-account.png";
+
 
 const api = ref<CarouselApi | null>(null);
 const intervalId = ref<number | null>(null);
@@ -21,7 +23,7 @@ const steps = [
     stepNumber: 1,
     title: "Register an Account",
     description: "Create your profile as a Tacloban resident or LGU staff member.",
-    image: "/assets/mockups/step-1-search.png", // <--- UPDATE THESE IMAGE PATHS
+    image: StepImg1, // <--- UPDATE THESE IMAGE PATHS
   },
   {
     stepNumber: 2,
@@ -69,6 +71,7 @@ onBeforeUnmount(() => {
   <div class="overflow-hidden py-16 ">
     <div class="mx-auto max-w-7xl px-6 lg:px-8">
       <h1
+        data-aos="fade-down"
         class="mt-2 text-4xl font-semibold tracking-tight text-pretty sm:text-5xl text-center"
       >
         How <span class="text-primary">MyTacloban</span> Works
@@ -76,7 +79,9 @@ onBeforeUnmount(() => {
 
       <div
         class="mx-auto grid max-w-3xl grid-cols-1 gap-x-4 gap-y-16 sm:gap-y-20 lg:mx-0 lg:max-w-none lg:grid-cols-2 mt-8 rounded-lg bg-gradient-to-br from-white via-white to-green-100/90 p-8 md:px-8 md:py-12 shadow-lg"
-      >
+      data-aos="zoom-in-up"
+      
+        >
         <div class="w-full space-y-8 flex items-center justify-center flex-col">
           <StepCard 
             v-for="step in steps" 
@@ -89,7 +94,7 @@ onBeforeUnmount(() => {
 
         <div class=" flex items-center justify-center">
           <div class="lg:max-w-xl">
-            <Carousel class="relative w-full max-w-xs" @init-api="setApi">
+            <Carousel class="relative w-full max-w-md" @init-api="setApi">
               <CarouselContent>
                 <CarouselItem v-for="(step, index) in steps" :key="index">
                   <div class="p-1 ">

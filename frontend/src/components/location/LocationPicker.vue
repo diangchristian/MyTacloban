@@ -51,9 +51,9 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="bg-white h-full p-4">
+  <div class="bg-white h-full p-4 rounded-md">
     <label class="block text-sm font-medium">Mark Location</label>
-    <div id="map" class="w-full h-64 rounded-md mb-4 mt-2"></div>
+    <div id="map" class="w-full h-75 rounded-md mb-4 mt-2"></div>
 
     <!-- Hidden for now, but keeps v-model in sync -->
     <input type="text" v-model="latlngString" class="hidden" />

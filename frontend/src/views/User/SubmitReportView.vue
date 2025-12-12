@@ -11,6 +11,7 @@ import { useSubmitReport } from "@/stores/submitReport";
 import { useAuthStore } from "@/stores/auth";
 import { storeToRefs } from "pinia";
 import FieldError from "@/components/forms/FieldError.vue";
+import Skeleton from "@/components/ui/skeleton/Skeleton.vue";
 
 const uploadStore = useUploadStore();
 const categoriesStore = useCategoriesStore();
@@ -20,6 +21,10 @@ const userId = authStore.user?.id;
 const submitReportStore = useSubmitReport();
 const { errors } = storeToRefs(useSubmitReport());
 const fileInput = ref("");
+const isLoading = ref(true);
+
+
+
 
 const selectedCategory = ref(null);
 const otherIssueText = ref("");
@@ -57,8 +62,9 @@ const resetForm = () => {
   }
 };
 
-onMounted(() => {
-  categoriesStore.getReportCategories();
+onMounted(async () => {
+  await categoriesStore.getReportCategories();
+  isLoading.value = false
 });
 
 watch(
@@ -96,9 +102,15 @@ const handleSubmit = async () => {
       <form action="" @submit.prevent="handleSubmit">
         <div class="w-full bg-white p-4 rounded-md">
           <p class="font-semibold">Select Category</p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 rounded-xl shadow-sm gap-4 mt-2" v-if="isLoading" >
+            <Skeleton    v-for="i in 6" :key="i" class="bg-gray-200 h-30" />
+          </div>
+
           <div
             class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 rounded-xl shadow-sm gap-4 mt-2"
-          >
+            v-else
+            >
+  
             <ReportsCategory
               v-model="selectedCategory"
               v-for="category in categoriesStore.reportCategories"
@@ -113,7 +125,7 @@ const handleSubmit = async () => {
           />
         </div>
         <div class="grid lg:grid-cols-2 mt-4 gap-4 rounded-md">
-          <div class="span-1 bg-white">
+          <div class="span-1 bg-white rounded-md z-1">
             <LocationPicker
               v-model="formData.coordinates"
               :errorMessage="errors.coordinates ? errors.coordinates[0] : ''"

@@ -2,8 +2,7 @@
 import { Image } from 'lucide-vue-next';
 import ImagesModal from '@/components/others/ImagesModal.vue';
 import { ref } from 'vue';
-import mockup1 from '@/assets/images/Mockup.png'
-import mockup2 from '@/assets/images/Mockup2.png'
+
 import sample from '@/assets/images/news-sample.png'
 
 const images = [

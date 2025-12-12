@@ -9,6 +9,7 @@ import { useAuthStore } from '@/stores/auth'
 export const useSubmitReport = defineStore('submitReport', {
     state: () => {
         return {
+            allReports: [],
             reports: [],
             reportDetails: null,
             errors: {},
@@ -19,9 +20,9 @@ export const useSubmitReport = defineStore('submitReport', {
     },
 
     getters: {
-        pendingCount: (state) => state.reports.filter(r => r.status === 'pending').length,
-        inProgressCount: (state) => state.reports.filter(r => r.status === 'in_progress').length,
-        resolvedCount: (state) => state.reports.filter(r => r.status === 'resolved').length,
+        pendingCount: (state) => state.allReports.filter(r => r.status === 'pending').length,
+        inProgressCount: (state) => state.allReports.filter(r => r.status === 'in_progress').length,
+        resolvedCount: (state) => state.allReports.filter(r => r.status === 'resolved').length,
     },
     
     actions: {
@@ -29,7 +30,7 @@ export const useSubmitReport = defineStore('submitReport', {
             const { data } = await axios.get("/api/reports");
 
             if(data){
-                this.reports = data
+                this.allReports = data
                 this.errors = {}
                 this.isLoading = false;
             }else{
@@ -81,6 +82,7 @@ export const useSubmitReport = defineStore('submitReport', {
             const authStore = useAuthStore()      // access auth store
             const userId = authStore.user?.id   
             const {data} = await axios.get(`/api/reports/user-reports/${userId}`)
+            this.allReports = data
             this.reports = data
             console.log(this.reports)
         },
@@ -98,16 +100,19 @@ export const useSubmitReport = defineStore('submitReport', {
             return data;
         },
 
-        async getBySearchAndStatusAdmin(search, status){
-            const { data } = await axios.get(`/api/reports/user-reports/admin`, {  // or /reports/admin if you use that route
+        async getBySearchAndStatusAdmin(search = null, status = null, start = null, end = null){
+            console.log(search ,status.value ,start, end)
+            const { data } = await axios.get(`/api/reports/user-reports/admin`, { 
                 params: {
                     search: search || '',
-                    status: status || 'all'
+                    status: status.value || 'all',
+                    start: start,
+                    end: end
                 }
             });
         
             // make sure it's an array
-            this.reports = Array.isArray(data) ? data : [];
+            this.allReports = Array.isArray(data) ? data : [];
             return this.reports;
         },
         
@@ -118,6 +123,7 @@ export const useSubmitReport = defineStore('submitReport', {
             if(data){
                 this.errors = {}
                 this.isLoading = false;
+                toast.success(data.message)
             }else{
                 this.errors = data.error
             }
@@ -136,6 +142,7 @@ export const useSubmitReport = defineStore('submitReport', {
             if(data){
                 this.errors = {}
                 this.isLoading = false;
+                toast.success(data.message)
             }else{
                 this.errors = data.error
             }

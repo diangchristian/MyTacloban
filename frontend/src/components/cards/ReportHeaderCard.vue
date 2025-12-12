@@ -32,11 +32,17 @@ const props = defineProps({
                  
                 </div>
                 <h1 class="text-2xl">  {{ props.header.title }}</h1>
+
+                <div class="mt-4">
+                  <Label for="" class="text-black mb-2">Reporter Information</Label>
+                  <p class="text-sm font-light">Name: {{props.header.full_name }}</p>
+                  <p class="text-sm font-light">Email: {{props.header.email }}</p>
+                </div>
               </CardTitle>
               <CardDescription class="mt-1">
-                <Label for="" class="text-black mb-2">{{ props.header.description }}</Label>
+                <Label for="" class="text-black mb-2">Description</Label>
                 <p>
-                    Sed ullamcorper magna sit amet interdum. Quia laoreet nulla condimenium. Aliquam erat volupat. Cras at nulla in turpis dignissim consequat vel laoreet purus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vivamus laoreet, lacus id aliquot molestie ut lacus interdum.
+                  {{ props.header.description }}.
                 </p>
               </CardDescription>
             </CardHeader>

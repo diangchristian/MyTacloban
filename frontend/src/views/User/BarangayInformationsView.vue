@@ -7,7 +7,7 @@ import { MapPin, Users, Home, Map, User, Phone, Mail } from "lucide-vue-next"
 import {useBarangayStore} from "@/stores/barangay"
 import { storeToRefs } from 'pinia';
 import { debounce } from 'lodash';
-
+import Button from '@/components/ui/button/Button.vue';
 
 const barangayStore = useBarangayStore()
 const {barangays} = storeToRefs(barangayStore)
@@ -130,12 +130,12 @@ function openDialog(item) {
       <MapLocation :coordinates="selectedBarangay.coordinates" />
 
       <DialogFooter>
-        <button 
-          class="px-4 py-2 font-bold text-black bg-primary hover:bg-primary/20 hover:text-primary rounded cursor-pointer" 
+        <Button 
+          class="px-4 py-2 font-bold text-white bg-primary hover:bg-primary/20 hover:text-primary rounded cursor-pointer" 
           @click="isDialogOpen = false"
         >
           Close
-        </button>
+        </Button>
       </DialogFooter>
     </DialogContent>
   </Dialog>

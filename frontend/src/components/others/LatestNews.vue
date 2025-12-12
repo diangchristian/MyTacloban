@@ -41,7 +41,7 @@ const props = defineProps({
               {{ latestNews[0]?.title  }}
             </div>
             <div class="text-lg lg:text-xl text-gray-700">
-              {{ latestNews[0]?.body  }}
+              <div class="" v-html="latestNews[0]?.body"></div>
             </div>
           </div>
           <div class="mt-5 lg:mt-5 shrink-0 lg:w-1/3">
@@ -86,7 +86,8 @@ const props = defineProps({
             class="w-full h-64 object-cover rounded-lg"
           />
           <DialogDescription class="text-base text-gray-700 leading-relaxed">
-            {{ selectedItem?.body }}
+            
+            <div class="" v-html="selectedItem?.body"></div>
           </DialogDescription>
           <div class="flex gap-2 pt-4 border-t">
             <button 

@@ -170,7 +170,7 @@ onMounted(() => {
                 <FieldError v-if="errors.announcement_title" class="mt-2" :errorMessage="errors.announcement_title[0]"/>
               </div>
               <Skeleton v-if="!editorLoaded" class="h-full bg-gray-200 w-full" />
-              <TinyMCE v-model="formData.body" class="w-full mt-4"  @init="editorLoaded = true" />
+             <TinyMCE   v-model="formData.body" class="w-full mt-4"  @init="editorLoaded = true" />
 
 
 
@@ -250,6 +250,7 @@ onMounted(() => {
                   <SelectContent>
                     <SelectItem value="draft">Draft</SelectItem>
                     <SelectItem value="published">Published</SelectItem>
+                    <SelectItem value="archived">Archived</SelectItem>
                   </SelectContent>
                 </Select>
                 <FieldError v-if="errors.status" class="mt-2" :errorMessage="errors.status[0]"/>

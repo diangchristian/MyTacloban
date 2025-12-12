@@ -8,7 +8,8 @@ export const useCategoriesStore = defineStore('categories', {
       eventCategories: [],
       reportCategories: [],
       announcementCategories: [],
-      loading: false,
+      errors:{},
+      isLoading: true,
     }),
   
     getters: {
@@ -22,27 +23,42 @@ export const useCategoriesStore = defineStore('categories', {
   
     actions: {
       async getEventCategories() {
-        this.loading = true
-        const res = await axios.get("/api/event_categories")
-        this.eventCategories = res.data
-        this.loading = false
+        this.isLoading = true;
+        try {
+          const res = await axios.get("/api/event_categories");
+          this.eventCategories = res.data;
+        } catch (error) {
+          console.error("Error fetching event categories:", error);
+        } finally {
+          this.isLoading = false;
+        }
       },
-  
+      
       async getReportCategories() {
-        this.loading = true
-        const res = await axios.get("/api/report_categories")
-        this.reportCategories = res.data
-        this.loading = false
+        try {
+          const res = await axios.get("/api/report_categories");
+          this.reportCategories = res.data;
+        } catch (error) {
+          console.error("Error fetching report categories:", error);
+        } finally {
+          this.isLoading = false;
+        }
       },
-  
+      
       async getAnnouncementCategories() {
-        this.loading = true
-        const res = await axios.get("/api/announcement_categories")
-        this.announcementCategories = res.data
-        this.loading = false
+        this.isLoading = true;
+        try {
+          const res = await axios.get("/api/announcement_categories");
+          this.announcementCategories = res.data;
+        } catch (error) {
+          console.error("Error fetching announcement categories:", error);
+        } finally {
+          this.isLoading = false;
+        }
       },
-
+      
       async createCategory(formData) {
+      
         const { name, type, slug, icon_name, color } = formData;
         const payload = {
             name: name,
@@ -62,13 +78,16 @@ export const useCategoriesStore = defineStore('categories', {
     
             if (res.status >= 200 && res.status < 300) {
                 toast.success(res.data.message);
+                this.errors = {}
+                
             }
     
             this.callCategoryByType(type);
     
         } catch (error) {
-            console.error(error);
-            toast.error("Failed to create category");
+          this.errors = error.response.data.errors
+          console.log(this.errors)
+          toast.error("Failed to create category");
         }
     },
     

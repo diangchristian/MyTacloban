@@ -139,7 +139,7 @@ const viweAnnouncement = (announcement) => {
               </DialogHeader>
               <div class="space-y-4">
                 <DialogDescription class="text-base text-gray-700 leading-relaxed">
-                  {{ selectedItem?.body }}
+                  <div class="" v-html="selectedItem?.body"></div>
                 </DialogDescription>
                 <div class="flex gap-2 pt-4 border-t">
                   <button 

@@ -14,21 +14,26 @@ import FeatruesIcon from "./FeatruesIcon.vue";
 const features = [
     {
         title: "Services",
-        description : "Access public services with ease—from requesting documents to accessing local assistance programs. Submit requirements online, track progress, and get notified once your request is processed."
+        description: "Easily access city services—from requesting documents to applying for permits and local assistance. Submit requirements online, track the status of your requests, and receive notifications once they’re completed.",
+        delay: 100,
     },
     {
         title: "Announcements",
-        description : "Stay updated with the latest news from the city. View weather alerts, road advisories, community warnings, and important government updates—all in one place."
+        description: "Get real-time updates from the City Government. Stay informed on weather advisories, traffic alerts, public safety notices, and other important announcements that affect the community.",
+        delay: 200,
     },
     {
         title: "Events",
-        description : "Discover upcoming activities happening around Tacloban. From festivals and public gatherings to government-led programs, you can browse event details, schedules, and locations effortlessly."
+        description: "Explore upcoming activities and programs happening around Tacloban. Stay updated on festivals, public events, and government initiatives with detailed schedules and locations.",
+        delay: 300,
     },
     {
         title: "Barangay",
-        description : "Connect with your barangay effortlessly. View barangay officials, programs, hotlines, community schedules, and updates. You can also report community concerns directly for faster local response."
+        description: "Stay connected with your barangay. View local officials, programs, and contact information. Access community updates, schedules, and submit concerns directly for faster response and assistance.",
+        delay: 400,
     },
-]
+];
+
 
 
 </script>
@@ -36,8 +41,8 @@ const features = [
 
 
 <template>
-   <div v-for="feature in features" :key="feature.title">
-        <Card class="h-full">
+   <div v-for="feature in features" :key="feature.title" >
+        <Card class="h-full" data-aos="fade-up" :data-aos-delay="feature.delay">
             <CardHeader>
                 <CardTitle class="text-xl">
                     <div class="size-20  rounded-lg mb-2">
