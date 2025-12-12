@@ -88,6 +88,7 @@ class ReportController extends Controller
     public function update(Request $request, $id){
        $fields =  $request->validate([
             'status' => 'required|string|in:pending,in_progress,assigned,resolved,rejected',
+            'user_id' => 'required'
         ]);
 
         if($this->report->updateReportStatus($fields, $id)){

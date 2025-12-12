@@ -100,7 +100,7 @@ function handleSearch(){
         </div>
 
         <!-- Right Column -->
-        <div class="hidden md:flex md:flex-col md:w-[720px] bg-white rounded-lg p-4 
+        <div class="hidden md:flex md:flex-col md:w-[820px] bg-white rounded-lg p-4 
                     overflow-y-auto h-[calc(100vh-160px)]">
 
           <ReportsDetails

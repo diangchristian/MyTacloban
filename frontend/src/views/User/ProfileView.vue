@@ -77,9 +77,9 @@ const profileImageSrc = computed(() => {
 
 <template>
   
-  <main class="w-full mx-auto bg-white p-6 sm:p-12 rounded-xl shadow-2xl">
+  <main class=" max-w-7xl mx-auto bg-white p-6 sm:p-12 rounded-xl shadow-2xl">
     
-    <div class="max-w-7xl mx-auto flex flex-col lg:flex-row lg:space-x-12">
+    <div class="  mx-auto flex flex-col lg:flex-row lg:space-x-12">
       
       <div class="flex-1 space-y-8 order-2 lg:order-1 mt-8 lg:mt-0">
         

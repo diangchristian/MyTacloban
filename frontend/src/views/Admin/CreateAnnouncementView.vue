@@ -18,6 +18,7 @@
   import { storeToRefs } from "pinia";
   import Skeleton from "@/components/ui/skeleton/Skeleton.vue";
   import FieldError from "@/components/forms/FieldError.vue";
+  import {useAuthStore} from "@/stores/auth"
 
 
 
@@ -31,6 +32,7 @@
   const uploadStore = useUploadStore();
   const announcementStore = useAnnouncementStore();
   const { announcementDetails, categories, isLoading, errors } = storeToRefs(announcementStore);
+  const {user} = storeToRefs(useAuthStore())
 
 // ====== FORM DATA ======
 const formData = reactive({
@@ -40,6 +42,7 @@ const formData = reactive({
   isHighlight: false,
   image: uploadStore.uploadedFiles[0]?.url ?? null,
   status: "published",
+  user_id: user.value.id
 });
 const editorLoaded = ref(false);
 

@@ -43,51 +43,77 @@ export const useCategoriesStore = defineStore('categories', {
       },
 
       async createCategory(formData) {
-
-        const {name, type} = formData
-        console.log({name: name}, type)
-        const url = `/api/${type}_categories`; // dynamic endpoint
-        const res = await axios.post(url, {name: name});
-        console.log(res.data.message)
-      
-        if (res.status >= 200 && res.status < 300) {
-          toast.success(res.data.message)
+        const { name, type, slug, icon_name, color } = formData;
+        const payload = {
+            name: name,
+            type: type,
+        };
+    
+        if (type === 'report') {
+            payload.slug = slug;
+            payload.icon_name = icon_name;
+            payload.color = color;
         }
-
-        this.callCategoryByType(type)
-
-      },
-
+    
+        const url = `/api/${type}_categories`;
+    
+        try {
+            const res = await axios.post(url, payload);
+    
+            if (res.status >= 200 && res.status < 300) {
+                toast.success(res.data.message);
+            }
+    
+            this.callCategoryByType(type);
+    
+        } catch (error) {
+            console.error(error);
+            toast.error("Failed to create category");
+        }
+    },
+    
       async updateCategory(formData) {
-
-        const {id,name, type} = formData
+        const { id, name, type, slug, icon_name, color } = formData;
+        const payload = {
+            name: name,
+            type: type,
+        };
+    
+        if (type === 'report') {
+            payload.slug = slug;
+            payload.icon_name = icon_name;
+            payload.color = color;
+        }
         console.log({name: name}, type)
         const url = `/api/${type}_categories/${id}`; // dynamic endpoint
    
         try{
-          const res = await axios.put(url, {name: name});
+          const res = await axios.put(url, payload);
+         
           console.log(res.data.message)
           toast.success(res.data.message)
+          this.callCategoryByType(type)
         }catch(error){
-          toast.error(res.data.message)
+          toast.error(error.message)
         }
   
-        this.callCategoryByType(type)
+
       },
 
       async deleteCategory(id, type) {
-        const url = `/api/${type}_categories/${id}`; // dynamic endpoint
-     
         
+        const url = `/api/${type}_categories/${id}`; 
+        console.log(url)
         try{
           const res = await axios.delete(url);
           console.log(res.data.message)
           toast.success(res.data.message)
+          this.callCategoryByType(type)
         }catch(error){
-          toast.error(res.data.message)
+          toast.error(error)
         }
   
-        this.callCategoryByType(type)
+
       },
 
       callCategoryByType(type){

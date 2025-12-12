@@ -125,10 +125,12 @@ export const useSubmitReport = defineStore('submitReport', {
             console.log(data)
         },
 
-        async updateReportStatus(id, status){
+        async updateReportStatus(id, status, curretUserId){
             console.log(status)
+            console.log(curretUserId)
             const { data } = await axios.put(`/api/reports/${id}`, {
-                status: status
+                status: status,
+                user_id: curretUserId
               })
 
             if(data){
