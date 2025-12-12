@@ -11,7 +11,7 @@ interface AnnouncementRepositoryInterface
 
     
     public function stats();
-    public function search($search = null, $category = null, $start = null, $end = null);
+    public function search($search = null, $category = null, $start = null, $end = null, $status = null);
     public function getById($id);
     public function getByDateRange(string $start, string $end);
 

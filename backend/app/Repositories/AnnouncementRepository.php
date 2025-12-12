@@ -13,6 +13,7 @@ class AnnouncementRepository implements AnnouncementRepositoryInterface {
                         SELECT a.*, ac.* FROM announcements a
                         JOIN announcement_categories ac ON a.category_id = ac.id
                         WHERE a.status = 'published'
+                        ORDER BY a.created_at DESC
                         ");
     }
 
@@ -29,7 +30,6 @@ class AnnouncementRepository implements AnnouncementRepositoryInterface {
                 a.isHighlight,
                 a.created_at,
                 a.updated_at,
-        
                 ac.id AS category_id,
                 ac.category_name
             FROM announcements a
@@ -48,44 +48,55 @@ class AnnouncementRepository implements AnnouncementRepositoryInterface {
                         ", [$id]);
     }
 
-    public function stats() {
-        $stats = DB::select("
-            SELECT
-                COUNT(*) AS total_count,
-                SUM(CASE WHEN status = 'published' THEN 1 ELSE 0 END) AS published_count,
-                SUM(CASE WHEN status = 'draft' THEN 1 ELSE 0 END) AS draft_count,
-                
-                SUM(CASE WHEN YEARWEEK(created_at, 1) = YEARWEEK(NOW(), 1) THEN 1 ELSE 0 END) AS total_this_week,
-                SUM(CASE WHEN status = 'published' AND YEARWEEK(created_at, 1) = YEARWEEK(NOW(), 1) THEN 1 ELSE 0 END) AS published_this_week,
-                SUM(CASE WHEN status = 'draft' AND YEARWEEK(created_at, 1) = YEARWEEK(NOW(), 1) THEN 1 ELSE 0 END) AS draft_this_week,
-                
-                SUM(CASE WHEN YEARWEEK(created_at, 1) = YEARWEEK(DATE_SUB(NOW(), INTERVAL 1 WEEK), 1) THEN 1 ELSE 0 END) AS total_last_week,
-                SUM(CASE WHEN status = 'published' AND YEARWEEK(created_at, 1) = YEARWEEK(DATE_SUB(NOW(), INTERVAL 1 WEEK), 1) THEN 1 ELSE 0 END) AS published_last_week,
-                SUM(CASE WHEN status = 'draft' AND YEARWEEK(created_at, 1) = YEARWEEK(DATE_SUB(NOW(), INTERVAL 1 WEEK), 1) THEN 1 ELSE 0 END) AS draft_last_week
-            FROM announcements
-        ");
-    
-        // Raw queries return array of stdClass, get first row
-        $s = $stats[0];
-    
-        return response()->json([
-            'total' => [
-                'count' => $s->total_count,
-                'thisWeek' => $s->total_this_week,
-                'lastWeek' => $s->total_last_week,
-            ],
-            'published' => [
-                'count' => $s->published_count,
-                'thisWeek' => $s->published_this_week,
-                'lastWeek' => $s->published_last_week,
-            ],
-            'draft' => [
-                'count' => $s->draft_count,
-                'thisWeek' => $s->draft_this_week,
-                'lastWeek' => $s->draft_last_week,
-            ],
-        ]);
-    }
+    public function stats()
+{
+    $stats = DB::select("
+        SELECT
+            COUNT(*) AS total_count,
+            SUM(CASE WHEN status = 'published' THEN 1 ELSE 0 END) AS published_count,
+            SUM(CASE WHEN status = 'draft' THEN 1 ELSE 0 END) AS draft_count,
+            SUM(CASE WHEN status = 'archived' THEN 1 ELSE 0 END) AS archived_count, -- new status example
+
+            -- This week
+            SUM(CASE WHEN YEARWEEK(created_at, 1) = YEARWEEK(NOW(), 1) THEN 1 ELSE 0 END) AS total_this_week,
+            SUM(CASE WHEN status = 'published' AND YEARWEEK(created_at, 1) = YEARWEEK(NOW(), 1) THEN 1 ELSE 0 END) AS published_this_week,
+            SUM(CASE WHEN status = 'draft' AND YEARWEEK(created_at, 1) = YEARWEEK(NOW(), 1) THEN 1 ELSE 0 END) AS draft_this_week,
+            SUM(CASE WHEN status = 'archived' AND YEARWEEK(created_at, 1) = YEARWEEK(NOW(), 1) THEN 1 ELSE 0 END) AS archived_this_week, -- new
+
+            -- Last week
+            SUM(CASE WHEN YEARWEEK(created_at, 1) = YEARWEEK(DATE_SUB(NOW(), INTERVAL 1 WEEK), 1) THEN 1 ELSE 0 END) AS total_last_week,
+            SUM(CASE WHEN status = 'published' AND YEARWEEK(created_at, 1) = YEARWEEK(DATE_SUB(NOW(), INTERVAL 1 WEEK), 1) THEN 1 ELSE 0 END) AS published_last_week,
+            SUM(CASE WHEN status = 'draft' AND YEARWEEK(created_at, 1) = YEARWEEK(DATE_SUB(NOW(), INTERVAL 1 WEEK), 1) THEN 1 ELSE 0 END) AS draft_last_week,
+            SUM(CASE WHEN status = 'archived' AND YEARWEEK(created_at, 1) = YEARWEEK(DATE_SUB(NOW(), INTERVAL 1 WEEK), 1) THEN 1 ELSE 0 END) AS archived_last_week -- new
+        FROM announcements
+    ");
+
+    $s = $stats[0];
+
+    return response()->json([
+        'total' => [
+            'count' => $s->total_count,
+            'thisWeek' => $s->total_this_week,
+            'lastWeek' => $s->total_last_week,
+        ],
+        'published' => [
+            'count' => $s->published_count,
+            'thisWeek' => $s->published_this_week,  
+            'lastWeek' => $s->published_last_week,
+        ],
+        'draft' => [
+            'count' => $s->draft_count,
+            'thisWeek' => $s->draft_this_week,
+            'lastWeek' => $s->draft_last_week,
+        ],
+        'archived' => [ // new status card
+            'count' => $s->archived_count,
+            'thisWeek' => $s->archived_this_week,
+            'lastWeek' => $s->archived_last_week,
+        ],
+    ]);
+}
+
     
 
     // using idx_ann_category
@@ -100,7 +111,7 @@ class AnnouncementRepository implements AnnouncementRepositoryInterface {
             [$start, $end]
         );
     }
-    public function search($search = null, $category = null, $start = null, $end = null)
+    public function search($search = null, $category = null, $start = null, $end = null, $status = null)
     {
         $sql = "SELECT
                     a.id AS announcement_id,
@@ -132,6 +143,11 @@ class AnnouncementRepository implements AnnouncementRepositoryInterface {
             $sql .= " AND DATE(a.created_at) BETWEEN ? AND ?";
             $bindings[] = $start;
             $bindings[] = $end;
+        }
+
+        if (!empty($status)) {
+            $sql .= " AND a.status = ?";
+            $bindings[] = $status;
         }
 
         // FULLTEXT SEARCH (fixed)

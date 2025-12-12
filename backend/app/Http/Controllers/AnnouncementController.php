@@ -42,8 +42,9 @@ class AnnouncementController extends Controller
         $category = $request->query('category');
         $start = $request->query('start');
         $end = $request->query('end');
+        $status = $request->query('status');
 
-        $results = $this->announcement->search($search, $category, $start, $end);
+        $results = $this->announcement->search($search, $category, $start, $end, $status);
 
         return response()->json([
             'success' => true,

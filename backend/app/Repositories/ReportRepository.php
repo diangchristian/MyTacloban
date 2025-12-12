@@ -175,7 +175,7 @@ class ReportRepository implements ReportRepositoryInterface {
 
     
     
-    public function getReports($search = null, $status = null)
+    public function getReports($search = null, $status = null, $start = null, $end = null)
     {
         $sql = "
             SELECT 
@@ -195,6 +195,13 @@ class ReportRepository implements ReportRepositoryInterface {
         if ($status && $status !== 'all') {
             $sql .= " AND v.status = ?";
             $params[] = $status;
+        }
+
+         // Date FILTER
+         if (!empty($start) && !empty($end)) {
+            $sql .= " AND DATE(v.created_at) BETWEEN ? AND ?";
+            $params[] = $start;
+            $params[] = $end;
         }
 
         $reports = DB::select($sql, $params);
@@ -223,8 +230,11 @@ class ReportRepository implements ReportRepositoryInterface {
     {
         $sql = "
             SELECT 
-                v.*
+                v.*,
+                u.full_name,
+                u.email
             FROM view_reports_base v
+            JOIN users u ON u.id = v.user_id
             WHERE v.id = ?
             LIMIT 1
         ";
