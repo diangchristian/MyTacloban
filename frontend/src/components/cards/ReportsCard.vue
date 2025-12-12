@@ -19,6 +19,8 @@ const props = defineProps({
   
 })
 
+
+
 const emit = defineEmits(['view'])
 </script>
 
@@ -31,12 +33,17 @@ const emit = defineEmits(['view'])
         <span
           :class="{
             'bg-yellow-100 text-yellow-800': report.status === 'pending',
-            'bg-blue-100 text-blue-800': report.status === 'in_progress',
-            'bg-green-100 text-green-800': report.status === 'resolved'
+            'bg-blue-100 text-blue-800': report.status === 'assigned',
+            'bg-green-100 text-green-800': report.status === 'resolved',
+            'bg-orange-200 text-orange-800': report.status === 'in_progress',
           }"
           class="px-2 py-1 rounded-full text-xs font-semibold flex-shrink-0"
         >
-          {{ report.status }}
+          {{ report.status === 'pending' ? 'Pending' :
+              report.status === 'assigned' ? 'Assigned' :
+              report.status === 'resolved' ? 'Resolved' : 'In Progress'
+        
+        }}
         </span>
       </div>
 

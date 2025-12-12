@@ -54,7 +54,7 @@ const categoryClass = computed(() => {
 <template>
     <Card class="m-0">
         <CardHeader>
-            <CardTitle class="text-md">
+            <CardTitle class="text-md line-clamp-2">
                 <div class="flex items-center justify-between w-full mb-2">
                     <span :class="`px-2 py-1 text-xs rounded-lg ${categoryClass}`">
                         {{ announcement.category_name }}
@@ -64,7 +64,7 @@ const categoryClass = computed(() => {
                 {{announcement.title}}
             </CardTitle>
             <CardDescription class="mt-2">
-                <div v-html="announcement.body"></div>
+                <div v-html="announcement.body" class="line-clamp-5"></div>
             </CardDescription>
         </CardHeader>
         <CardContent class="mt-auto">
@@ -81,3 +81,4 @@ const categoryClass = computed(() => {
     </Card>
   
 </template>
+

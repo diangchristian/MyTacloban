@@ -7,21 +7,30 @@ import StartList from "@/components/others/StartList.vue"
     <div class="mx-auto max-w-7xl px-6 lg:px-8">
       <h1
         class="mt-2 text-4xl font-semibold tracking-tight text-pretty sm:text-5xl text-center"
+         data-aos="fade-down"
       >
         What is <span class="text-primary">MyTacloban</span>?
       </h1>
       <div
         class="mx-auto grid max-w-3xl grid-cols-1 gap-x-4 gap-y-16 sm:gap-y-20 lg:mx-0 lg:max-w-none lg:grid-cols-2 lg:mt-14"
       >
-        <img
+        <!-- <img
           width="2000"
           height="1442"
           src="@/assets/images/MYTAC.png"
           alt="Product screenshot"
           class="w-2xl max-w-none rounded-xl shadow-xl ring-1 ring-white/10 -ml-78 sm:w-228 md:-ml-4 lg:-ml-84 order-2 lg:order-1"
-        />
+        /> -->
 
-        <div class="lg:pt-4 lg:pr-8 order-1 lg:order-2">
+      <div class="">
+          <div class="h-30" data-aos="zoom-in"> 
+            <img src="@/assets/images/announcment.png" alt="">
+          </div>
+      </div>
+
+        <div
+        data-aos="fade-up"
+        class="lg:pt-4 lg:pr-8 order-1 lg:order-2">
           <div class="lg:max-w-xl  ">
             <p class="mt-4 lg:mt-0 text-lg/8">
               MyTacloban is an innovative web-based platform developed for the

@@ -4,9 +4,6 @@ import { onMounted, ref } from "vue";
 import MapLocation from "../location/MapLocation.vue";
 import ImagesModal from "@/components/others/ImagesModal.vue";
 import { initFlowbite } from "flowbite";
-import { defineProps } from "vue";
-import mockup1 from "@/assets/images/Mockup.png";
-import mockup2 from "@/assets/images/Mockup2.png";
 import sample from "@/assets/images/news-sample.png";
 import TimelineCard from "../cards/TimelineCard.vue";
 import { useSubmitReport } from "@/stores/submitReport";
@@ -18,7 +15,6 @@ import { Separator } from "@/components/ui/separator";
 const submitReportStore = useSubmitReport();
 const { reportDetails, isLoading } = storeToRefs(submitReportStore);
 
-const images = [mockup1, mockup2, sample];
 
 const props = defineProps({
   report: Object,
@@ -38,7 +34,7 @@ const formatted = new Date(props.report.created_at).toLocaleString("en-US", {
 </script>
 
 <template>
-  <div class="h-full">
+  <div class="h-full overflow-y-scroll">
     <div class="space-y-4">
       <div class="rounded-md">
         <!-- ID + Date -->
@@ -95,7 +91,7 @@ const formatted = new Date(props.report.created_at).toLocaleString("en-US", {
         <div>
           <p class="font-semibold mb-2">Images:</p>
 
-          <div class="flex flex-wrap gap-4" v-if="report.iamges">
+          <div class="flex flex-wrap gap-4" v-if="report.images">
             <button
               data-modal-target="default-modal"
               data-modal-toggle="default-modal"
@@ -104,7 +100,7 @@ const formatted = new Date(props.report.created_at).toLocaleString("en-US", {
               <img
                 :src="report.images[0]"
                 alt="Mockup"
-                class="w-32 sm:w-48 h-auto object-cover cursor-pointer"
+                class="w-20 sm:w-48 h-auto object-cover cursor-pointer"
               />
             </button>
           </div>

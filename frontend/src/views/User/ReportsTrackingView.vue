@@ -10,17 +10,19 @@ import {useSubmitReport} from "@/stores/submitReport"
 import { storeToRefs } from "pinia";
 import { debounce } from 'lodash';
 import { useAuthStore } from '@/stores/auth'
+import Skeleton from "@/components/ui/skeleton/Skeleton.vue";
 
 
 const submitReportStore = useSubmitReport()
-const {reports} = storeToRefs(useSubmitReport())
+const {allReports, reports} = storeToRefs(useSubmitReport())
 
 const authStore = useAuthStore()      // access auth store
 const userId = authStore.user?.id   
-
+const isLoading = ref(true)
 
 onMounted(async() => {
-  submitReportStore.getUserReports()
+ await submitReportStore.getUserReports()
+  isLoading.value = false
 })
 
 
@@ -28,7 +30,7 @@ const selectedReport = ref(null)
 const isMobile = ref(false)
 const showModal = ref(false)
 const search = ref('')
-
+const clicked = ref(false)
 
 
 const debouncedSearch = debounce(() => {
@@ -42,6 +44,7 @@ function updateScreen(){
 
 onMounted(() => {
   updateScreen();
+  console.log(reports.value.length)
   window.addEventListener('resize', updateScreen)
 })
 
@@ -76,8 +79,8 @@ function handleSearch(){
         <Input placeholder="Search reports" class="w-full sm:w-1/2" v-model="search" @keyup="handleSearch"/>
 
         <div class="flex flex-wrap gap-2">
-          <Button  type="button" @click="submitReportStore.getUserReports()"  class="cursor-pointer">All Reports ({{ reports.length }})</Button>
-          <Button  type="button"  @click="submitReportStore.getBySearchAndStatusUser(search, 'pending', userId)"    variant="outline" class="cursor-pointer">Pending ({{submitReportStore.pendingCount}})</Button>
+          <Button  type="button" @click="submitReportStore.getUserReports()"  class="cursor-pointer">All Reports ({{ allReports.length }})</Button>
+          <Button  type="button"  @click="submitReportStore.getBySearchAndStatusUser(search, 'pending', userId)"    :variant="clicked ? 'outline' : 'primary'" class="cursor-pointer">Pending ({{submitReportStore.pendingCount}})</Button>
           <Button type="button"  @click="submitReportStore.getBySearchAndStatusUser(search, 'in_progress', userId)"  variant="outline" class="cursor-pointer">In Progress ({{submitReportStore.inProgressCount}})</Button>
         </div>
       </div>
@@ -91,13 +94,25 @@ function handleSearch(){
           class="bg-white rounded-lg flex flex-col flex-1 overflow-y-auto p-4 gap-4
                  h-[calc(100vh-210px)] md:h-[calc(100vh-160px)] scrollable"
         >
+
+        <div class="gap-4" v-if="isLoading">
+          <Skeleton class="bg-gray-200 h-55 mt-4" v-for="i in 3" :key="i"/>
+        </div>
+
           <ReportsCard
+            v-else
             v-for="r in reports"
             :key="r.id"
             :report="r"
             @view="openReport"
           />
+
+          <p v-if="!isLoading && reports.length === 0" class="text-gray-500 text-center mt-4">
+          No reports found.
+        </p>
+
         </div>
+
 
         <!-- Right Column -->
         <div class="hidden md:flex md:flex-col md:w-[820px] bg-white rounded-lg p-4 

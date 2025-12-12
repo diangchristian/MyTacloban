@@ -7,8 +7,6 @@
 @source "../node_modules/flowbite";
 @import "leaflet/dist/leaflet.css";
 
-
-
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {

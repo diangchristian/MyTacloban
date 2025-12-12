@@ -5,13 +5,13 @@ import QuickActions from '@/components/others/QuickActions.vue';
 import { ref, onMounted, computed } from "vue";
 import { ClipboardList, Clock, CircleDot, CircleCheckBig, Users  } from 'lucide-vue-next';
 import { useSubmitReport } from '@/stores/submitReport';
-import { useUserStore } from '@/stores/userStore';
 import { useCategoriesStore } from '@/stores/categories';
+import {useUserStore} from "@/stores/userStore"
 
 // initialize stores for reports, users, and categories
 const reportStore = useSubmitReport();
-const userStore = useUserStore();
 const categoriesStore = useCategoriesStore();
+const userStore = useUserStore()
 
 // track loading state while fetching data
 const isLoading = ref(true);
@@ -34,7 +34,7 @@ onMounted(async () => {
 // get the 5 most recent reports sorted by date
 const recentReports = computed(() => {
   // ensure we have an array to work with
-  const items = Array.isArray(reportStore.reports) ? reportStore.reports : [];
+  const items = Array.isArray(reportStore.allReports) ? reportStore.allReports : [];
   
   // sort reports by creation date (newest first)
   const sorted = [...items].sort((a, b) => {
@@ -156,17 +156,6 @@ const stats = computed(() => {
     icon: CircleCheckBig,
     bg: "bg-green-400/40",
     textColor: "text-green-500",
-  },
-  {
-    title: "Total Users",
-    value: {
-      count: userStore.totalUsers, // total registered users
-      thisWeek: 0, // placeholder until user creation tracking is added
-      lastWeek: 0
-    },
-    icon: Users,
-    bg: "bg-purple-400/40",
-    textColor: "text-purple-500",
   }
   ]);
 });

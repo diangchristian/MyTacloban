@@ -10,7 +10,7 @@ console.log('clicked')
 
 <template>
   <div class="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4">
-    <div class="bg-white rounded-xl p-4 my-4 h-full w-full max-w-2xl relative">
+    <div class="bg-white rounded-xl p-4 my-4 h-full w-full max-w-2xl relative overflow-y-scroll">
       
       <!-- close -->
       <button 

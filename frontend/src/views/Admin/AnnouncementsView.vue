@@ -1,12 +1,13 @@
 <script setup>
 import DashboardStatsCard from "@/components/cards/DashboardStatsCard.vue";
-import AnnouncementCard from "@/components/cards/AnnouncementCard.vue";
+// import AnnouncementCard from "@/components/cards/AnnouncementCard.vue";
 import {
   ClipboardList,
   Clock,
   CircleDot,
   CircleCheckBig,
   Users,
+  Archive
 } from "lucide-vue-next";
 import Input from "@/components/ui/input/Input.vue";
 import Button from "@/components/ui/button/Button.vue";
@@ -24,57 +25,29 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { storeToRefs } from "pinia";
 import { onMounted, ref, computed, watch } from "vue";
 import { useRouter, useRoute } from "vue-router";
-import { useDialogStore } from "@/stores/dialogStore";
 import ConfirmDeleteDialog from "@/components/others/ConfirmDeleteDialog.vue";
 import { debounce } from "lodash";
+import PaginatedAnnouncements from "@/components/others/PaginatedAnnouncements.vue";
+import {getDateRange} from "@/utils/getDateRange"
 
-const dialogStore = useDialogStore();
 
 const router = useRouter();
 
 const announcementStore = useAnnouncementStore();
 const { announcements, stats, categories, isLoading } =
   storeToRefs(announcementStore);
-const selectedAnnouncement = ref(null);
 const searchTerm = ref("");
 const selectedCategory = ref(null);
 const selectedDate = ref(null);
+const selectedStatus = ref(null);
+
 onMounted(() => {
   announcementStore.getAnnouncement();
   announcementStore.getStats();
   announcementStore.getCategories();
 });
 
-const getDateRange = (filter) => {
-  const today = new Date();
-  let start, end;
-  switch (filter) {
-    case "today":
-      start = end = today.toISOString().split("T")[0];
-      break;
-    case "this_week":
-      const firstDay = new Date(
-        today.setDate(today.getDate() - today.getDay())
-      );
-      const lastDay = new Date(
-        today.setDate(today.getDate() - today.getDay() + 6)
-      );
-      start = firstDay.toISOString().split("T")[0];
-      end = lastDay.toISOString().split("T")[0];
-      break;
-    case "this_month":
-      start = new Date(today.getFullYear(), today.getMonth(), 1)
-        .toISOString()
-        .split("T")[0];
-      end = new Date(today.getFullYear(), today.getMonth() + 1, 0)
-        .toISOString()
-        .split("T")[0];
-      break;
-    default:
-      start = end = null;
-  }
-  return { start, end };
-};
+
 
 const fetchAnnouncements = () => {
   const { start, end } = getDateRange(selectedDate.value);
@@ -82,35 +55,20 @@ const fetchAnnouncements = () => {
     searchTerm.value,
     selectedCategory.value,
     start,
-    end
+    end,
+    selectedStatus.value     // <-- new!
   );
 };
+
 
 // Debounced version of fetch
 const debouncedFetch = debounce(fetchAnnouncements, 300); // 300ms delay
 
 // Watch for changes
-watch([searchTerm, selectedCategory, selectedDate], () => {
+watch([searchTerm, selectedCategory, selectedDate, selectedStatus], () => {
   debouncedFetch();
 });
 
-const deleteHandler = (announcement) => {
-  selectedAnnouncement.value = announcement;
-  dialogStore.openConfirm({
-    title: "Delete Announcement",
-    description: "This will permanently delete the annoucement.",
-    confirmText: "Delete Announcment",
-    onConfirm: () => {
-      console.log(selectedAnnouncement.value);
-      announcementStore.deleteAnnouncment(
-        selectedAnnouncement.value.announcement_id
-      );
-      selectedAnnouncement.value = null;
-      announcementStore.getAnnouncement();
-      announcementStore.getStats();
-    },
-  });
-};
 const announcementStats = computed(() => {
   if (!stats.value) return [];
 
@@ -121,7 +79,7 @@ const announcementStats = computed(() => {
     lastWeek: 0,
   };
   const draft = stats.value.draft || { count: 0, thisWeek: 0, lastWeek: 0 };
-
+  const archived = stats.value.archived || { count: 0, thisWeek: 0, lastWeek: 0 }
   return [
     {
       title: "Total Announcements",
@@ -153,6 +111,16 @@ const announcementStats = computed(() => {
         draft.thisWeek - draft.lastWeek
       } updated this week`,
     },
+    {
+      title: "Archived",
+      value: archived,
+      icon: Archive,
+      bg: "bg-red-400/40",
+      textColor: "text-red-500",
+      footer: `${archived.thisWeek - archived.lastWeek >= 0 ? "+" : ""}${
+        archived.thisWeek - archived.lastWeek
+      } updated this week`,
+    },
   ];
 });
 
@@ -160,12 +128,10 @@ const clearFilters = () => {
   searchTerm.value = "";
   selectedCategory.value = null;
   selectedDate.value = null;
-
+  selectedStatus.value = null;
 
   announcementStore.getAnnouncement();
-
-}
-
+};
 
 
 </script>
@@ -190,16 +156,17 @@ const clearFilters = () => {
       />
     </div>
 
-    <div class="w-full flex flex-col lg:flex-row gap-4 sm:items-center mt-8">
-      <Input
+    <div class="w-full  mt-8">
+      <div class="flex gap-3">
+        <Input
         v-model="searchTerm"
         placeholder="Search announcements"
         class="w-full max-w-md bg-white"
       />
-
       <Button @click="fetchAnnouncements"> Search </Button>
 
-      <div class="flex items-center gap-4">
+      </div>
+      <div class="flex items-center flex-wrap gap-4 mt-4">
         <!-- Category Filter -->
         <div class="flex items-center gap-2">
           <Label>Category</Label>
@@ -210,7 +177,7 @@ const clearFilters = () => {
             <SelectContent>
               <SelectItem
                 v-for="cat in categories"
-                :key="cat.id"
+                :key="cat.id"  
                 :value="cat.id"
               >
                 {{ cat.category_name }}
@@ -234,6 +201,23 @@ const clearFilters = () => {
           </Select>
         </div>
 
+        <!-- Status Filter -->
+      <div class="flex items-center gap-2">
+        <Label>Status</Label>
+        <Select v-model="selectedStatus">
+          <SelectTrigger class="w-full">
+            <SelectValue placeholder="Select status" class="w-full" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="published">Published</SelectItem>
+            <SelectItem value="draft">Draft</SelectItem>
+            <SelectItem value="archived">Archived</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
+
+
         <!-- Clear Filters Button -->
         <Button variant="outline" class="" @click="clearFilters">
           Clear Filters
@@ -246,29 +230,7 @@ const clearFilters = () => {
         <RouterLink to="/admin/announcements/create">+ Add</RouterLink>
       </Button>
     </div>
-
-    <div
-      class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4"
-      v-if="isLoading"
-    >
-      <Skeleton
-        v-for="n in 6"
-        :key="n"
-        class="h-60 w-full bg-gray-200 rounded-md"
-      />
-    </div>
-    <div
-      class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4"
-      v-else
-    >
-      <AnnouncementCard
-        v-for="announcement in announcements"
-        :key="announcement.id"
-        role="admin"
-        :announcement="announcement"
-        @delete="deleteHandler"
-      />
-    </div>
+    <PaginatedAnnouncements  :announcements="announcements"/>
 
     <ConfirmDeleteDialog />
   </div>

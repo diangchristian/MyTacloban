@@ -25,6 +25,7 @@ const formData = reactive({
         <RouterLink to="/" class="flex items-center gap-2 font-medium">
           <div class="bg-primary text-primary-foreground flex size-6 items-center justify-center rounded-md">
             <GalleryVerticalEnd class="size-4" />
+            <img src="@/assets/images/Tac.png" alt="">
           </div>
           MyTacloban
         </RouterLink>
