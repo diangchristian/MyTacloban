@@ -9,6 +9,8 @@ import NotFoundView from '@/views/Error/NotFoundView.vue'
 import userRoutes from "./user.js"
 import publicRoutes from "./public.js"
 import adminRoutes from "./admin.js"
+import { useUserStore } from '@/stores/userStore'
+
 const routes = [
   ...publicRoutes,
   ...userRoutes,
@@ -30,6 +32,7 @@ const router = createRouter({
 
 router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore();
+  const userStore = useUserStore();
 
   // If token exists but user not loaded yet
   if (!authStore.user && localStorage.getItem('token')) {
@@ -43,6 +46,24 @@ router.beforeEach(async (to, from, next) => {
 
   const isAuthenticated = authStore.isAuthenticated;
   const userRole = authStore.userRole;
+
+    // Check user status
+  if (isAuthenticated && authStore.user) {
+    const userStatus = authStore.user.status?.toLowerCase();
+    
+    if (userStatus !== 'active') {
+      // Logout and redirect to login with message
+      await authStore.logout();
+      localStorage.removeItem('token');
+      return next({ 
+        name: 'login', 
+        query: { 
+          message: 'account-deactivated',
+          reason: userStatus === 'blocked' ? 'blocked' : 'inactive'
+        } 
+      });
+    }
+  }
 
   // Guest-only pages (login/register)
   if (to.meta.guest && isAuthenticated) {

@@ -49,6 +49,11 @@ const handleSubmit = () => {
           Enter your email below to login to your account
         </p>
       </div>
+      <div v-if="$route.query.message === 'account-deactivated'" class="bg-destructive/15 text-destructive px-4 py-3 rounded-lg text-sm">
+        <p class="font-medium">Account Deactivated</p>
+        <p>Your account has been {{ $route.query.reason === 'blocked' ? 'blocked' : 'deactivated' }}. Please contact support for assistance.</p>
+      </div>
+      <FieldError v-if="errors.general" :errorMessage="errors.general[0]"/>
       <Field>
         <FieldLabel for="email">
           Email

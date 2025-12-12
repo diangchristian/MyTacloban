@@ -96,6 +96,10 @@ Route::post('/barangays', [BarangayController::class, 'store']);
 Route::put('/barangays/{id}', [BarangayController::class, 'update']);
 Route::delete('/barangays/{id}', [BarangayController::class, 'destroy']);
 
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware(['auth:sanctum', 'user.status'])->group(function () {
+    Route::get('/user', function (Request $request) {
+        return response()->json(['user' => $request->user()]);
+    });
     
+    // Add other protected routes here
 });
