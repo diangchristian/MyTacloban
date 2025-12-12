@@ -101,25 +101,37 @@ export const useCategoriesStore = defineStore('categories', {
       },
 
       async deleteCategory(id, type) {
-        
-        const url = `/api/${type}_categories/${id}`; 
-        console.log(url)
-        try{
-          const res = await axios.delete(url);
-          console.log(res.data.message)
-          toast.success(res.data.message)
-          this.callCategoryByType(type)
-        }catch(error){
-          toast.error(error)
-        }
-  
+        const url = `/api/${type}_categories/${id}`;
+        const listKey =
+          type === 'event' ? 'eventCategories'
+          : type === 'announcement' ? 'announcementCategories'
+          : type === 'report' ? 'reportCategories'
+          : null;
 
+        const previous = listKey ? [...this[listKey]] : [];
+
+        // Optimistic UI removal
+        if (listKey) {
+          this[listKey] = this[listKey].filter(c => c.id !== id);
+        }
+
+        try {
+          const res = await axios.delete(url);
+          toast.success(res.data?.message || 'Category deleted');
+          await this.callCategoryByType(type);
+        } catch (error) {
+          if (listKey) {
+            this[listKey] = previous; // rollback on failure
+          }
+          const message = error?.response?.data?.message || 'Failed to delete category';
+          toast.error(message);
+        }
       },
 
-      callCategoryByType(type){
-        if (type === 'event') this.getEventCategories();
-        else if (type === 'announcement')this.getAnnouncementCategories();
-        else if (type === 'report') this.getReportCategories();
+      async callCategoryByType(type){
+        if (type === 'event') return this.getEventCategories();
+        if (type === 'announcement') return this.getAnnouncementCategories();
+        if (type === 'report') return this.getReportCategories();
       }
   
     }

@@ -1,5 +1,6 @@
 import axios from "axios";
 import { defineStore } from "pinia";
+import { toast } from "vue-sonner";
 
 export const useEventStore = defineStore("events", {
     state: () => ({
@@ -27,14 +28,17 @@ export const useEventStore = defineStore("events", {
             this.isLoading = true;
 
             try {
-                const { data } = await axios.post("/api/events", formData, {
+                await axios.post("/api/events", formData, {
                     headers: { "Content-Type": "multipart/form-data" },
                 });
-                this.events.push(data);
 
+                await this.getEvents();
+                toast.success("Event created successfully!");
                 this.errors = {};
             } catch (e) {
-                this.errors = e.response?.data?.errors ?? { message: "Create failed" };
+                const message = e.response?.data?.message || "Failed to create event";
+                toast.error(message);
+                this.errors = e.response?.data?.errors ?? { message };
             }
 
             this.isLoading = false;
@@ -44,39 +48,38 @@ export const useEventStore = defineStore("events", {
             this.isLoading = true;
 
             try {
-                const { data } = await axios.post(`/api/events/${id}?_method=PUT`, formData, {
+                await axios.post(`/api/events/${id}?_method=PUT`, formData, {
                     headers: { "Content-Type": "multipart/form-data" },
                 });
 
-                const idx = this.events.findIndex(e => e.id === id);
-
-                if (idx !== -1) {
-                    // ✅ reactive update
-                    this.events[idx] = data;
-                }
-
+                await this.getEvents();
+                toast.success("Event updated successfully!");
                 this.errors = {};
             } catch (e) {
-                this.errors = e.response?.data?.errors ?? { message: "Update failed" };
+                const message = e.response?.data?.message || "Failed to update event";
+                toast.error(message);
+                this.errors = e.response?.data?.errors ?? { message };
             }
 
             this.isLoading = false;
         },
 
         async deleteEvent(id) {
-            if (!confirm("Are you sure you want to delete this event?")) return;
-
             this.isLoading = true;
+
+            const previous = [...this.events];
+            this.events = this.events.filter(e => e.id !== id);
 
             try {
                 await axios.delete(`/api/events/${id}`);
-
-                // ✅ reactive delete
-                this.events = this.events.filter(e => e.id !== id);
-
+                await this.getEvents();
+                toast.success("Event deleted successfully!");
                 this.errors = {};
             } catch (e) {
-                this.errors = e.response?.data ?? { message: "Delete failed" };
+                this.events = previous; // rollback on failure
+                const message = e.response?.data?.message || "Failed to delete event";
+                toast.error(message);
+                this.errors = e.response?.data ?? { message };
             }
 
             this.isLoading = false;

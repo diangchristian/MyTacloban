@@ -1,28 +1,66 @@
 <script setup>
 import {
-Dialog,
-DialogContent,
-DialogHeader,
-DialogTitle,
-DialogDescription,
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
 } from "@/components/ui/dialog";
 import Input from "@/components/ui/input/Input.vue";
 import Textarea from "@/components/ui/textarea/Textarea.vue";
 import Select from "@/components/ui/select/Select.vue";
 import SelectTrigger from "@/components/ui/select/SelectTrigger.vue";
 import SelectValue from "@/components/ui/select/SelectValue.vue";
+import SelectContent from "@/components/ui/select/SelectContent.vue";
+import SelectItem from "@/components/ui/select/SelectItem.vue";
 import Label from "@/components/ui/label/Label.vue";
+import Button from "@/components/ui/button/Button.vue";
+import { Upload, Calendar } from "lucide-vue-next";
+import { ref, computed, watch } from "vue";
 
 const props = defineProps({
-    modelValue: { type: Boolean, default: false }, // v-model value
-    event: {type: Object},
-    title: { type: String, default: "Create Event" }
+    modelValue: { type: Boolean, default: false },
+    event: { type: Object, required: true },
+    title: { type: String, default: "Create Event" },
+    categories: { type: Array, default: () => [] },
+    isLoading: { type: Boolean, default: false }
 })
 
-const emit = defineEmits(["update:modelValue"])
+const emit = defineEmits(["update:modelValue", "save"])
 
-// Close handler
-const close = () => emit("update:modelValue", false)
+const selectedFile = ref(null);
+const fileInput = ref(null);
+const dateInput = ref(null);
+
+const localCategories = computed(() => props.categories || []);
+
+const bannerPreviewUrl = computed(() =>
+    selectedFile.value ? URL.createObjectURL(selectedFile.value) : props.event?.bannerImageUrl
+);
+
+// Clear local file selection when dialog closes so stale files are not re-used
+watch(() => props.modelValue, (isOpen) => {
+    if (!isOpen) {
+        selectedFile.value = null;
+    }
+});
+
+const handleFileUpload = (e) => {
+    selectedFile.value = e.target.files?.[0] || null;
+};
+
+const triggerFileInput = () => {
+    fileInput.value?.click();
+};
+
+const triggerDatePicker = () => {
+    dateInput.value?.showPicker();
+};
+
+const saveEvent = () => {
+    emit("save", selectedFile.value);
+};
+
+const close = () => emit("update:modelValue", false);
 </script>
 
 <template>
@@ -43,12 +81,31 @@ const close = () => emit("update:modelValue", false)
                     <div class="grid grid-cols-2 gap-4">
                         <div class="space-y-2">
                             <Label for="date">Date <span class="text-red-500">*</span></Label>
-                            <Input id="date" type="date" v-model="event.date" required />
+                            <div class="relative">
+                                <input
+                                    id="date"
+                                    ref="dateInput"
+                                    type="date"
+                                    v-model="event.event_date"
+                                    required
+                                    class="sr-only"
+                                />
+                                <Button
+                                    type="button"
+                                    variant="outline"
+                                    @click="triggerDatePicker"
+                                    class="w-full justify-start text-left font-normal"
+                                    :class="!event.event_date && 'text-muted-foreground'"
+                                >
+                                    <Calendar class="mr-2 h-4 w-4" />
+                                    {{ event.event_date || 'Pick a date' }}
+                                </Button>
+                            </div>
                         </div>
                         
                         <div class="space-y-2">
                             <Label for="time">Time</Label>
-                            <Input id="time" v-model="event.time" placeholder="e.g., 6:00 AM – 10:00 AM" />
+                            <Input id="time" v-model="event.event_time" placeholder="e.g., 6:00 AM – 10:00 AM" />
                         </div>
                     </div>
 
@@ -61,21 +118,20 @@ const close = () => emit("update:modelValue", false)
                         <div class="space-y-2">
                             <Label for="category">Category</Label>
                             <Select v-model="event.category_id">
-                              <SelectTrigger>
+                              <SelectTrigger class="w-full">
                                   <SelectValue placeholder="Select Category" />
                               </SelectTrigger>
 
                               <SelectContent>
                                   <SelectItem
-                                      v-for="cat in categories"
+                                      v-for="cat in localCategories"
                                       :key="cat.id"
-                                      :value="cat.id"
+                                      :value="String(cat.id)"
                                   >
-                                      {{ cat.category_name }}
+                                      {{ cat.name || cat.category_name }}
                                   </SelectItem>
                               </SelectContent>
                           </Select>
-                          <input type="hidden" v-model.number="event.category_id">
                         </div>
                     </div>
                     
@@ -107,12 +163,12 @@ const close = () => emit("update:modelValue", false)
                                 <Button
                                     v-if="selectedFile || event.bannerImageUrl"
                                     type="button" 
-                                    variant="destructive" 
+                                    variant="ghost" 
                                     size="icon" 
                                     class="h-6 w-6 p-0 rounded-full"
                                     @click.stop="selectedFile = null; event.bannerImageUrl = null;"
                                 >
-                                    <X class="size-3" />
+                                    ✕
                                 </Button>
                                 <Upload class="size-4 ml-2 text-gray-500" />
                             </div>
@@ -150,35 +206,17 @@ const close = () => emit("update:modelValue", false)
                             rows="5"
                         />
                     </div>
-                    
-                    <div class="space-y-2 pt-2 border-t border-gray-100">
-                        <Label for="status">Status</Label>
-                        <Select v-model="event.status">
-                            <SelectTrigger class="w-full">
-                                <SelectValue placeholder="Select Status" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem
-                                    v-for="stat in STATUS_OPTIONS"
-                                    :key="stat"
-                                    :value="stat"
-                                >
-                                    {{ stat }}
-                                </SelectItem>
-                            </SelectContent>
-                        </Select>
-                    </div>
 
                     <div class="flex justify-end gap-3 pt-4">
                         <Button 
                             type="button" 
                             variant="outline" 
-                            @click="isEventFormOpen = false; resetFormState()"
+                            @click="close"
                             class="min-w-[80px]"
                         >
                             Cancel
                         </Button>
-                        <Button type="submit" class="min-w-[80px]" :disabled="isLoading">
+                        <Button type="submit" class="min-w-[80px] bg-green-600 hover:bg-green-700" :disabled="isLoading">
                             {{ isLoading ? 'Saving...' : 'Save' }}
                         </Button>
                     </div>
