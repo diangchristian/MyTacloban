@@ -31,6 +31,17 @@ class ReportTimelineController extends Controller
             'description' => 'required|string',
         ]);
 
-        return response()->json($this->timelines->addTimeline($fields));
+
+        if($this->timelines->addTimeline($fields)){
+            return response()->json([
+                'message' => 'New timeline added successfully!'
+            ]);
+
+        }
+
+        return response()->json([
+            'message' => 'Error adding timeline!'
+        ]);
+
     }
 }

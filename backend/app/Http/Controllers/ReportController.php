@@ -36,8 +36,10 @@ class ReportController extends Controller
 
         $search = $request->query('search');
         $status = $request->query('status');
+        $start = $request->query('start');
+        $end = $request->query('end');
 
-        return response()->json($this->report->getReports($search, $status));
+        return response()->json($this->report->getReports($search, $status,  $start,   $end));
     }
 
 
@@ -93,12 +95,12 @@ class ReportController extends Controller
 
         if($this->report->updateReportStatus($fields, $id)){
             return response()->json([
-                'message' => 'status updated succesfully!'
+                'message' => 'Status updated succesfully!'
             ]);
         }
 
         return response()->json([
-            'message' => 'An error has occured!'
+            'message' => 'Couldn\'t update status!'
         ]);
     }
 
