@@ -95,3 +95,7 @@ Route::get('/barangays', [BarangayController::class, 'index']);
 Route::post('/barangays', [BarangayController::class, 'store']);
 Route::put('/barangays/{id}', [BarangayController::class, 'update']);
 Route::delete('/barangays/{id}', [BarangayController::class, 'destroy']);
+
+Route::middleware('auth:sanctum')->group(function () {
+    
+});
