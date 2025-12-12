@@ -61,6 +61,17 @@ export const useAuthStore = defineStore('auth', {
                 if(data.errors){
                     this.errors = data.errors;
                 } else {
+                    // Check user status before allowing login
+                    const userStatus = data.user.status?.toLowerCase();
+                    
+                    if (userStatus !== 'active') {
+                        this.errors = { 
+                            general: [`Your account is ${userStatus}. Please contact support.`] 
+                        };
+                        toast.error(`Account ${userStatus}. Please contact support.`);
+                        return;
+                    }
+                    
                     this.user = data.user;
                     this.userRole = data.user.role.toLowerCase()
                     this.errors = {};
@@ -76,6 +87,10 @@ export const useAuthStore = defineStore('auth', {
             } catch (error) {
                 if (error.response && error.response.status === 422) {
                     this.errors = error.response.data.errors; // show Laravel validation errors
+                } else if (error.response && error.response.status === 403) {
+                    // Handle account deactivation from backend
+                    this.errors = { general: [error.response.data.message] };
+                    toast.error(error.response.data.message);
                 } else {
                     console.error(error);
                 }
