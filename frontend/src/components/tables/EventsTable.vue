@@ -1,13 +1,14 @@
 <script setup>
+import Button from "@/components/ui/button/Button.vue"
 import {
   Clock, Calendar, MapPin,
   SquarePen, Trash2, Eye, Plus, ListChecks, Megaphone
 } from "lucide-vue-next";
 
 defineProps({
-events: Array,
-getStatusClasses: Function
+    events: Array
 })
+const emit = defineEmits(['edit', 'delete', 'preview'])
 </script>
 <template>
     <section class="bg-white p-6 rounded-xl shadow-lg border border-gray-100">
@@ -20,7 +21,6 @@ getStatusClasses: Function
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Event Name</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date & Time</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                             <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
                         </tr>
                     </thead>
@@ -29,25 +29,17 @@ getStatusClasses: Function
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ event.title }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                 <div class="flex flex-col">
-                                    <span>{{ event.date }}</span>
-                                    <span class="text-xs text-gray-400">{{ event.time }}</span>
+                                    <span>{{ event.event_date }}</span>
+                                    <span class="text-xs text-gray-400">{{ event.event_time }}</span>
                                 </div>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ event.category }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <span
-                                    :class="[getStatusClasses(event.status)]"
-                                    class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full"
-                                >
-                                    {{ event.status }}
-                                </span>
-                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ event.category || event.category_name }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                 <div class="flex justify-center space-x-2">
                                     <Button
                                         variant="ghost"
                                         class="p-2 text-blue-600 hover:text-blue-800"
-                                        @click="openEditDialog(event)"
+                                        @click="emit('edit', event)"
                                         aria-label="Edit Event"
                                     >
                                         <SquarePen class="size-4" />
@@ -55,7 +47,7 @@ getStatusClasses: Function
                                     <Button
                                         variant="ghost"
                                         class="p-2 text-red-600 hover:text-red-800"
-                                        @click="deleteEvent(event.id)"
+                                        @click="emit('delete', event.id)"
                                         aria-label="Delete Event"
                                     >
                                         <Trash2 class="size-4" />
@@ -63,7 +55,7 @@ getStatusClasses: Function
                                     <Button
                                         variant="ghost"
                                         class="p-2 text-green-600 hover:text-green-800"
-                                        @click="openPreviewDialog(event)"
+                                        @click="emit('preview', event)"
                                         aria-label="Preview Event"
                                     >
                                         <Eye class="size-4" />
