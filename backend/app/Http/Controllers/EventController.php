@@ -45,7 +45,7 @@ class EventController extends Controller
 
         if ($request->hasFile('image')) {
             $path = $request->file('image')->store('images', 'public');
-            $imageUrl = asset("storage/$path");
+            $imageUrl = "/storage/$path";
         }
 
         $payload = [
@@ -89,7 +89,7 @@ class EventController extends Controller
 
         if ($request->hasFile('image')) {
             $path = $request->file('image')->store('images', 'public');
-            $imageUrl = asset("storage/$path");
+            $imageUrl = "/storage/$path";
         }
 
         $payload = [

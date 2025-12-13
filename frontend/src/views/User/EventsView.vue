@@ -1,264 +1,208 @@
 <script setup>
-import EventsCard from "@/components/cards/EventsCard.vue";
-import Button from "@/components/ui/button/Button.vue";
-import { ref, computed, onMounted } from "vue";
-import { ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Clock, Calendar, MapPin } from "lucide-vue-next";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
-import { useEventStore } from "@/stores/events";
-import { storeToRefs } from "pinia";
+import { ref, computed, onMounted } from "vue"
+import { storeToRefs } from "pinia"
+import { useEventStore } from "@/stores/events"
+import { useCategoriesStore } from "@/stores/categories"
+import EventCard from "@/components/cards/EventCard.vue"
+import EventPreview from "@/components/others/EventPreview.vue"
+import Input from "@/components/ui/input/Input.vue"
+import Select from "@/components/ui/select/Select.vue"
+import SelectTrigger from "@/components/ui/select/SelectTrigger.vue"
+import SelectValue from "@/components/ui/select/SelectValue.vue"
+import SelectContent from "@/components/ui/select/SelectContent.vue"
+import SelectItem from "@/components/ui/select/SelectItem.vue"
+import { Search, Calendar, Filter } from "lucide-vue-next"
 
-const eventStore = useEventStore();
-const { events } = storeToRefs(eventStore);
+// Stores
+const eventStore = useEventStore()
+const categoriesStore = useCategoriesStore()
+const { events, isLoading } = storeToRefs(eventStore)
+const { eventCategories } = storeToRefs(categoriesStore)
+
+// UI State
+const searchTerm = ref("")
+const selectedCategory = ref("all")
+const isPreviewOpen = ref(false)
+const selectedEvent = ref(null)
 
 onMounted(() => {
-  eventStore.getEvents();
-});
+    eventStore.getEvents()
+    categoriesStore.getEventCategories()
+})
 
-// ---------- Reactive States ----------
-const selectedFilter = ref("All");
-const isFilterOpen = ref(false);
-const isYearDropdownOpen = ref(false);
-
-// Dialog state
-const isEventDialogOpen = ref(false);
-const selectedEvent = ref(null);
-
-// Filter options (DB has no category)
-const FILTER_OPTIONS = ["All"];
-
-// ---------- Filtered Events ----------
+// Computed
 const filteredEvents = computed(() => {
-  return events.value;
-});
+    let result = events.value || []
+    
+    // Only show upcoming events (today and future)
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
+    result = result.filter(e => {
+        const eventDate = new Date(e.event_date)
+        eventDate.setHours(0, 0, 0, 0)
+        return eventDate >= today
+    })
+    
+    // Filter by search term
+    const term = searchTerm.value.trim().toLowerCase()
+    if (term) {
+        result = result.filter(e => {
+            const haystack = [
+                e.title,
+                e.description,
+                e.location,
+                e.event_date,
+                e.event_time,
+            ]
+                .filter(Boolean)
+                .join(" ")
+                .toLowerCase()
+            return haystack.includes(term)
+        })
+    }
+    
+    // Filter by category
+    if (selectedCategory.value !== "all") {
+        result = result.filter(e => String(e.category_id) === selectedCategory.value)
+    }
+    
+    // Sort by date (upcoming first)
+    return result.sort((a, b) => {
+        const dateA = new Date(a.event_date)
+        const dateB = new Date(b.event_date)
+        return dateA - dateB
+    })
+})
 
-// ---------- Months ----------
-const months = [
-  "January", "February", "March", "April", "May", "June",
-  "July", "August", "September", "October", "November", "December"
-];
+const upcomingEvents = computed(() => {
+    return filteredEvents.value
+})
 
-// ---------- Available Years (Always includes current year) ----------
-const availableYears = computed(() => {
-  const eventYears = events.value
-    .map(e => new Date(e.event_date).getFullYear())
-    .filter(y => !isNaN(y));
+const pastEvents = computed(() => {
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
+    return filteredEvents.value.filter(e => {
+        const eventDate = new Date(e.event_date)
+        eventDate.setHours(0, 0, 0, 0)
+        return eventDate < today
+    })
+})
 
-  const uniqueYears = [...new Set(eventYears)];
-
-  const currentYearValue = new Date().getFullYear();
-  if (!uniqueYears.includes(currentYearValue)) {
-    uniqueYears.push(currentYearValue);
-  }
-
-  return uniqueYears.sort((a, b) => a - b);
-});
-
-// ---------- Year Index ----------
-const currentYearIndex = ref(
-  availableYears.value.indexOf(new Date().getFullYear())
-);
-
-if (currentYearIndex.value === -1) {
-  currentYearIndex.value = 0;
+function viewEvent(event) {
+    selectedEvent.value = event
+    isPreviewOpen.value = true
 }
-
-// ---------- Current Year ----------
-const currentYear = computed(() => {
-  return availableYears.value[currentYearIndex.value];
-});
-
-// ---------- Month Index ----------
-const currentMonthIndex = ref(new Date().getMonth());
-
-// ---------- Events for Current Month ----------
-const eventsForCurrentMonth = computed(() => {
-  const monthName = months[currentMonthIndex.value];
-
-  return filteredEvents.value.filter(event => {
-    const eventDate = new Date(event.event_date);
-    return (
-      eventDate.getFullYear() === currentYear.value &&
-      eventDate.toLocaleString("default", { month: "long" }) === monthName
-    );
-  });
-});
-
-// ---------- Page Turner Methods ----------
-function prevMonth() {
-  if (currentMonthIndex.value > 0) currentMonthIndex.value--;
-  else currentMonthIndex.value = 11;
-}
-
-function nextMonth() {
-  if (currentMonthIndex.value < 11) currentMonthIndex.value++;
-  else currentMonthIndex.value = 0;
-}
-
-// ---------- Modal ----------
-const openEventDialog = (event) => {
-  selectedEvent.value = event;
-  isEventDialogOpen.value = true;
-};
 </script>
 
 <template>
-  <div class="space-y-8">
-
-    <div class="w-full mx-auto">
-      <div class="w-full h-52 overflow-hidden rounded-md relative">
-        <img src="@/assets/images/user-bg.jpg" class="w-full h-full object-cover" alt="">
-        <div class="w-full h-full bg-gradient-to-l via-green to-primary/70 absolute top-0 left-0 z-2 flex flex-col justify-center px-8 text-white">
-            <h1 class="text-3xl font-bold">EVENTS</h1>
-            <p class="font-semibold">Upcoming schedules and activities in the city</p>
+    <div class="min-h-screen bg-gradient-to-br from-gray-50 to-green-50/30">
+        <!-- Hero Section -->
+        <div class="w-full mx-auto">
+            <div class="w-full h-52 overflow-hidden rounded-md relative">
+                <img
+                    src="@/assets/images/user-bg.jpg"
+                    class="w-full h-full object-cover"
+                    alt=""
+                >
+                <div class="w-full h-full bg-gradient-to-l via-green to-primary/70 absolute top-0 left-0 z-2 flex flex-col justify-center px-8 text-white">
+                    <h1 class="text-5xl font-bold">EVENTS</h1>
+                    <p class="font-semibold">Upcoming schedules and activities in the city</p>
+                </div>
+            </div>
         </div>
-      </div>
+
+        <!-- Filters Section -->
+        <div class="bg-gray-50 py-8 px-6">
+            <section class="max-w-7xl mx-auto">
+                <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-100">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Search & Filter</h3>
+                    <div class="flex flex-col md:flex-row gap-4">
+                        <!-- Search -->
+                        <div class="flex-1 relative">
+                            <Search class="size-5 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                            <Input
+                                v-model="searchTerm"
+                                placeholder="Search events by title, location, or date..."
+                                class="pl-10"
+                            />
+                        </div>
+
+                        <!-- Category Filter -->
+                        <div class="md:w-64 relative">
+                            <Filter class="size-5 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none z-10" />
+                            <Select v-model="selectedCategory">
+                                <SelectTrigger class="pl-10">
+                                    <SelectValue placeholder="All Categories" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="all">All Categories</SelectItem>
+                                    <SelectItem
+                                        v-for="cat in eventCategories"
+                                        :key="cat.id"
+                                        :value="String(cat.id)"
+                                    >
+                                        {{ cat.category_name || cat.name }}
+                                    </SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Loading State -->
+        <div v-if="isLoading" class="max-w-7xl mx-auto px-6 py-12">
+            <div class="text-center text-gray-500">
+                <div class="inline-block animate-spin rounded-full h-12 w-12 border-4 border-green-600 border-t-transparent mb-4"></div>
+                <p>Loading events...</p>
+            </div>
+        </div>
+
+        <!-- Events Grid -->
+        <div v-else class="max-w-7xl mx-auto px-6 py-12 space-y-12">
+            
+            <!-- Upcoming Events -->
+            <section v-if="upcomingEvents.length > 0">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="bg-green-600 text-white p-2 rounded-lg">
+                        <Calendar class="size-6" />
+                    </div>
+                    <h2 class="text-2xl md:text-3xl font-bold text-gray-900">
+                        Upcoming Events
+                        <span class="text-green-600">({{ upcomingEvents.length }})</span>
+                    </h2>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <EventCard
+                        v-for="event in upcomingEvents"
+                        :key="event.id"
+                        :event="event"
+                        @view="viewEvent"
+                    />
+                </div>
+            </section>
+
+            <!-- Empty State -->
+            <div v-if="upcomingEvents.length === 0" class="text-center py-16">
+                <div class="inline-flex items-center justify-center w-20 h-20 bg-gray-100 rounded-full mb-4">
+                    <Calendar class="size-10 text-gray-400" />
+                </div>
+                <h3 class="text-xl font-semibold text-gray-700 mb-2">No Events Found</h3>
+                <p class="text-gray-500">
+                    {{ searchTerm || selectedCategory !== 'all' 
+                        ? 'Try adjusting your search or filters' 
+                        : 'Check back soon for upcoming community events' 
+                    }}
+                </p>
+            </div>
+        </div>
+
+        <!-- Event Preview Dialog -->
+        <EventPreview 
+            v-model="isPreviewOpen"
+            :event="selectedEvent"
+        />
     </div>
-
-    <div class="p-4 md:px-8 lg:px-12 space-y-8">
-
-      <div class="flex flex-col md:flex-row md:justify-between items-center mb-6 gap-2">
-
-        <!-- Filter Dropdown (All) -->
-        <div class="relative w-full md:w-auto md:order-1 order-2">
-          <Button
-            @click="isFilterOpen = !isFilterOpen"
-            class="h-11 px-6 flex items-center justify-between gap-3 rounded-full border-2 transition-all duration-200 shadow-sm w-full md:w-auto"
-            :class="isFilterOpen 
-              ? 'bg-green-600 text-white border-green-600 hover:bg-green-700' 
-              : 'bg-white text-gray-700 border-gray-300 hover:border-green-400'"
-          >
-            <span class="font-medium text-sm">{{ selectedFilter }}</span>
-            <component 
-              :is="isFilterOpen ? ChevronUp : ChevronDown" 
-              size="18" 
-              :class="isFilterOpen ? 'text-white' : 'text-green-500'" 
-            />
-          </Button>
-
-          <div 
-            v-if="isFilterOpen" 
-            class="absolute mt-2 w-full md:w-48 bg-white shadow-xl rounded-xl border border-gray-100 p-2 z-50 left-0" 
-          >
-            <button
-              v-for="filter in FILTER_OPTIONS"
-              :key="filter"
-              @click="selectedFilter = filter; isFilterOpen = false"
-              class="w-full text-left px-3 py-2 rounded-lg text-sm text-gray-700 hover:bg-green-100 transition-colors"
-            >
-              {{ filter }}
-            </button>
-          </div>
-        </div>
-
-        <!-- Year and Month Navigation -->
-        <div class="flex flex-col items-center gap-2 md:order-2 order-1 md:mx-auto mt-4 md:mt-0">
-
-          <!-- Year Dropdown -->
-          <div class="relative mb-2">
-            <Button
-              @click="isYearDropdownOpen = !isYearDropdownOpen"
-              class="bg-transparent text-gray-900 text-lg font-semibold px-2 py-1 hover:bg-gray-100 transition-colors"
-            >
-              {{ currentYear }}
-            </Button>
-
-            <div
-              v-if="isYearDropdownOpen"
-              class="absolute mt-1 w-28 bg-white border rounded-lg shadow-lg z-50 left-1/2 transform -translate-x-1/2"
-            >
-              <button
-                v-for="(year, index) in availableYears"
-                :key="year"
-                @click="currentYearIndex = index; isYearDropdownOpen = false"
-                class="w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-green-100 transition-colors"
-              >
-                {{ year }}
-              </button>
-            </div>
-          </div>
-
-          <!-- Month Switcher -->
-          <div class="flex items-center gap-6">
-            <Button 
-              @click="prevMonth" 
-              class="p-2 rounded-full bg-white text-green-600 hover:bg-green-50 transition-colors shadow-md border-2 border-green-100"
-            >
-              <ChevronLeft size="24" />
-            </Button>
-
-            <p class="text-3xl font-extrabold text-gray-900">{{ months[currentMonthIndex] }}</p>
-
-            <Button 
-              @click="nextMonth" 
-              class="p-2 rounded-full bg-white text-green-600 hover:bg-green-50 transition-colors shadow-md border-2 border-green-100"
-            >
-              <ChevronRight size="24" />
-            </Button>
-          </div>
-        </div>
-
-        <!-- Invisible Spacer -->
-        <div class="w-full md:w-auto md:order-3 order-3 invisible">
-             <Button class="h-11 px-6 w-full md:w-auto invisible">
-                 <span class="font-medium text-sm">All</span>
-            </Button>
-        </div>
-      </div>
-
-      <hr class="border-gray-200 mt-4" />
-
-      <!-- Event Cards -->
-      <div class="mt-4">
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <div v-for="event in eventsForCurrentMonth" :key="event.title + event.date">
-            <EventsCard :event="event" :on-read-more="openEventDialog" /> 
-          </div>
-        </div>
-
-        <p v-if="eventsForCurrentMonth.length === 0" class="text-gray-500 text-center mt-10 w-full">
-          No events scheduled for {{ months[currentMonthIndex] }} {{ currentYear }}.
-        </p>
-      </div>
-
-      <!-- Event Dialog -->
-      <Dialog v-model:open="isEventDialogOpen">
-        <DialogContent class="max-w-2xl w-full overflow-y-auto p-4 rounded-lg">
-          <DialogHeader>
-            <DialogTitle class="text-md font-medium text-gray-900">
-              {{ selectedEvent?.title }}
-            </DialogTitle>
-          </DialogHeader>
-
-          <CardContent class="space-y-2">
-            <div class="flex items-center gap-2 text-gray-600 font-light text-sm">
-              <Calendar class="size-4" /> <span>{{ selectedEvent?.event_date }}</span>
-            </div>
-            <div class="flex items-center gap-2 text-gray-600 font-light text-sm">
-              <Clock class="size-4" /> <span>{{ selectedEvent?.event_time }}</span>
-            </div>
-            <div class="flex items-center gap-2 text-gray-600 font-light text-sm">
-              <MapPin class="size-4" /> <span>{{ selectedEvent?.location }}</span>
-            </div>
-
-            <p class="text-gray-700 leading-relaxed">
-              {{ selectedEvent?.content }}
-            </p>
-
-            <Button
-              class="w-full mt-4 px-4 py-2 border rounded-md text-green-600 hover:bg-green-50 transition-colors"
-              @click="isEventDialogOpen = false"
-            >
-              Close
-            </Button>
-          </CardContent>
-        </DialogContent>
-      </Dialog>
-    </div>
-  </div>
 </template>
