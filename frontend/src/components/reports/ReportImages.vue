@@ -5,12 +5,6 @@ import { ref } from 'vue';
 
 import sample from '@/assets/images/news-sample.png'
 
-const images = [
-  mockup1,
-  mockup2,
-  sample
-]
-
 const props = defineProps({
   images:{
     type: Array
