@@ -34,14 +34,9 @@ router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore();
   const userStore = useUserStore();
 
-  // If token exists but user not loaded yet
-  if (!authStore.user && localStorage.getItem('token')) {
-    try {
-      await authStore.getUser(); // ensures user is loaded
-    } catch {
-      // optional: clear token if getUser fails
-      localStorage.removeItem('token');
-    }
+  // Wait for initial auth check to complete
+  if (authStore.isLoading && localStorage.getItem('token')) {
+    await authStore.getUser();
   }
 
   const isAuthenticated = authStore.isAuthenticated;
