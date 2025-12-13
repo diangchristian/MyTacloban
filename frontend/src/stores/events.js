@@ -48,7 +48,7 @@ export const useEventStore = defineStore("events", {
             this.isLoading = true;
 
             try {
-                await axios.post(`/api/events/${id}?_method=PUT`, formData, {
+                await axios.put(`/api/events/${id}`, formData, {
                     headers: { "Content-Type": "multipart/form-data" },
                 });
 

@@ -14,7 +14,7 @@ import SelectContent from "@/components/ui/select/SelectContent.vue";
 import SelectItem from "@/components/ui/select/SelectItem.vue";
 import Label from "@/components/ui/label/Label.vue";
 import Button from "@/components/ui/button/Button.vue";
-import { Upload, Calendar } from "lucide-vue-next";
+import { Upload, Calendar, ChevronLeft, ChevronRight } from "lucide-vue-next";
 import { ref, computed, watch } from "vue";
 
 const props = defineProps({
@@ -30,12 +30,64 @@ const emit = defineEmits(["update:modelValue", "save"])
 const selectedFile = ref(null);
 const fileInput = ref(null);
 const dateInput = ref(null);
+const showDatePicker = ref(false);
 
 const localCategories = computed(() => props.categories || []);
 
 const bannerPreviewUrl = computed(() =>
     selectedFile.value ? URL.createObjectURL(selectedFile.value) : props.event?.bannerImageUrl
 );
+
+// Date picker helpers
+const currentPickerMonth = ref(new Date(props.event?.event_date || new Date()).getMonth());
+const currentPickerYear = ref(new Date(props.event?.event_date || new Date()).getFullYear());
+
+const daysInMonth = computed(() => {
+    return new Date(currentPickerYear.value, currentPickerMonth.value + 1, 0).getDate();
+});
+
+const firstDayOfMonth = computed(() => {
+    return new Date(currentPickerYear.value, currentPickerMonth.value, 1).getDay();
+});
+
+const monthName = computed(() => {
+    return new Date(currentPickerYear.value, currentPickerMonth.value).toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+});
+
+const calendarDays = computed(() => {
+    const days = [];
+    for (let i = 0; i < firstDayOfMonth.value; i++) {
+        days.push(null);
+    }
+    for (let i = 1; i <= daysInMonth.value; i++) {
+        days.push(i);
+    }
+    return days;
+});
+
+const prevMonth = () => {
+    if (currentPickerMonth.value === 0) {
+        currentPickerMonth.value = 11;
+        currentPickerYear.value--;
+    } else {
+        currentPickerMonth.value--;
+    }
+};
+
+const nextMonth = () => {
+    if (currentPickerMonth.value === 11) {
+        currentPickerMonth.value = 0;
+        currentPickerYear.value++;
+    } else {
+        currentPickerMonth.value++;
+    }
+};
+
+const selectDate = (day) => {
+    const date = new Date(currentPickerYear.value, currentPickerMonth.value, day);
+    event.event_date = date.toISOString().split('T')[0];
+    showDatePicker.value = false;
+};
 
 // Clear local file selection when dialog closes so stale files are not re-used
 watch(() => props.modelValue, (isOpen) => {
@@ -50,10 +102,6 @@ const handleFileUpload = (e) => {
 
 const triggerFileInput = () => {
     fileInput.value?.click();
-};
-
-const triggerDatePicker = () => {
-    dateInput.value?.showPicker();
 };
 
 const saveEvent = () => {
@@ -93,13 +141,63 @@ const close = () => emit("update:modelValue", false);
                                 <Button
                                     type="button"
                                     variant="outline"
-                                    @click="triggerDatePicker"
+                                    @click="showDatePicker = !showDatePicker"
                                     class="w-full justify-start text-left font-normal"
                                     :class="!event.event_date && 'text-muted-foreground'"
                                 >
                                     <Calendar class="mr-2 h-4 w-4" />
                                     {{ event.event_date || 'Pick a date' }}
                                 </Button>
+
+                                <!-- Lucide Calendar Picker Popup -->
+                                <div v-if="showDatePicker" class="absolute top-full left-0 mt-2 bg-white border border-gray-200 rounded-lg shadow-lg p-4 z-50 w-72">
+                                    <!-- Month/Year Navigation -->
+                                    <div class="flex items-center justify-between mb-4">
+                                        <Button type="button" variant="ghost" size="icon" @click="prevMonth" class="h-8 w-8">
+                                            <ChevronLeft class="size-4" />
+                                        </Button>
+                                        <span class="font-semibold text-gray-900">{{ monthName }}</span>
+                                        <Button type="button" variant="ghost" size="icon" @click="nextMonth" class="h-8 w-8">
+                                            <ChevronRight class="size-4" />
+                                        </Button>
+                                    </div>
+
+                                    <!-- Day Headers -->
+                                    <div class="grid grid-cols-7 gap-2 mb-2">
+                                        <div v-for="day in ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']" :key="day" class="text-center text-xs font-semibold text-gray-500">
+                                            {{ day }}
+                                        </div>
+                                    </div>
+
+                                    <!-- Days Grid -->
+                                    <div class="grid grid-cols-7 gap-2">
+                                        <div v-for="(day, index) in calendarDays" :key="index" class="aspect-square">
+                                            <button
+                                                v-if="day"
+                                                type="button"
+                                                @click="selectDate(day)"
+                                                :class="[
+                                                    'w-full h-full rounded text-sm font-medium transition-colors',
+                                                    event.event_date === `${currentPickerYear}-${String(currentPickerMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`
+                                                        ? 'bg-green-600 text-white'
+                                                        : 'bg-gray-50 text-gray-900 hover:bg-green-100'
+                                                ]"
+                                            >
+                                                {{ day }}
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <!-- Close button -->
+                                    <Button 
+                                        type="button" 
+                                        variant="ghost" 
+                                        @click="showDatePicker = false" 
+                                        class="w-full mt-3 text-gray-600 text-sm"
+                                    >
+                                        Close
+                                    </Button>
+                                </div>
                             </div>
                         </div>
                         
