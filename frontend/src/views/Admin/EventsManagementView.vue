@@ -170,31 +170,58 @@
 
     // CRUD
     async function saveEvent(uploadedFile) {
-        if (!newEvent.title || !newEvent.event_date || !newEvent.location) {
+        // Ensure all required fields are filled
+        if (!newEvent.title?.trim()) {
+            toast.error('Title is required')
+            return
+        }
+        if (!newEvent.event_date?.trim()) {
+            toast.error('Date is required')
+            return
+        }
+        if (!newEvent.location?.trim()) {
+            toast.error('Location is required')
             return
         }
 
         const formData = new FormData()
+        
+        // Log what we're sending
+        console.log('Saving event:', {
+            id: newEvent.id,
+            title: newEvent.title,
+            category_id: newEvent.category_id,
+            event_date: newEvent.event_date,
+            location: newEvent.location
+        })
+
         Object.entries({
             title: newEvent.title,
-            description: newEvent.description,
-            content: newEvent.content,
+            description: newEvent.description || "",
+            content: newEvent.content || "",
             location: newEvent.location,
-            event_time: newEvent.event_time,
+            event_time: newEvent.event_time || "",
             event_date: newEvent.event_date,
             category_id: newEvent.category_id ? Number(newEvent.category_id) : "",
-        }).forEach(([k, v]) => formData.append(k, v ?? ""))
+        }).forEach(([k, v]) => formData.append(k, v))
 
         if (uploadedFile) formData.append("image", uploadedFile)
 
-        newEvent.id
-            ? await eventStore.updateEvent(newEvent.id, formData)
-            : await eventStore.addEvent(formData)
+        try {
+            if (newEvent.id) {
+                await eventStore.updateEvent(newEvent.id, formData)
+            } else {
+                await eventStore.addEvent(formData)
+            }
 
-        if (Object.keys(errors.value).length === 0) {
-            isEventFormOpen.value = false
-            resetEventForm()
-            currentPage.value = 1
+            if (Object.keys(errors.value).length === 0) {
+                isEventFormOpen.value = false
+                resetEventForm()
+                currentPage.value = 1
+            }
+        } catch (error) {
+            console.error('Save event error:', error)
+            toast.error('Failed to save event')
         }
     }
 
@@ -223,6 +250,14 @@
     watch(filteredEvents, () => {
         if (currentPage.value > totalPages.value) {
             currentPage.value = totalPages.value
+        }
+    })
+
+    // Watch dialog open to ensure form is filled properly
+    watch(isEventFormOpen, (isOpen) => {
+        if (isOpen) {
+            // Form data should already be set by openEditDialog or resetEventForm
+            console.log('Form opened with data:', newEvent)
         }
     })
 

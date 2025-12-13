@@ -38,7 +38,15 @@ const bannerPreviewUrl = computed(() =>
     selectedFile.value ? URL.createObjectURL(selectedFile.value) : props.event?.bannerImageUrl
 );
 
-// Date picker helpers
+// Date picker helpers - watch for changes to event date
+watch(() => props.event?.event_date, (newDate) => {
+    if (newDate) {
+        const date = new Date(newDate);
+        currentPickerMonth.value = date.getMonth();
+        currentPickerYear.value = date.getFullYear();
+    }
+});
+
 const currentPickerMonth = ref(new Date(props.event?.event_date || new Date()).getMonth());
 const currentPickerYear = ref(new Date(props.event?.event_date || new Date()).getFullYear());
 
@@ -84,8 +92,11 @@ const nextMonth = () => {
 };
 
 const selectDate = (day) => {
-    const date = new Date(currentPickerYear.value, currentPickerMonth.value, day);
-    event.event_date = date.toISOString().split('T')[0];
+    // Construct a local date string (YYYY-MM-DD) to avoid timezone shifts
+    const y = currentPickerYear.value;
+    const m = String(currentPickerMonth.value + 1).padStart(2, '0');
+    const d = String(day).padStart(2, '0');
+    props.event.event_date = `${y}-${m}-${d}`;
     showDatePicker.value = false;
 };
 
@@ -123,7 +134,13 @@ const close = () => emit("update:modelValue", false);
             <form @submit.prevent="saveEvent" class="space-y-6 pt-4">
                     <div class="space-y-2">
                         <Label for="title">Title <span class="text-red-500">*</span></Label>
-                        <Input id="title" v-model="event.title" required />
+                        <input 
+                            id="title" 
+                            v-model="event.title" 
+                            type="text"
+                            required 
+                            class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
+                        />
                     </div>
 
                     <div class="grid grid-cols-2 gap-4">
@@ -203,14 +220,26 @@ const close = () => emit("update:modelValue", false);
                         
                         <div class="space-y-2">
                             <Label for="time">Time</Label>
-                            <Input id="time" v-model="event.event_time" placeholder="e.g., 6:00 AM – 10:00 AM" />
+                            <input 
+                                id="time" 
+                                v-model="event.event_time" 
+                                type="text"
+                                placeholder="e.g., 6:00 AM – 10:00 AM"
+                                class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
+                            />
                         </div>
                     </div>
 
                     <div class="grid grid-cols-2 gap-4">
                         <div class="space-y-2">
                             <Label for="venue">Venue <span class="text-red-500">*</span></Label>
-                            <Input id="venue" v-model="event.location" required />
+                            <input 
+                                id="venue" 
+                                v-model="event.location" 
+                                type="text"
+                                required 
+                                class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
+                            />
                         </div>
                         
                         <div class="space-y-2">
@@ -288,20 +317,22 @@ const close = () => emit("update:modelValue", false);
                     
                     <div class="space-y-2">
                         <Label for="description">Summary</Label>
-                        <Textarea
+                        <textarea
                             id="description"
                             v-model="event.description"
                             rows="2"
                             maxlength="150"
+                            class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
                         />
                     </div>
 
                     <div class="space-y-2">
                         <Label for="content">Full Details</Label>
-                        <Textarea
+                        <textarea
                             id="content"
                             v-model="event.content"
                             rows="5"
+                            class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
                         />
                     </div>
 
