@@ -170,7 +170,6 @@ function viewEvent(event) {
                     </div>
                     <h2 class="text-2xl md:text-3xl font-bold text-gray-900">
                         Upcoming Events
-                        <span class="text-green-600">({{ upcomingEvents.length }})</span>
                     </h2>
                 </div>
                 

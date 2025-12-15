@@ -48,14 +48,17 @@ export const useEventStore = defineStore("events", {
             this.isLoading = true;
 
             try {
-                await axios.put(`/api/events/${id}`, formData, {
+                console.log(`Updating event ${id}...`)
+                const response = await axios.post(`/api/events/${id}?_method=PUT`, formData, {
                     headers: { "Content-Type": "multipart/form-data" },
                 });
+                console.log('Update response:', response.data)
 
                 await this.getEvents();
                 toast.success("Event updated successfully!");
                 this.errors = {};
             } catch (e) {
+                console.error('Update error:', e.response?.data || e)
                 const message = e.response?.data?.message || "Failed to update event";
                 toast.error(message);
                 this.errors = e.response?.data?.errors ?? { message };

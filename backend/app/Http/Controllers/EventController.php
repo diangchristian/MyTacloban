@@ -113,7 +113,10 @@ class EventController extends Controller
     }
 
     public function destroy(Request $request, $id){
-        $deleted = $this->event->destroy((int) $id, $request->user()->id ?? null);
+        $user = $request->user();
+        $userId = $user ? $user->id : null;
+        
+        $deleted = $this->event->destroy((int) $id, $userId);
 
         if ($deleted) {
             return response()->json(['message' => 'Event deleted successfully']);
