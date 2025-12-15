@@ -17,6 +17,7 @@ use App\Http\Controllers\ReportTimelineController;
 use App\Http\Controllers\ImageUploadController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\SystemSettingsController;
+use App\Http\Middleware\CheckUserStatus;
 
 
 
@@ -66,7 +67,7 @@ Route::post('/report-timelines', [ReportTimelineController::class, 'store' ]);
 
 
 
-Route::put('/update/user-profile/{id}', [UserController::class, 'update']);
+Route::put('/updates/user-profile/{id}', [UserController::class, 'update']);
 Route::put('/user-profile/{id}', [UserManagementController::class, 'updateRoleStatus']);
 Route::put('/system-settings', [SystemSettingsController::class, 'update']);
 
@@ -96,10 +97,6 @@ Route::post('/barangays', [BarangayController::class, 'store']);
 Route::put('/barangays/{id}', [BarangayController::class, 'update']);
 Route::delete('/barangays/{id}', [BarangayController::class, 'destroy']);
 
-Route::middleware(['auth:sanctum', 'user.status'])->group(function () {
-    Route::get('/user', function (Request $request) {
-        return response()->json(['user' => $request->user()]);
-    });
-    
-    // Add other protected routes here
-});
+// Route::get('/user', function (Request $request) {
+//     return response()->json(['user' => $request->user()]);
+// })->middleware(['auth:sanctum', CheckUserStatus::class]);

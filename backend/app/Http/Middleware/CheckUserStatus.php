@@ -12,7 +12,7 @@ class CheckUserStatus
     {
         $user = Auth::user();
 
-        if ($user && $user->status !== 'Active') {
+    if ($user && $user->status !== 'Active') {
             Auth::logout();
             return response()->json([
                 'message' => 'Your account has been deactivated or blocked.'
