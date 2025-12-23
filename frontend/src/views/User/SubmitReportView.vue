@@ -23,9 +23,7 @@ const { errors } = storeToRefs(useSubmitReport());
 const fileInput = ref("");
 const isLoading = ref(true);
 
-
-
-
+ 
 const selectedCategory = ref(null);
 const otherIssueText = ref("");
 // const requiresOtherInput = computed(() => selectedCategory.value === 6);
@@ -107,7 +105,7 @@ const handleSubmit = async () => {
           </div>
 
           <div
-            class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 rounded-xl shadow-sm gap-4 mt-2"
+            class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 rounded-xl  gap-4 mt-2"
             v-else
             >
   

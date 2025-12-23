@@ -201,7 +201,7 @@ function viewEvent(event) {
         <!-- Event Preview Dialog -->
         <EventPreview 
             v-model="isPreviewOpen"
-            :event="selectedEvent"
+            :event="selectedEvent"  
         />
     </div>
 </template>

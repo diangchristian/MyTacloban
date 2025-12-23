@@ -3,6 +3,7 @@ import { defineStore } from 'pinia'
 import { toast } from 'vue-sonner'
 import { Toaster } from 'sonner'
 import { useAuthStore } from '@/stores/auth'
+import { promiseTimeout } from '@vueuse/core'
 
 
 
@@ -21,6 +22,7 @@ export const useSubmitReport = defineStore('submitReport', {
 
     getters: {
         pendingCount: (state) => state.allReports.filter(r => r.status === 'pending').length,
+        assignedCount: (state) => state.allReports.filter(r => r.status === 'assigned').length,
         inProgressCount: (state) => state.allReports.filter(r => r.status === 'in_progress').length,
         resolvedCount: (state) => state.allReports.filter(r => r.status === 'resolved').length,
     },
@@ -43,6 +45,7 @@ export const useSubmitReport = defineStore('submitReport', {
         async getReportById(id){
             console.log(id)
             const { data } = await axios.get(`/api/reports/details/${id}`);
+        
 
             if(data){
                 this.reportDetails = data
@@ -77,6 +80,7 @@ export const useSubmitReport = defineStore('submitReport', {
             }
         },
         
+    
 
         async getUserReports(){
             const authStore = useAuthStore()      // access auth store

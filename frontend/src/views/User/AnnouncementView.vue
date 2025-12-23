@@ -79,9 +79,16 @@ onMounted(async () => {
     <Dialog v-model:open="isNewsDialogOpen">
       <DialogContent class="max-w-2xl max-h-[80vh] overflow-y-auto">
         <DialogHeader>
+        
           <DialogTitle class="text-2xl font-bold">
             {{ selectedItem?.title }}
           </DialogTitle>
+          <img 
+            v-if="selectedItem?.image"
+            :src="selectedItem?.image" 
+            alt="announcement-image"
+            class="w-full h-64 object-cover rounded-lg mt-4"
+          />  
           <div class="text-sm text-gray-500">
             {{ selectedItem?.date }}
           </div>

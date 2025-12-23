@@ -48,6 +48,23 @@ const categoryClass = computed(() => {
   return categoryColors[props.announcement.category_name] || "bg-gray-100 text-gray-800";
 });
 
+
+function  timeAgo(date) {
+    const now = new Date()
+    const past = new Date(date)
+    const diffInSeconds = Math.floor((now - past) / 1000)
+
+    const minutes = Math.floor(diffInSeconds / 60)
+    const hours = Math.floor(minutes / 60)
+    const days = Math.floor(hours / 24)
+    const weeks = Math.floor(days / 7)
+
+    if (minutes < 1) return 'Just now'
+    if (minutes < 60) return `${minutes} min${minutes > 1 ? 's' : ''} ago`
+    if (hours < 24) return `${hours} hour${hours > 1 ? 's' : ''} ago`
+    if (days < 7) return `${days} day${days > 1 ? 's' : ''} ago`
+    return `${weeks} week${weeks > 1 ? 's' : ''} ago`
+  }
 </script>
 
 
@@ -59,7 +76,11 @@ const categoryClass = computed(() => {
                     <span :class="`px-2 py-1 text-xs rounded-lg ${categoryClass}`">
                         {{ announcement.category_name }}
                     </span>
-                    <p class="text-gray-400 text-xs font-regular">2 hours ago</p>
+                    <p class="text-gray-400 text-xs font-regular">
+                        {{ timeAgo(announcement.created_at) }}
+                        </p>
+
+
                     </div>
                 {{announcement.title}}
             </CardTitle>

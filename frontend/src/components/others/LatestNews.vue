@@ -81,8 +81,8 @@ const props = defineProps({
         <div class="space-y-4">
           <img 
             v-if="selectedItem?.image"
-            :src="images" 
-            :alt="selectedItem?.title"
+            :src="selectedItem?.image" 
+            alt="announcement-image"
             class="w-full h-64 object-cover rounded-lg"
           />
           <DialogDescription class="text-base text-gray-700 leading-relaxed">

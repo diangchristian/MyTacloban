@@ -37,6 +37,7 @@ const props = defineProps({
                   <Label for="" class="text-black mb-2">Reporter Information</Label>
                   <p class="text-sm font-light">Name: {{props.header.full_name }}</p>
                   <p class="text-sm font-light">Email: {{props.header.email }}</p>
+                  <p class="text-sm font-light">Phone Number: {{props.header.phone_number }}</p>
                 </div>
               </CardTitle>
               <CardDescription class="mt-1">
