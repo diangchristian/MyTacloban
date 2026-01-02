@@ -45,7 +45,8 @@ const formData = reactive({
   email: '',
   password: '',
   password_confirmation: '',
-  barangay_id: ''
+  barangay_id: '',
+  phone_number: ''
 
 })
 
@@ -108,6 +109,13 @@ const handleSubmit = () => {
           We'll use this to contact you. We will not share your email
           with anyone else.
         </FieldDescription>
+      </Field>
+      <Field>
+        <FieldLabel for="email">
+          Email
+        </FieldLabel>
+        <Input id="phone_number" type="phone_number" placeholder="m@example.com"  v-model="formData.phone_number"/>
+        <FieldError v-if="errors.phone_number" :errorMessage="errors.phone_number[0]"/>
       </Field>
       <Field>
         <FieldLabel for="password">

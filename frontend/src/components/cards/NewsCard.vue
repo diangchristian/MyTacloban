@@ -75,7 +75,7 @@ const emit = defineEmits(['view-details']);
         <!-- Right image section -->
         <CardContent class="flex-1 p-0 overflow-hidden max-w-[50%]"> 
             <img 
-                :src="images" 
+                :src="news.image" 
                 class="w-full h-full object-cover"
                 :alt="news.title"
             >

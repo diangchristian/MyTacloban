@@ -3,7 +3,7 @@ import DashboardStatsCard from '@/components/cards/DashboardStatsCard.vue';
 import RecentReportsTable from '@/components/tables/RecentReportsTable.vue';
 import QuickActions from '@/components/others/QuickActions.vue';  
 import { ref, onMounted, computed } from "vue";
-import { ClipboardList, Clock, CircleDot, CircleCheckBig, Users  } from 'lucide-vue-next';
+import { ClipboardList, Clock, CircleDot, CircleCheckBig, Users, UserCheck } from 'lucide-vue-next';
 import { useSubmitReport } from '@/stores/submitReport';
 import { useCategoriesStore } from '@/stores/categories';
 import {useUserStore} from "@/stores/userStore"
@@ -93,8 +93,8 @@ const countReportsInRange = (items, start, end, predicate = () => true) => {
 
 // compute all dashboard statistics with week-over-week comparisons
 const stats = computed(() => {
-  const items = Array.isArray(reportStore.reports) ? reportStore.reports : [];
-
+  const items = Array.isArray(reportStore.allReports) ? reportStore.allReports : [];
+  console.log(items)
   // count total reports for this week and last week
   const totalThisWeek = countReportsInRange(items, startOfThisWeek, now);
   const totalLastWeek = countReportsInRange(items, startOfLastWeek, startOfThisWeek);
@@ -103,6 +103,9 @@ const stats = computed(() => {
   const pendingThisWeek = countReportsInRange(items, startOfThisWeek, now, r => r.status === 'pending');
   const pendingLastWeek = countReportsInRange(items, startOfLastWeek, startOfThisWeek, r => r.status === 'pending');
 
+
+  const assignedThisWeek = countReportsInRange(items, startOfThisWeek, now, r => r.status === 'assigned');
+  const assignedLastWeek = countReportsInRange(items, startOfLastWeek, startOfThisWeek, r => r.status === 'assigned');
   // count in-progress reports for both weeks
   const inProgressThisWeek = countReportsInRange(items, startOfThisWeek, now, r => r.status === 'in_progress');
   const inProgressLastWeek = countReportsInRange(items, startOfLastWeek, startOfThisWeek, r => r.status === 'in_progress');
@@ -116,7 +119,7 @@ const stats = computed(() => {
   {
     title: "Reports This Week",
     value: {
-      count: reportStore.reports.length, // total count of all reports
+      count: reportStore.allReports.length, // total count of all reports
       thisWeek: totalThisWeek,
       lastWeek: totalLastWeek
     },
@@ -135,6 +138,18 @@ const stats = computed(() => {
     bg: "bg-yellow-400/40",
     textColor: "text-yellow-500",
   },
+  {
+    title: "Assigned",
+    value: {
+      count: reportStore.assignedCount, // total pending reports
+      thisWeek: assignedThisWeek,
+      lastWeek: assignedLastWeek
+    },
+    icon: UserCheck,
+    bg: "bg-cyan-400/40",
+    textColor: "text-white",
+  },
+  
   {
     title: "In Progress",
     value: {

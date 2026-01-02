@@ -14,16 +14,19 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import { useEventStore } from "@/stores/events"
 
-
+const eventStore = useEventStore()
+const {events} = storeToRefs(useEventStore())
 const announcementStore = useAnnouncementStore()
 const {announcements} = storeToRefs(announcementStore)
 
 const isNewsDialogOpen = ref(false)
 const selectedItem = ref(null)
-onMounted(() => [
+onMounted(() => {
   announcementStore.getAnnouncement()
-])
+  eventStore.getEvents()
+})
 
 
 const dashboardLinks = [
@@ -44,38 +47,6 @@ const dashboardLinks = [
     subHeader: 'Find contact information and services',
     buttonType: 'outline',
     url: '/user/barangay-informations'
-  }
-]
-
-// ⭐ Your events array for the reusable EventsCard
-const events = [
-  {
-    category: "Health",
-    title: "Free Medical Mission",
-    location: "Barangay 50 Covered Court",
-    description: "Free medical services for all residents.",
-    time: "8:00 AM – 3:00 PM"
-  },
-  {
-    category: "Sports",
-    title: "Basketball Finals",
-    location: "City Gym",
-    description: "Inter-barangay championship games.",
-    time: "6:00 PM – 10:00 PM"
-  },
-  {
-    category: "Community",
-    title: "Clean-Up Drive",
-    location: "Nula-Tula Seawall",
-    description: "Join us in keeping our community clean.",
-    time: "7:00 AM – 11:00 AM"
-  },
-  {
-    category: "Education",
-    title: "Scholarship Orientation",
-    location: "City Hall Lobby",
-    description: "Information on available scholarships.",
-    time: "2:00 PM – 4:00 PM"
   }
 ]
 

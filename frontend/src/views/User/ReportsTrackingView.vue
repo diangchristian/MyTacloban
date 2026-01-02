@@ -80,7 +80,7 @@ function handleSearch(){
 
         <div class="flex flex-wrap gap-2">
           <Button  type="button" @click="submitReportStore.getUserReports()"  class="cursor-pointer">All Reports ({{ allReports.length }})</Button>
-          <Button  type="button"  @click="submitReportStore.getBySearchAndStatusUser(search, 'pending', userId)"    :variant="clicked ? 'outline' : 'primary'" class="cursor-pointer">Pending ({{submitReportStore.pendingCount}})</Button>
+          <Button  type="button"  @click="submitReportStore.getBySearchAndStatusUser(search, 'pending', userId)"    variant="outline" class="cursor-pointer">Pending ({{submitReportStore.pendingCount}})</Button>
           <Button type="button"  @click="submitReportStore.getBySearchAndStatusUser(search, 'in_progress', userId)"  variant="outline" class="cursor-pointer">In Progress ({{submitReportStore.inProgressCount}})</Button>
         </div>
       </div>

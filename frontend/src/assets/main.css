@@ -160,3 +160,8 @@
   font-size: 2em;
   font-weight: bold;
 }
+
+
+.news li{
+  list-style: circle;
+}

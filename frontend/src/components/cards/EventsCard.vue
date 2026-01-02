@@ -76,7 +76,7 @@ const props = defineProps({
 
       <Button 
         variant="outline" 
-        class="cursor-pointer mt-4 w-full"
+        class="cursor-pointer w-full mt-auto"
         @click="onReadMore(event)"
       >
         Read More

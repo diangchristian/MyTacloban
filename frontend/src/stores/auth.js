@@ -25,8 +25,8 @@ export const useAuthStore = defineStore('auth', {
     },
     actions: {
 
-        async getUser(){
-            if(localStorage.getItem('token')){ // Check for token AND if user is not already set
+        async getUser() {
+            if (localStorage.getItem('token')) { // Check for token AND if user is not already set
                 this.isLoading = true;
                 try {
                     const res = await axios.get('/api/user', {
@@ -34,12 +34,24 @@ export const useAuthStore = defineStore('auth', {
                             Authorization: `Bearer ${localStorage.getItem('token')}`
                         }
                     });
-                    
+        
+                    console.log(res);
                     // Assuming a successful response from axios is status 2xx
                     this.user = res.data.user;
-                    console.log(this.user.id)
+                    console.log(this.user.id);
                 } catch (error) {
-                    console.error("Failed to fetch user:", error);
+                    if (error.response) {
+                        // Check if the error status is 401
+                        if (error.response.status === 401) {
+                            console.error("Debug: Received 401 Unauthorized error. Possible causes:");
+                            console.error("- Token is missing or invalid.");
+                            console.error("- Token has expired.");
+                            console.error("- Backend authentication middleware rejected the request.");
+                        }
+                        console.error("Error response data:", error.response.data);
+                    } else {
+                        console.error("Failed to fetch user: Network or unknown error", error);
+                    }
                     // Clear invalid token/state on fetch failure
                     this.logout(false); // Call logout without redirecting immediately
                 } finally {
