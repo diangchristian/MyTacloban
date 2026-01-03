@@ -16,6 +16,7 @@ import {
 const props = defineProps({
   person: { type: Object, required: true },
   selected: { type: Boolean, default: false },
+  mode: {type: String, default: 'users'}
 });
 
 const emit = defineEmits(['view', 'edit', 'delete']);
@@ -38,11 +39,18 @@ const getStatusVariant = (status) => {
     <TableCell>{{ person.email }}</TableCell>
     <TableCell>{{ person.role }}</TableCell>
 
-    <TableCell>
-      <Badge :variant="getStatusVariant(person.status)">
-        {{ person.status }}
-      </Badge>
+    <TableCell v-if="mode === 'users'">
+      <slot name="status" >
+        <!-- default fallback (for users) -->
+        <Badge :variant="getStatusVariant(person.status)">
+          {{ person.status }}
+        </Badge>
+      </slot>
     </TableCell>
+
+    <TableCell v-else>
+      {{ person.contact }}
+  </TableCell>
 
     <TableCell>{{ person.dateJoined }}</TableCell>
 
@@ -55,7 +63,6 @@ const getStatusVariant = (status) => {
         </DropdownMenuTrigger>
 
         <DropdownMenuContent>
-          <DropdownMenuItem @click="emit('view', props.person)">View</DropdownMenuItem>
           <DropdownMenuItem @click="emit('edit', props.person)">Edit</DropdownMenuItem>
           <DropdownMenuItem class="text-red-600" @click="emit('delete', props.person)">
             Delete

@@ -1,6 +1,8 @@
 import axios from "axios";
 import { defineStore } from "pinia";
 import { toast } from "vue-sonner";
+import {useAuthStore} from "@/stores/auth"
+
 
 export const useEventStore = defineStore("events", {
     state: () => ({
@@ -12,9 +14,15 @@ export const useEventStore = defineStore("events", {
     actions: {
         async getEvents() {
             this.isLoading = true;
-
+            const authStore = useAuthStore()    
+            const barangayId = !authStore.isAdmin ? authStore.barangayId : null
+            console.log(barangayId)
             try {
-                const { data } = await axios.get("/api/events");
+                const { data } = await axios.get("/api/events", {
+                    params: {
+                        barangayId: barangayId
+                    }
+                });
                 this.events = data;
                 this.errors = {};
             } catch (e) {
@@ -26,6 +34,19 @@ export const useEventStore = defineStore("events", {
 
         async addEvent(formData) {
             this.isLoading = true;
+            const authStore = useAuthStore()    
+            const barangayId = !authStore.isAdmin ? authStore.barangayId : null
+            
+            formData.append('barangay_id', barangayId )
+            formData.append('user_id', authStore.user.id )
+    
+    
+            for (const [key, value] of formData.entries()) {
+                console.log(key, value)
+              }
+              
+            
+            console.log(formData)
 
             try {
                 await axios.post("/api/events", formData, {
@@ -69,12 +90,16 @@ export const useEventStore = defineStore("events", {
 
         async deleteEvent(id) {
             this.isLoading = true;
-
+            const authStore = useAuthStore()    
             const previous = [...this.events];
             this.events = this.events.filter(e => e.id !== id);
-
             try {
-                await axios.delete(`/api/events/${id}`);
+                await axios.delete(`/api/events/${id}`, {
+                    params: {
+                      user_id: authStore.user.id
+                    }
+                  });
+                  
                 await this.getEvents();
                 toast.success("Event deleted successfully!");
                 this.errors = {};

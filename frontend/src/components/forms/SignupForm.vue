@@ -111,8 +111,8 @@ const handleSubmit = () => {
         </FieldDescription>
       </Field>
       <Field>
-        <FieldLabel for="email">
-          Email
+        <FieldLabel for="phone_number">
+          Phone Number
         </FieldLabel>
         <Input id="phone_number" type="phone_number" placeholder="m@example.com"  v-model="formData.phone_number"/>
         <FieldError v-if="errors.phone_number" :errorMessage="errors.phone_number[0]"/>

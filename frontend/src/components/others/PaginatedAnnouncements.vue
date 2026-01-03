@@ -64,6 +64,7 @@
         title: "Delete Announcement",
         description: "This will permanently delete the annoucement.",
         confirmText: "Delete Announcment",
+        variant: 'danger',
         onConfirm: () => {
         console.log(selectedAnnouncement.value);
         announcementStore.deleteAnnouncment(

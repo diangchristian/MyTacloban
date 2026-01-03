@@ -1,7 +1,16 @@
 <script setup>
-    defineProps({
-        cards: { type: Array, required: true }
-    })
+import {
+  Card,
+  CardAction,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
+
+defineProps({
+    cards: { type: Array, required: true }
+})
 </script>
 
 
@@ -11,15 +20,31 @@
         <div
         v-for="card in cards"
         :key="card.title"
-        class="bg-white p-6 rounded-xl shadow-lg border border-gray-100 flex items-center justify-between hover:shadow-xl"
+        class=""
         >
-        <div>
-            <p class="text-sm font-medium text-gray-500">{{ card.title }}</p>
-            <p class="text-3xl font-extrabold text-gray-900 mt-1">{{ card.value }}</p>
-        </div>
-        <div :class="[card.color, card.bg]" class="p-3 rounded-full">
-            <component :is="card.icon" class="size-6" />
-        </div>
+        
+        <div class="">
+            <Card class="@container/card">
+            <CardHeader class="flex items-start justify-between">
+                <div>
+                    <CardDescription class="text-black  font-semibold">{{card.title}}</CardDescription>
+                    <CardTitle class="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
+                        {{card.value}}
+                    </CardTitle>
+                </div>
+
+                <!-- ICON ON THE RIGHT -->
+                <div class="text-white  p-3 rounded-lg" :class="card.bg">
+                    <component :is="card.icon" class="size-6 " :class="card.textColor" />
+                </div>
+            </CardHeader>
+            </Card>
+
+            
+            </div>
+
+            
+           
         </div>
     </section>
 </template>

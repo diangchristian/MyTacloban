@@ -12,6 +12,12 @@ import { useAuthStore } from "@/stores/auth";
 import { storeToRefs } from "pinia";
 import FieldError from "@/components/forms/FieldError.vue";
 import Skeleton from "@/components/ui/skeleton/Skeleton.vue";
+import {useBarangayStore} from "@/stores/barangay"
+import BarangayDropDown from "@/components/others/BarangayDropDown.vue";
+
+
+const barangayStore = useBarangayStore();
+const {barangays} = storeToRefs(barangayStore)
 
 const uploadStore = useUploadStore();
 const categoriesStore = useCategoriesStore();
@@ -25,6 +31,7 @@ const isLoading = ref(true);
 
  
 const selectedCategory = ref(null);
+const selectedBarangay = ref(null);
 const otherIssueText = ref("");
 // const requiresOtherInput = computed(() => selectedCategory.value === 6);
 
@@ -38,7 +45,7 @@ const formData = reactive({
     path: file.path,
     url: file.url,
   })),
-  // other_issue: ""
+  barangay_id:""
 });
 
 const resetForm = () => {
@@ -52,6 +59,7 @@ const resetForm = () => {
     coordinates: "",
     description: "",
     images: [],
+    barangay_id:""
   });
 
   // Clear the actual file input
@@ -62,8 +70,11 @@ const resetForm = () => {
 
 onMounted(async () => {
   await categoriesStore.getReportCategories();
+  await barangayStore.getAllBarangay();
   isLoading.value = false
 });
+
+
 
 watch(
   () => uploadStore.uploadedFiles,
@@ -77,11 +88,17 @@ watch(selectedCategory, (newVal) => {
   formData.category = newVal;
 });
 
+watch(selectedBarangay, (newVal) => {
+  formData.barangay = newVal;
+});
+
+
 watch(otherIssueText, (newVal) => {
   formData.other_issue = newVal;
 });
 
 const handleSubmit = async () => {
+
   const result = await submitReportStore.submitReport(formData);
 
   if (result === true) {
@@ -123,21 +140,14 @@ const handleSubmit = async () => {
           />
         </div>
         <div class="grid lg:grid-cols-2 mt-4 gap-4 rounded-md">
-          <div class="span-1 bg-white rounded-md z-1">
+          <div class="span-1 bg-white rounded-md z-1 p-4">
+            <BarangayDropDown v-model="formData.barangay_id"  :error="errors.barangay_id ? errors.barangay_id[0] : ''"  class="mb-4"/>
             <LocationPicker
               v-model="formData.coordinates"
               :errorMessage="errors.coordinates ? errors.coordinates[0] : ''"
             />
           </div>
           <div class="col-span-1 bg-white p-4 space-y-4 rounded-md">
-            <!-- <div v-if="requiresOtherInput" class="mt-4">
-                        <label class="block text-sm font-medium">Please describe the issue</label>
-                        <Input v-model="otherIssueText"
-                        type="text"
-                        placeholder="Describe the issue..."
-                        class="border p-2 rounded w-full mt-2"/>
-                        
-                    </div> -->
             <div class="">
               <label class="block text-sm font-medium">Report Title</label>
               <Input
