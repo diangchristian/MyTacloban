@@ -10,11 +10,13 @@ import userRoutes from "./user.js"
 import publicRoutes from "./public.js"
 import adminRoutes from "./admin.js"
 import { useUserStore } from '@/stores/userStore'
+import barangayRoutes from './barangayStaff.js'
 
 const routes = [
   ...publicRoutes,
   ...userRoutes,
   ...adminRoutes,
+  ...barangayRoutes,
   {
     path: '/:pathMatch(.*)*',
     name: 'NotFound',
@@ -62,7 +64,9 @@ router.beforeEach(async (to, from, next) => {
 
   // Guest-only pages (login/register)
   if (to.meta.guest && isAuthenticated) {
-    return next({ name: userRole === 'Admin' ? 'admin.dashboard' : 'user.dashboard' });
+    return next({ name: userRole === 'LGU_ADMIN' ? 'admin.dashboard' :
+                        userRole === 'BARANGAY_STAFF' ? 'barangay.dashboard' :
+                        'user.dashboard' });
   }
 
   // Protected routes

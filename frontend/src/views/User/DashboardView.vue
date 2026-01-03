@@ -7,6 +7,7 @@ import { MoveRight } from 'lucide-vue-next';
 import {useAnnouncementStore} from "@/stores/announcements"
 import { onMounted, ref } from "vue";
 import { storeToRefs } from "pinia";
+import DashboardBanner from "@/components/others/DashboardBanner.vue";
 import {
   Dialog,
   DialogContent,
@@ -63,15 +64,8 @@ const viweAnnouncement = (announcement) => {
   <main>
     <div class="w-full mx-auto">
 
-      <!-- HEADER -->
-      <div class="w-full h-52 overflow-hidden rounded-md relative">
-        <img src="@/assets/images/user-bg.jpg" class="w-full h-full object-cover" alt="">
-        <div class="w-full h-full bg-gradient-to-l via-green to-primary/70 absolute top-0 left-0 z-2 flex flex-col justify-center px-8 text-white">
-            <h1 class="text-3xl font-bold">Welcome to MyTacloban</h1>
-            <p class="font-semibold">Your gateway to city services and information</p>
-        </div>
-      </div>
-
+      <DashboardBanner title="Welcome to MyTacloban" subTitle="Managing community reports and local services"/>
+    
       <!-- DASHBOARD LINKS -->
       <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 mt-4 gap-4 space-x-4 space-y-4">
           <DashboardCard 

@@ -123,6 +123,7 @@
                     textColor: "text-orange-600",
                 },
                 ]
+
     })
 
     const filteredEvents = computed(() => {
@@ -295,11 +296,11 @@
         
 
     <template>
-        <div class="p-6 md:p-10 space-y-8 bg-gray-50 min-h-screen">
+        <div class="p-6 space-y-8 bg-gray-50 w-auto">
 
-            <EventDashboardCard  :cards="dashboardCards"/>
+            <EventDashboardCard  :cards="dashboardCards"  class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"/>
 
-            <section class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+            <section class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between ">
                 <div class="relative w-full md:w-1/2 lg:w-1/3">
                     <Input
                         v-model="searchTerm"
@@ -368,3 +369,6 @@
 
         </div>
     </template>
+
+
+

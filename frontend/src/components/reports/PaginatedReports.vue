@@ -1,70 +1,76 @@
 <script setup>
-  import { ref, computed, watch } from 'vue'
-  import {
-    Pagination,
-    PaginationContent,
-    PaginationEllipsis,
-    PaginationItem,
-    PaginationNext,
-    PaginationPrevious,
-  } from '@/components/ui/pagination'
-  import ReportsCard from '@/components/cards/ReportsCard.vue'
-  import { useRoute, useRouter } from 'vue-router'
-  import { Skeleton } from "@/components/ui/skeleton";
-  import {useSubmitReport} from "@/stores/submitReport"
-  import { storeToRefs } from 'pinia';
+import { ref, computed, watch } from 'vue'
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationNext,
+  PaginationPrevious,
+} from '@/components/ui/pagination'
+import ReportsCard from '@/components/cards/ReportsCard.vue'
+import { useRoute, useRouter } from 'vue-router'
+import { Skeleton } from "@/components/ui/skeleton";
+import {useSubmitReport} from "@/stores/submitReport"
+import { storeToRefs } from 'pinia';
+import {useAuthStore} from "@/stores/auth"
+
+
+const authStore = useAuthStore()
 
 
 
+const {isLoading} = storeToRefs(useSubmitReport())
+const props = defineProps({
+  reports: {
+    type: Array,
+    required: true,
+    default: () => [],
+  },
+})
 
-  const {isLoading} = storeToRefs(useSubmitReport())
-  const props = defineProps({
-    reports: {
-      type: Array,
-      required: true,
-      default: () => [],
-    },
+const route = useRoute()
+const router = useRouter()
+
+const perPage = 8
+const currentPage = ref(Number(route.query.page) || 1)
+
+
+watch(
+  () => props.reports.length,
+  () => {
+    const maxPage = Math.max(1, Math.ceil(props.reports.length / perPage))
+    if (currentPage.value > maxPage) {
+      currentPage.value = maxPage
+    }
+  },
+)
+
+const total = computed(() => props.reports.length)
+
+const paginatedReports = computed(() => {
+  const start = (currentPage.value - 1) * perPage
+  const end = start + perPage
+  return props.reports.slice(start, end)
+})
+
+function onPageChange(newPage) {
+  currentPage.value = newPage
+  router.replace({
+    query: { ...route.query, page: newPage },
   })
-  
-  const route = useRoute()
-  const router = useRouter()
-  
-  const perPage = 8
-  const currentPage = ref(Number(route.query.page) || 1)
-  
+}
 
-  watch(
-    () => props.reports.length,
-    () => {
-      const maxPage = Math.max(1, Math.ceil(props.reports.length / perPage))
-      if (currentPage.value > maxPage) {
-        currentPage.value = maxPage
-      }
-    },
-  )
-  
-  const total = computed(() => props.reports.length)
-  
-  const paginatedReports = computed(() => {
-    const start = (currentPage.value - 1) * perPage
-    const end = start + perPage
-    return props.reports.slice(start, end)
+const viewDetails = (id) => {
+
+  const route = authStore.userRole === 'LGU_ADMIN' ? 'admin.report.details' : 'barangay.report.details'
+
+  router.push({
+    name: route,
+    params: { id },
   })
-  
-  function onPageChange(newPage) {
-    currentPage.value = newPage
-    router.replace({
-      query: { ...route.query, page: newPage },
-    })
-  }
-  
-  const viewDetails = (id) => {
-    router.push({
-      name: 'admin.report.details',
-      params: { id },
-    })
-  }
-  </script>
+}
+</script>
   
   <template>
     <div class="space-y-4 mt-4">

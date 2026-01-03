@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { toast } from 'vue-sonner'
 import axios from 'axios'
+import { useAuthStore } from './auth'
 
 export const useUserStore = defineStore('user', {
   state: () => ({
@@ -49,9 +50,15 @@ export const useUserStore = defineStore('user', {
     async fetchUsers() {
       this.loading = true
       this.error = null
-      
+      const authStore = useAuthStore()
+      const barangayId = !authStore.isAdmin ? authStore.user.barangay_id : null
       try {
-        const response = await axios.get('/api/users')
+        const response = await axios.get('/api/users', {
+          params: {
+              barangayId: barangayId,
+              currentUserId: authStore.user.id
+          }
+        })  
         const users = response.data
 
         // Map users to the format needed for the table
@@ -138,7 +145,7 @@ export const useUserStore = defineStore('user', {
       } finally {
         this.loading = false
       }
-    },
+    },    
 
     // Delete a user
     async deleteUser(userId) {

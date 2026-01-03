@@ -16,12 +16,15 @@ export const useAuthStore = defineStore('auth', {
     },
 
     getters: {
-        userRole: (state) => state.user?.role?.toLowerCase() || null,
+        userRole: (state) => state.user?.role || null,
         // Checks if the user object is present (logged in)
         isAuthenticated: (state) => !!state.user,
         
         // Convenience getter to check for admin
-        isAdmin: (state) => state.user?.role === 'admin'
+        isAdmin: (state) => state.user?.role === 'LGU_ADMIN',
+
+        barangayId: (state) => state.user?.barangay_id,
+
     },
     actions: {
 
@@ -89,10 +92,16 @@ export const useAuthStore = defineStore('auth', {
                     this.errors = {};
                     toast.success(data.message)
                     localStorage.setItem('token', data.token);
-        
-                    if(data.user.role === 'Admin'){
+                    
+                    // if LGU_ADMIN
+                    if(data.user.role === 'LGU_ADMIN'){
                         this.router.push({name: "admin.dashboard"});
-                    } else {
+
+                        // if BARANGAY_STAFF
+                    } else  if(data.user.role === 'BARANGAY_STAFF'){
+                        this.router.push({name: "barangay.dashboard"});
+                        // IF Citizen
+                    }else{
                         this.router.push({name: "user.dashboard"});
                     }
                 }

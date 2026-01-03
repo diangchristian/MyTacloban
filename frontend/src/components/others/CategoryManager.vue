@@ -45,7 +45,6 @@ onMounted(() => {
     categoriesStore.getAnnouncementCategories()
     categoriesStore.getEventCategories()
     categoriesStore.getReportCategories()
-    console.log(errors.value)
 })
 
 

@@ -7,8 +7,8 @@ import { ClipboardList, Clock, CircleDot, CircleCheckBig, Users, UserCheck } fro
 import { useSubmitReport } from '@/stores/submitReport';
 import { useCategoriesStore } from '@/stores/categories';
 import {useUserStore} from "@/stores/userStore"
+import DashboardBanner from '@/components/others/DashboardBanner.vue';
 import { storeToRefs } from 'pinia';
-
 
 const reportStore = useSubmitReport()
 const categoriesStore = useCategoriesStore()
@@ -24,6 +24,7 @@ onMounted(async () => {
   try {
     await reportStore.getDashboardStats()
     await reportStore.getAllReports()
+    console.log(weeklyCounts.value)
   } finally {
     isLoading.value = false
   }
@@ -99,13 +100,15 @@ const stats = computed(() => [
 
 <template>
     <div class="w-full mx-auto">
-        <div class="grid grid-cols-1 sm:grid-cols-2  lg:grid-cols-4 gap-4">
+        <DashboardBanner title="BARANGAY 95 - A CAIBAAN" subTitle="Managing community reports and local services"/>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2  lg:grid-cols-4 gap-4 mt-4">
             <DashboardStatsCard v-for="stat in stats" :key="stat.title" :stat="stat"/>
         </div>
         <div class="mt-4 grid grid-cols-2  md:grid-cols-3 gap-4">
             <div class="col-span-2 bg-white p-4 rounded-xl shadow-sm">
               <h1 class="font-semibold">Recent Reports</h1>
-              <RecentReportsTable :reports="allReports.slice(0, 5)" :isLoading="isLoading" class="mt-2"/>
+              <RecentReportsTable :reports="allReports.slice(0,5)" :isLoading="isLoading" class="mt-2"/>
             </div>
             <QuickActions class="col-span-2 md:col-span-1"/>
         </div>

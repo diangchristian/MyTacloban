@@ -15,7 +15,7 @@ const props = defineProps({
     <div class="flex items-start justify-between">
       <div>
         <p class="text-sm text-gray-600 font-medium mb-2">{{ title }}</p>
-        <p :class="`text-3xl font-bold`">{{ value }}</p>
+        <p :class="`text-3xl font-semibold`">{{ value }}</p>
       </div>
       <div :class="`${bgColor} p-3 rounded-lg`">
         <component :is="icon" :class="`w-6 h-6 ${color}`" />

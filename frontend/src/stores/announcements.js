@@ -22,10 +22,13 @@ export const useAnnouncementStore = defineStore('announcement', {
     actions: {
         async getAnnouncement(){
             const authStore = useAuthStore()      // access auth store
-            const role = authStore.user?.role;
-            const { data } = role === 'User' ? 
+            const role = authStore.userRole;
+            const { data } = role === 'LGU_ADMIN' ? 
+                                await axios.get("/api/admin/announcements") :
+                               role === 'BARANGAY_STAFF' ?
+                                await axios.get(`/api/barangay/announcements/${authStore.user.barangay_id}`)
+                                :
                                 await axios.get("/api/announcements")
-                            :   await axios.get("/api/admin/announcements")
 
             if(data){
                 this.announcements = data
@@ -63,11 +66,17 @@ export const useAnnouncementStore = defineStore('announcement', {
         },
 
         async getStats (){
-            const { data } = await axios.get("/api/admin/announcements-stats");
+            const authStore = useAuthStore()      // access auth store
+            const role = authStore.userRole 
+            console.log(role)
+            const { data } = role === 'LGU_ADMIN' ?
+                             await axios.get("/api/admin/announcements-stats") :
+                             await axios.get(`/api/barangay/announcements-stats/${authStore.barangayId}`) 
           
             if(data){
                 this.stats = data
                 this.isLoading = false
+                console.log(data)
                 this.errors = {}
             }else{
                 this.errors = data.errors
@@ -76,8 +85,10 @@ export const useAnnouncementStore = defineStore('announcement', {
 
 
         async getBySearch(search = null, category = null, start = null, end = null, status='published'){
+            const authStore = useAuthStore();
 
-            console.log(search, category, start, end)
+            const barangayId = !authStore.isAdmin ? authStore.user.barangay_id : null
+            console.log(search, category, start, end, status)
             try {
                 const {data} = await axios.get("/api/announcements-search", {
                   params: {
@@ -85,10 +96,12 @@ export const useAnnouncementStore = defineStore('announcement', {
                     category: category,
                     start: start,
                     end: end,
-                    status: status
+                    status: status,
+                    barangayId: barangayId
                   },
                 });
-                this.announcements = data.data;
+                this.announcements = data.data; 
+                console.log(data.data)
                 this.isLoading = false
               } catch (error) {
                 console.error("Error fetching announcements:", error);
@@ -110,7 +123,7 @@ export const useAnnouncementStore = defineStore('announcement', {
           
             } catch (error) {
               this.isLoading = false;
-          
+                console.log(error   )
               if (error.response && error.response.status === 422) {
                 // Laravel validation errors
                 this.errors = error.response.data.errors || {};

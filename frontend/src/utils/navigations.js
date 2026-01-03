@@ -10,10 +10,11 @@ import {
   ClipboardClock,
   Landmark,
   UserRoundCog,
-  Users
-
+  Users,
+  Logs
 
 } from "lucide-vue-next"
+import user from "../router/user"
 
 export default function getNavigations(role){
 
@@ -90,9 +91,53 @@ export default function getNavigations(role){
             title: "System Settings",
             url: "/admin/system-settings",
             icon: Settings,
+          },
+          {
+            title: "Audit Logs",
+            url: "/admin/audit-logs",
+            icon: Logs,
           }
     ]
 
-        return role === 'admin' ? adminNav : userNav
+    const barangayNav = [
+      {
+          title: "Dashboard",
+          url: "/barangay/dashboard",
+          icon: LayoutDashboard,
+        },
+        {
+          title: "Announcements",
+          url: "/barangay/announcements",
+          icon: Newspaper,
+        },
+        {
+          title: "User Management",
+          url: "/barangay/user-management",
+          icon: Users,
+        },
+        {
+          title: "Reports Management",
+          url: "/barangay/reports-management",
+          icon: ClipboardClock,
+        },
+        {
+          title: "Barangay Informations",
+          url: "/barangay/barangay-informations",
+          icon: Landmark,
+        },
+        {
+          title: "Events and Activities",
+          url: "/barangay/events-management",
+          icon: Calendar,
+        },
+        {
+          title: "System Settings",
+          url: "/barangay/system-settings",
+          icon: Settings,
+        },
+        
+  ]
+
+    return role === 'LGU_ADMIN' ? adminNav : role === 'BARANGAY_STAFF' ? barangayNav : userNav ;
         
 }

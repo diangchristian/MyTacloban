@@ -12,7 +12,11 @@ import Button from "../ui/button/Button.vue";
 import { useRouter } from "vue-router";
 import { useDialogStore } from '@/stores/dialogStore'
 import { computed } from "vue";
+import {useAuthStore} from "@/stores/auth"
 
+
+
+const authStore = useAuthStore()
 
 const router = useRouter()
 const props = defineProps({
@@ -30,9 +34,11 @@ function stripHtml(html) {
   return html.replace(/<[^>]*>/g, "");
 }
 
+
+console.log(authStore.userRole)
 const edithandler = () => {
 
-  router.push({name: 'admin.announcements-edit', params: { id }})
+  router.push({name:  authStore.userRole === 'LGU_ADMIN'  ? 'admin.announcements-edit' : 'barangay.announcements-edit', params: { id }})
 }
 
 const categoryColors = {

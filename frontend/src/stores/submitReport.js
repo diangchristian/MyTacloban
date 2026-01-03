@@ -13,6 +13,7 @@ export const useSubmitReport = defineStore('submitReport', {
             allReports: [],
             reports: [],
             reportDetails: null,
+            weeklyCounts: {},
             errors: {},
             isLoading: true
             
@@ -29,13 +30,19 @@ export const useSubmitReport = defineStore('submitReport', {
     
     actions: {
         async getAllReports(){
-            const { data } = await axios.get("/api/reports");
+            const authStore  = useAuthStore()
+            const barangayId = !authStore.isAdmin ? authStore.barangayId : null
+            const { data } = await axios.get("/api/reports" , {
+                params: {
+                    barangayId: barangayId  
+                }
+            });
 
             if(data){
                 this.allReports = data
                 this.errors = {}
                 this.isLoading = false;
-            }else{
+            }else{  
                 this.errors = data.error
             }
 
@@ -105,13 +112,17 @@ export const useSubmitReport = defineStore('submitReport', {
         },
 
         async getBySearchAndStatusAdmin(search = null, status = null, start = null, end = null){
+
+            const authStore = useAuthStore()
+            const barangayId = !authStore.isAdmin ? authStore.user.barangay_id : null
             console.log(search ,status.value ,start, end)
             const { data } = await axios.get(`/api/reports/user-reports/admin`, { 
                 params: {
                     search: search || '',
                     status: status.value || 'all',
                     start: start,
-                    end: end
+                    end: end,
+                    barangay_id: barangayId
                 }
             });
         
@@ -144,7 +155,7 @@ export const useSubmitReport = defineStore('submitReport', {
               })
 
             if(data){
-                this.errors = {}
+                this.errors = {}    
                 this.isLoading = false;
                 toast.success(data.message)
             }else{
@@ -152,7 +163,50 @@ export const useSubmitReport = defineStore('submitReport', {
             }
 
             console.log(data)
-        }
+        },
+
+        async getDashboardStats(id = null){
+            const authStore = useAuthStore()      // access auth store
+            const barangayId = !authStore.isAdmin ? authStore.barangayId : null
+            if(authStore.userRole === 'LGU_ADMIN'){
+
+                const {data} = await axios.get(`/api/all-report-statuses`)
+                this.weeklyCounts = data
+            }else {
+                const {data} = await axios.get(`/api/report-statuses/${barangayId}`)
+                this.weeklyCounts = data
+            }
         
-    }
+        },
+
+
+        async escalateToLGU(id){
+            const authStore  = useAuthStore()
+            const curretUserId = authStore.user.id
+            const { data } = await axios.put(`/api/barangay/reports/${id}`, {
+                report_id: id,
+                user_id: curretUserId
+            })
+            console.log(data)
+            if(data){
+                this.errors = {}
+                this.isLoading = false;
+                this.router.push({name: 'barangay.reports-management'})
+                console.log(data)
+                toast.success(data.message)
+            }else{
+                this.errors = data.error
+                toast.error(data.message)
+            }
+
+            
+        }
+
+
+
+        
+
+
+
+    }   
 })

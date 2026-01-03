@@ -69,6 +69,7 @@ const profileImageSrc = computed(() => {
       title: 'Delete Account',
       description: 'This will permanently delete your account and all associated data.',
       confirmText: 'Delete Account',
+      variant: 'danger',
       onConfirm: () => authStore.deleteAccount()
     })
   }

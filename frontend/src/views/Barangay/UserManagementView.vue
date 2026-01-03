@@ -90,6 +90,7 @@ const editForm = ref({
 
 const openEditDialog = (person) => {
   userToEdit.value = person;
+  console.log(person.role)
   editForm.value = {
     role: person.role,
     status: person.status
@@ -350,7 +351,7 @@ const resetPagination = () => {
           </div>
 
           <!-- Table -->
-          <Table>
+          <Table c>
             <TableHeader>
               <TableRow class="row">
                 <TableHead>Name</TableHead>
@@ -366,7 +367,6 @@ const resetPagination = () => {
                 v-for="person in paginatedPeople"
                 :key="person.id"
                 :person="person"
-                mode="users"
                 @view="viewUser"
                 @edit="editUser"
                 @delete="deleteUser"

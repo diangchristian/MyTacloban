@@ -4,28 +4,60 @@ import { ref } from 'vue'
 
 export const useDialogStore = defineStore('dialog', () => {
   const open = ref(false)
-  const title = ref('Are you absolutely sure?')
-  const description = ref('This action cannot be undone.')
-  const confirmText = ref('Continue')
-  let onConfirm = null
+  const title = ref('')
+  const description = ref('')
+  const confirmText = ref('Confirm')
+  const cancelText = ref('Cancel')
+  const variant = ref('default') // danger | warning | info | success
 
-  function openConfirm({ title: t, description: d, confirmText: c, onConfirm: fn }) {
-    title.value = t ?? title.value
-    description.value = d ?? description.value
-    confirmText.value = c ?? confirmText.value
-    onConfirm = fn
+  let onConfirm = null
+  let onCancel = null
+
+  function openConfirm({
+    title: t,
+    description: d,
+    confirmText: c,
+    cancelText: cancel,
+    variant: v,
+    onConfirm: confirmFn,
+    onCancel: cancelFn,
+  }) {
+    title.value = t
+    description.value = d
+    confirmText.value = c ?? 'Confirm'
+    cancelText.value = cancel ?? 'Cancel'
+    variant.value = v ?? 'default'
+    onConfirm = confirmFn
+    onCancel = cancelFn
     open.value = true
   }
 
   function confirm() {
-    if (onConfirm) onConfirm()
+    onConfirm?.()
+    close()
+  }
+
+  function cancel() {
+    onCancel?.()
     close()
   }
 
   function close() {
     open.value = false
     onConfirm = null
+    onCancel = null
   }
 
-  return { open, title, description, confirmText, openConfirm, confirm, close }
+  return {
+    open,
+    title,
+    description,
+    confirmText,
+    cancelText,
+    variant,
+    openConfirm,
+    confirm,
+    cancel,
+    close,
+  }
 })

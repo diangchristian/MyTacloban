@@ -6,33 +6,41 @@ ClipboardList,
 NewspaperIcon,
 Users
 } from 'lucide-vue-next';
+import {useAuthStore} from "@/stores/auth"
+
+
+
+const authStore = useAuthStore()
+const role = authStore.userRole === 'LGU_ADMIN' ? 'admin' : 'barangay'
+
+
 
 const actions = [
     {
         title: 'Add New Event',
         icon: CalendarPlus,
-        url: '/admin/events-management',
+        url: `/${role}/events-management`,
         color: 'bg-blue-100',
         textColor: 'text-blue-400'
     },
     {
         title: 'View All Reports',
         icon: ClipboardList,
-        url: '/admin/reports-management',
+        url: `/${role}/reports-management`,
         color: 'bg-green-100',
         textColor: 'text-green-400'
     },
     {
         title: 'Create Announcement',
         icon: NewspaperIcon,
-        url: '/admin/announcements',
+        url: `/${role}/announcements/create`,
         color: 'bg-purple-100',
         textColor: 'text-purple-400'
     },
     {
         title: 'Manage Users',
         icon: Users,
-        url: '/admin/user-management',
+        url: `/${role}/user-management`,
         color: 'bg-orange-100',
         textColor: 'text-orange-400'
     },

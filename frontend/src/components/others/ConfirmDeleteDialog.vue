@@ -13,6 +13,8 @@
   import { useDialogStore } from '@/stores/dialogStore'
   
   const dialogStore = useDialogStore()
+  console.log(dialogStore.variant)
+  const buttonVariant = dialogStore.variant === 'danger' ? 'bg-destructive hover:bg-red-600' : 'bg-orange-400 hover:bg-orange-600'
   </script>
   
   <template>
@@ -25,7 +27,7 @@
   
         <AlertDialogFooter>
           <AlertDialogCancel @click="dialogStore.close">Cancel</AlertDialogCancel>
-          <AlertDialogAction class="bg-destructive" @click="dialogStore.confirm">
+          <AlertDialogAction :class="buttonVariant" @click="dialogStore.confirm">
             {{ dialogStore.confirmText }}
           </AlertDialogAction>
         </AlertDialogFooter>
