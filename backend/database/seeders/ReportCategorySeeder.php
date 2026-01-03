@@ -45,12 +45,6 @@ class ReportCategorySeeder extends Seeder
                 'icon_name' => 'Building',
                 'color' => '#f87171',
             ],
-            [
-                'category_name' => 'Other Issues',
-                'slug' => 'other_issues',
-                'icon_name' => 'Plus',
-                'color' => '#ffffff',
-            ],
         ];
 
         foreach ($categories as $category) {

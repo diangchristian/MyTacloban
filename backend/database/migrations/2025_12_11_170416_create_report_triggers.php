@@ -23,7 +23,7 @@ return new class extends Migration
                 VALUES (
                     @current_user_id,
                     'reports',
-                    NEW.id,
+                    record_id,
                     'UPDATE',
                     JSON_OBJECT('status', OLD.status),
                     JSON_OBJECT('status', NEW.status)

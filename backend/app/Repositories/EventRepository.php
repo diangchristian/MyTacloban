@@ -6,15 +6,25 @@ use Illuminate\Support\Facades\DB;
 
 class EventRepository implements EventRepositoryInterface {
 
-    public function getAll()
-    {
-        return DB::table('events as e')
-            ->leftJoin('event_categories as ec', 'e.category_id', '=', 'ec.id')
-            ->select('e.*', 'ec.category_name')
-            ->orderByDesc('e.event_date')
-            ->orderByDesc('e.created_at')
-            ->get();
-    }
+    public function getAll($barangayId = null)
+{
+    return DB::table('events as e')
+        ->leftJoin('event_categories as ec', 'e.category_id', '=', 'ec.id')
+        ->select('e.*', 'ec.category_name')
+        ->when(
+            $barangayId !== null, 
+            
+            fn($q) => $q->where('e.barangay_id', $barangayId),
+            fn($q) => $q->whereNull('e.barangay_id')
+
+            
+            
+            )
+        ->orderByDesc('e.event_date')
+        ->orderByDesc('e.created_at')
+        ->get();
+}
+
 
     public function getById(int $id)
     {

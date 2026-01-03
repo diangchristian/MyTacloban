@@ -18,8 +18,16 @@ class UserController extends Controller
         $this->user = $user;
     }
 
-    public function index(){
-        $users = User::all();
+    public function index(Request $request){
+        $barangayId = $request->query('barangayId') ?? null;
+        $currentUserId = $request->query('currentUserId');
+
+        $users = User::query()
+            ->when($barangayId, function($query) use  ($barangayId){
+                $query->where('barangay_id', $barangayId);
+            })->where('id', '<>', $currentUserId)
+            ->get();
+
         return response()->json($users);
     }
 

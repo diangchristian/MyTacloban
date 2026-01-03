@@ -22,7 +22,7 @@ return new class extends Migration
             $table->enum('status', ['Active', 'Inactive', 'Blocked'])->default('Active');
             $table->string('password');
             $table->string('profile_image')->nullable();
-            $table->enum('role',['Admin', 'User'])->default('User');
+            $table->enum('role',['LGU_ADMIN', 'CITIZEN', 'BARANGAY_STAFF'])->default('CITIZEN');
             $table->rememberToken();
             $table->timestamps();
 

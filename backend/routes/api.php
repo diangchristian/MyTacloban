@@ -18,6 +18,7 @@ use App\Http\Controllers\ImageUploadController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\SystemSettingsController;
 use App\Http\Middleware\CheckUserStatus;
+use App\Http\Controllers\AuditLogController;
 
 
 
@@ -41,6 +42,8 @@ Route::apiResource('barangays', BarangayController::class );
 Route::apiResource('event_categories', EventCategoryController::class );
 Route::apiResource('events', EventController::class );
 Route::apiResource('report_categories', ReportCategoryController::class );
+
+// index, store, show, update, destory
 Route::apiResource('reports', ReportController::class );
 
 
@@ -49,15 +52,22 @@ Route::get('/announcements/category/{id}', [AnnouncementController::class, 'getB
 Route::get('/announcements/date/{filter}', [AnnouncementController::class, 'getByCreatedAt']);
 Route::get('/announcements-search', [AnnouncementController::class, 'search']);
 Route::get('/admin/announcements', [AnnouncementController::class, 'getAllAnnouncements']);
+Route::get('/barangay/announcements/{id}', [AnnouncementController::class, 'getAllAnnouncements']);
 Route::get('/admin/announcements-stats', [AnnouncementController::class, 'getAllStats']);
+Route::get('/barangay/announcements-stats/{id}', [AnnouncementController::class, 'getAllStats']);
 Route::get('/announcement-details/{id}', [AnnouncementController::class, 'getAnnouncementById']);
+Route::get('/barangay/reports/', [ReportController::class, 'index' ]);
 Route::get('/reports/user-reports/admin     ', [ReportController::class, 'getReports']);
 Route::get('/reports/user-reports/{id}', [ReportController::class, 'getUserReports']);
 Route::get('/search/barangays', [BarangayController::class, 'searchFilter']);
 Route::get('/reports/details/{id}', [ReportController::class, 'getReportDetail' ]);
 Route::get('/report-timelines/{id}', [ReportTimelineController::class, 'getTimelines' ]);
+Route::get('/report-statuses/{id}', [ReportController::class, 'getStatuses' ]);
+Route::get('/all-report-statuses', [ReportController::class, 'getStatuses' ]);
+
 Route::get('/users', [UserController::class, 'index']);
 Route::get('/system-settings', [SystemSettingsController::class, 'index']);
+Route::get('/audit-logs', [AuditLogController::class, 'index']);
 
 
 
@@ -67,9 +77,10 @@ Route::post('/report-timelines', [ReportTimelineController::class, 'store' ]);
 
 
 
-Route::put('/updates/user-profile/{id}', [UserController::class, 'update']);
+Route::put('/update/user-profile/{id}', [UserController::class, 'update']);
 Route::put('/user-profile/{id}', [UserManagementController::class, 'updateRoleStatus']);
 Route::put('/system-settings', [SystemSettingsController::class, 'update']);
+Route::put('/barangay/reports/{id}', [ReportController::class , 'escalateReport']);
 
 
 

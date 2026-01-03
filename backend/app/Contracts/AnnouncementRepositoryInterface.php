@@ -6,12 +6,12 @@ interface AnnouncementRepositoryInterface
 {
     public function getAllPublished();
 
-    public function getAll();
+    public function getAll($barangayId = null);
     public function getByCategory(string $category);
 
     
-    public function stats();
-    public function search($search = null, $category = null, $start = null, $end = null, $status = null);
+    public function stats($barangayId = null);
+    public function search($search = null, $category = null, $start = null, $end = null, $status = null, $barangayId = null);
     public function getById($id);
     public function getByDateRange(string $start, string $end);
 

@@ -14,11 +14,13 @@ return new class extends Migration
         Schema::create('reports', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id');
+            $table->foreignId('barangay_id')->constrained('barangays');
             $table->string('title');
             $table->text('description');
             $table->string('image')->nullable();
             $table->string('coordinates');
             $table->enum('status', ['pending', 'in_progress', 'resolved', 'assigned'])->default('pending');
+            $table->enum('handled_by', ['BARANGAY', 'LGU'])->default('BARANGAY');
             $table->timestamps();
         });
     }

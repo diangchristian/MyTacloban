@@ -5,6 +5,7 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\User;
 use App\Models\ReportCategory;
+use App\Models\Barangay;
 
 
 
@@ -22,6 +23,7 @@ class ReportFactory extends Factory
     {
         return [
             'user_id' => User::factory(), // Creates a related user
+            'barangay_id' => Barangay::inRandomOrder()->first()->id, // Creates a related user
             // Pick an existing category randomly
             'category_id' => ReportCategory::inRandomOrder()->first()->id,
             'title' => $this->faker->sentence(6, true),
