@@ -9,6 +9,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use App\Models\Barangay;
 use App\Models\Report;
+use App\Models\AuditLog;
 
 
 class User extends Authenticatable
@@ -25,6 +26,7 @@ class User extends Authenticatable
         'username',
         'full_name',
         'email',
+        'phone_number',
         'password',
         'profile_image',
         'role',
@@ -62,4 +64,11 @@ class User extends Authenticatable
     public function reports(){
         return $this->hasMany(Report::class);
     }
+
+
+    public function logs(){
+        return $this->hasMany(AuditLog::class);
+    }
+
+
 }

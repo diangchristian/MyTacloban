@@ -16,8 +16,9 @@ class ReportController extends Controller
         $this->report = $report;
     }
 
-    public function index(){
-        return response()->json($this->report->getAll());
+    public function index(Request $request){
+        $barangayId = $request->query('barangayId') ?? null;
+        return response()->json($this->report->getAll(  $barangayId));
 
     }
 
@@ -38,8 +39,24 @@ class ReportController extends Controller
         $status = $request->query('status');
         $start = $request->query('start');
         $end = $request->query('end');
+        $barangayId = $request->query('barangay_id');
 
-        return response()->json($this->report->getReports($search, $status,  $start,   $end));
+        return response()->json($this->report->getReports($search, $status,  $start,   $end,   $barangayId));
+    }
+
+    public function escalateReport(Request $request){
+
+        if($this->report->escalateToLGU($request)){
+            return response()->json([
+                'message' => 'Report successfully escalated to LGU Admin.'
+            ]);
+        }
+
+        return response()->json([
+            'message' => 'Failed to escalate report. Please try again.'
+        ]);
+
+ 
     }
 
 
@@ -48,9 +65,8 @@ class ReportController extends Controller
         return response()->json($this->report->getByReportDetails($id));
     }
 
-    public function show(Request $request){
-       
-        
+    public function getStatuses($id = null){
+        return response()->json($this->report->getWeeklyCounts($id));
     }
 
     public function store(Request $request){
@@ -71,7 +87,8 @@ class ReportController extends Controller
             'coordinates' => 'required|string|max:255',
             'other_issue' => 'nullable|string',
             'images' => 'nullable|array',
-            'images.*' => 'string|max:255', // paths or URLs from your image upload
+            'images.*' => 'string|max:255', 
+            'barangay_id' => 'required|integer|exists:barangays,id'
         ]);
         
 
@@ -104,7 +121,4 @@ class ReportController extends Controller
         ]);
     }
 
-    public function destroy(){
-
-    }
 }

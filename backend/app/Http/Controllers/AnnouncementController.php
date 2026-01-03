@@ -19,8 +19,8 @@ class AnnouncementController extends Controller
         return response()->json($this->announcement->getAllPublished());
     }
 
-    public function getAllAnnouncements(){
-        return response()->json($this->announcement->getAll());
+    public function getAllAnnouncements($id = null){
+        return response()->json($this->announcement->getAll($id));
     }
 
 
@@ -32,8 +32,8 @@ class AnnouncementController extends Controller
         return response()->json($this->announcement->getByCategory($category));
     }
 
-    public function getAllStats(){
-        return $this->announcement->stats();
+    public function getAllStats($barangayId = null){
+        return $this->announcement->stats($barangayId);
     }
 
     public function search(Request $request)
@@ -43,8 +43,9 @@ class AnnouncementController extends Controller
         $start = $request->query('start');
         $end = $request->query('end');
         $status = $request->query('status');
+        $barangayId  = $request->query('barangayId');
 
-        $results = $this->announcement->search($search, $category, $start, $end, $status);
+        $results = $this->announcement->search($search, $category, $start, $end, $status, $barangayId);
 
         return response()->json([
             'success' => true,
@@ -86,7 +87,7 @@ class AnnouncementController extends Controller
 
     }
 
-    public function store(Request $request){
+    public function store(Request $request){ 
 
         $fields = $request->validate([
             'category_id' => 'required|integer|exists:announcement_categories,id',
@@ -95,8 +96,10 @@ class AnnouncementController extends Controller
             'body' => 'required|string',
             'image' => 'nullable|string|max:255', // or url validation if storing URLs
             'status' => 'required|string|in:draft,published,archived',
-            'user_id' => 'required'
+            'user_id' => 'required',
+            'barangay_id' => 'nullable'
         ]);
+        
 
         // if okay it input
         if($this->announcement->store($fields)){
@@ -104,8 +107,6 @@ class AnnouncementController extends Controller
             'message' => 'Announcement created successfully!'
            ]);
         }
-
-        
 
     }
 

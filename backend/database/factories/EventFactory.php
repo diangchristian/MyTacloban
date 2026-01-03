@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\EventCategory;
+use App\Models\Barangay;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Event>
@@ -21,6 +22,7 @@ class EventFactory extends Factory
             'title' => $this->faker->sentence(7),
             'description' => $this->faker->sentence(2),
             'category_id' => EventCategory::factory(),
+            'barangay_id' => Barangay::inRandomOrder()->first()->id, // Creates a related user
             'content' => $this->faker->paragraphs(3, true),
             'location' => $this->faker->city(),
             'image' => $this->faker->imageUrl(640, 480, 'events', true), // placeholder image

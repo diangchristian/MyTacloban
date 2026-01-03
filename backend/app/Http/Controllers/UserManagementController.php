@@ -19,7 +19,7 @@ class UserManagementController extends Controller
     public function updateRoleStatus(Request $request, $id)
     {
         $validated = $request->validate([
-            'role' => 'required|in:Admin,User',
+            'role' => 'required|in:CITIZEN,BARANGAY_STAFF',
             'status' => 'required|in:Active,Inactive,Blocked',
         ]);
 

@@ -43,7 +43,7 @@ return new class extends Migration
             VALUES (
                 NEW.user_id,
                 'events',
-                NEW.id,
+               record_id,
                 'UPDATE',
                 JSON_OBJECT(
                     'title', OLD.title,
@@ -77,7 +77,7 @@ return new class extends Migration
             VALUES (
                 @current_user_id,
                 'events',
-                OLD.id,
+               record_id,
                 'DELETE',
                 JSON_OBJECT(
                     'title', OLD.title,

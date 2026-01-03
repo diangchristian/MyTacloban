@@ -4,7 +4,7 @@ namespace App\Contracts;
 
 interface EventRepositoryInterface
 {
-    public function getAll();
+    public function getAll($barangayId = null);
 
     public function getById(int $id);
 

@@ -20,9 +20,9 @@ class DatabaseSeeder extends Seeder
       
 
         $this->call(BarangaySeeder::class);
-        $this->call(SystemSettingsSeeder::class);
+        // $this->call(SystemSettingsSeeder::class);
         // $this->call(AnnouncementCategorySeeder::class);
-        $this->call(EventCategorySeeder::class);
+        // $this->call(EventCategorySeeder::class);
         $this->call(EventSeeder::class);
         // $this->call(ReportCategorySeeder::class);
         $this->call(AnnouncementSeeder::class);
@@ -31,8 +31,19 @@ class DatabaseSeeder extends Seeder
             'username' => 'Test User',
             'full_name' => 'admin tester',
             'bio' => 'i am the admin of this type shi',
-            'role' => 'Admin',
+            'role' => 'LGU_ADMIN',
+            'status' => 'Active',
             'email' => 'test@example.com',
+            'barangay_id' => NULL
+        ]);
+
+        User::factory()->create([
+            'username' => 'Barangay',
+            'full_name' => 'barangay tester',
+            'bio' => 'i am the barangay staff of this type shi',
+            'role' => 'BARANGAY_STAFF',
+            'status' => 'Active',
+            'email' => 'barangay@example.com',
         ]);
     }
 }

@@ -19,6 +19,7 @@ class AuthController extends Controller
             'barangay_id' => 'required',
             'email' => 'required|email|unique:users',
             'password' => 'required|confirmed',
+            'phone_number' => 'required'
            
         ]);
 
@@ -26,10 +27,11 @@ class AuthController extends Controller
             'username' => $fields['full_name'],
             'full_name' => $fields['full_name'],
             'email' => $fields['email'],
+            'phone_number' => $fields['phone_number'],
             'barangay_id' => $fields['barangay_id'],
             'password' => Hash::make($fields['password']),
             'status' => 'Active',
-            'role' => 'user', 
+            'role' => 'CITIZEN', 
         ]);
         
         $token = $user->createToken($request->full_name);

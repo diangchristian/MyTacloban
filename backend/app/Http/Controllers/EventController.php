@@ -15,8 +15,9 @@ class EventController extends Controller
         $this->event = $event;
     }
 
-    public function index(){
-       return response()->json( $this->event->getAll());
+    public function index(Request $request){
+        $barangayId = $request->query('barangayId') ?? null;
+       return response()->json( $this->event->getAll(  $barangayId));
     }
 
     public function show($id){
@@ -39,6 +40,7 @@ class EventController extends Controller
             'event_time' => 'nullable|string|max:255',
             'event_date' => 'required|date',
             'image' => 'nullable|image|max:2048',
+            'barangay_id' => 'nullable'
         ]);
 
         $imageUrl = null;
@@ -57,6 +59,8 @@ class EventController extends Controller
             'event_time' => $fields['event_time'] ?? null,
             'event_date' => $fields['event_date'],
             'image' => $imageUrl,
+            'barangay_id' => $fields['barangay_id'] ?? null,
+            'user_id' => $fields['barangay_id']
         ];
 
         $id = $this->event->store($payload);
@@ -77,6 +81,7 @@ class EventController extends Controller
             'event_time' => 'nullable|string|max:255',
             'event_date' => 'required|date',
             'image' => 'nullable|image|max:2048',
+                
         ]);
 
         $existing = $this->event->getById((int) $id);
@@ -101,6 +106,7 @@ class EventController extends Controller
             'event_time' => $fields['event_time'] ?? null,
             'event_date' => $fields['event_date'],
             'image' => $imageUrl,
+         
         ];
 
         $updated = $this->event->update($payload, (int) $id);
@@ -114,7 +120,7 @@ class EventController extends Controller
 
     public function destroy(Request $request, $id){
         $user = $request->user();
-        $userId = $user ? $user->id : null;
+        $userId = $request->query('user_id');
         
         $deleted = $this->event->destroy((int) $id, $userId);
 

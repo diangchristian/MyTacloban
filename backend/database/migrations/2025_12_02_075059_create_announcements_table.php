@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('announcements', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users'); //for admin who created the report
+            $table->foreignId('barangay_id')->nullable()->constrained('barangays'); //for admin who created the report
             $table->string('title');
             $table->text('body');
             $table->string('image')->nullable();
