@@ -31,6 +31,7 @@ class UserManagementController extends Controller
         $user->save();
         
         return response()->json($user);
+        
     }
 
     // Delete user
