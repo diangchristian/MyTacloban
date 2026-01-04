@@ -24,7 +24,8 @@ import {
 } from "@/components/ui/select";
 import {getDateRange} from "@/utils/getDateRange"
 import Label from "@/components/ui/label/Label.vue"; 
-
+import EmptyCard from "@/components/cards/EmptyCard.vue";
+import {MessageSquareWarning} from "lucide-vue-next"
 
 const submitReportStore = useSubmitReport()
 const {allReports} = storeToRefs(submitReportStore)
@@ -60,6 +61,13 @@ onMounted(async () => [
   submitReportStore.getAllReports()
 ])
 
+const emptyDisplay = {
+  title: 'You currently don\'t reports',
+  description: 'You\'re all caught up. New reports will appear here.',
+  icon: MessageSquareWarning
+}
+
+
 </script>
 
 <template>
@@ -67,7 +75,7 @@ onMounted(async () => [
     <div class="w-full">
       <form action="" @submit.prevent>
         <div class="max-w-4xl flex flex-col sm:flex-row gap-4 sm:items-center w-full ">
-        <Input placeholder="Search reports" class="w-full sm:w-1/2" v-model="search" @keyup="handleSearch"/>
+        <Input placeholder="Search reports" class="w-full sm:w-1/2 bg-white" v-model="search" @keyup="handleSearch"/>
         <Button > Search </Button>
 
         <div class="flex items-center flex-wrap gap-4 w-full ">
@@ -75,7 +83,7 @@ onMounted(async () => [
         <div class="flex items-center gap-2">
           <Label>Status</Label>
           <Select v-model="selectedStatus">
-            <SelectTrigger class="w-full">
+            <SelectTrigger class="w-full bg-white">
               <SelectValue placeholder="Select status" class="w-full" />
             </SelectTrigger>
             <SelectContent>
@@ -91,7 +99,7 @@ onMounted(async () => [
         <div class="flex items-center gap-2">
           <Label>Date</Label>
           <Select v-model="selectedDate">
-            <SelectTrigger class="w-full ">
+            <SelectTrigger class="w-full bg-white ">
               <SelectValue placeholder="Select date" class="w-full" />
             </SelectTrigger>
             <SelectContent>
@@ -109,7 +117,8 @@ onMounted(async () => [
       </div>
       </div>
       </form>
-      <PaginatedReports :reports="allReports"/>
+      <PaginatedReports :reports="allReports" v-if="allReports.length !== 0"/>
+      <EmptyCard v-else :emptyObject="emptyDisplay" class="mt-12"/>
       <div class="mt-4"></div>
     </div>
   </main>

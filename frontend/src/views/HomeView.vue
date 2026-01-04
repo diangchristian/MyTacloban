@@ -5,7 +5,7 @@ import WhatIsSection from '@/components/landing/WhatIsSection.vue'
 import HowSection from '@/components/landing/HowSection.vue'
 import YouCanDoSection from '@/components/landing/YouCanDoSection.vue'
 import FooterSection from '@/components/landing/FooterSection.vue'
-
+import Feedback from "@/components/about/Feedback.vue";
 </script>
 
 <template>
@@ -14,6 +14,7 @@ import FooterSection from '@/components/landing/FooterSection.vue'
     <WhatIsSection/>
     <HowSection/>
     <YouCanDoSection/>
+    <Feedback/>
     <FooterSection/>
   </main>
 </template>

@@ -1,13 +1,13 @@
 <script setup>
 import DashboardStatsCard from "@/components/cards/DashboardStatsCard.vue";
-// import AnnouncementCard from "@/components/cards/AnnouncementCard.vue";
 import {
   ClipboardList,
   Clock,
   CircleDot,
   CircleCheckBig,
   Users,
-  Archive
+  Archive,
+  Newspaper
 } from "lucide-vue-next";
 import Input from "@/components/ui/input/Input.vue";
 import Button from "@/components/ui/button/Button.vue";
@@ -29,6 +29,7 @@ import ConfirmDeleteDialog from "@/components/others/ConfirmDeleteDialog.vue";
 import { debounce } from "lodash";
 import PaginatedAnnouncements from "@/components/others/PaginatedAnnouncements.vue";
 import {getDateRange} from "@/utils/getDateRange"
+import EmptyCard from "@/components/cards/EmptyCard.vue";
 
 
 const router = useRouter();
@@ -47,8 +48,6 @@ onMounted(() => {
   announcementStore.getCategories();
 });
 
-
-
 const fetchAnnouncements = () => {
   const { start, end } = getDateRange(selectedDate.value);
   announcementStore.getBySearch(
@@ -60,8 +59,6 @@ const fetchAnnouncements = () => {
     
   );
 };
-
-
 // Debounced version of fetch
 const debouncedFetch = debounce(fetchAnnouncements, 300); // 300ms delay
 
@@ -135,6 +132,15 @@ const clearFilters = () => {
 };
 
 
+const emptyDisplay = {
+  title: 'You currently don\'t have an announcement',
+  description: 'You\'re all caught up. New announcements will appear here.',
+  icon: Newspaper
+}
+
+
+
+
 </script>
 
 <template>
@@ -172,7 +178,7 @@ const clearFilters = () => {
         <div class="flex items-center gap-2">
           <Label>Category</Label>
           <Select v-model="selectedCategory">
-            <SelectTrigger class="w-full ">
+            <SelectTrigger class="w-full bg-white">
               <SelectValue placeholder="Select category" class="w-full" />
             </SelectTrigger>
             <SelectContent>
@@ -191,7 +197,7 @@ const clearFilters = () => {
         <div class="flex items-center gap-2">
           <Label>Date</Label>
           <Select v-model="selectedDate">
-            <SelectTrigger class="w-full ">
+            <SelectTrigger class="w-full bg-white">
               <SelectValue placeholder="Select date" class="w-full" />
             </SelectTrigger>
             <SelectContent>
@@ -206,7 +212,7 @@ const clearFilters = () => {
       <div class="flex items-center gap-2">
         <Label>Status</Label>
         <Select v-model="selectedStatus">
-          <SelectTrigger class="w-full">
+          <SelectTrigger class="w-full bg-white">
             <SelectValue placeholder="Select status" class="w-full" />
           </SelectTrigger>
           <SelectContent>
@@ -227,9 +233,10 @@ const clearFilters = () => {
       <Button asChild>
         <RouterLink to="/barangay/announcements/create">+ Add</RouterLink>
       </Button>
-    </div>
-    <PaginatedAnnouncements  :announcements="announcements"/>
+    </div>  
+    <PaginatedAnnouncements  :announcements="announcements" v-if="announcements.length !== 0"/>
 
+    <EmptyCard v-else :emptyObject="emptyDisplay"/>
     <ConfirmDeleteDialog />
   </div>
 </template>

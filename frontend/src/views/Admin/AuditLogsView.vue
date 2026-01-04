@@ -69,15 +69,15 @@ console.log(getActionStyle('insert'))
 
 <template>
     
-    <div class="max-w-6xl mx-auto ">
-        <form action="" @submit.prevent>
-        <div class="max-w-4xl flex flex-col sm:flex-row gap-4 sm:items-center w-full ">
-            <Input placeholder="Search reports" class="w-full sm:w-1/2 bg-white" v-model="search" @keyup="handleSearch"/>
-            <Button > Search </Button>
-             <!-- Status Filter -->
-      </div>
+    <div class="max-w-6xl mx-auto pb-4 ">
+        <form action="" @submit.prevent class="mt-8">
+            <div class="max-w-4xl flex flex-col sm:flex-row gap-4 sm:items-center w-full ">
+                <Input placeholder="Search reports" class="w-full sm:w-1/2 bg-white" v-model="search" @keyup="handleSearch"/>
+                <Button > Search </Button>
+                <!-- Status Filter -->
+            </div>
       </form>
-        <div class="mt-12 bg-white rounded-md p-4 shadow-sm">
+        <div class="mt-4 bg-white rounded-md p-4 shadow-sm">
             <Table>
             <TableHeader class=" ">
               <TableRow class="row">

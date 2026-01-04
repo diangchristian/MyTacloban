@@ -7,7 +7,8 @@ import {
   CircleDot,
   CircleCheckBig,
   Users,
-  Archive
+  Archive,
+  Newspaper
 } from "lucide-vue-next";
 import Input from "@/components/ui/input/Input.vue";
 import Button from "@/components/ui/button/Button.vue";
@@ -29,7 +30,7 @@ import ConfirmDeleteDialog from "@/components/others/ConfirmDeleteDialog.vue";
 import { debounce } from "lodash";
 import PaginatedAnnouncements from "@/components/others/PaginatedAnnouncements.vue";
 import {getDateRange} from "@/utils/getDateRange"
-
+import EmptyCard from "@/components/cards/EmptyCard.vue";
 
 const router = useRouter();
 
@@ -59,6 +60,13 @@ const fetchAnnouncements = () => {
     selectedStatus.value     // <-- new!
   );
 };
+
+
+const emptyDisplay = {
+  title: 'You currently don\'t have an announcement',
+  description: 'You\'re all caught up. New announcements will appear here.',
+  icon: Newspaper
+}
 
 
 // Debounced version of fetch
@@ -230,7 +238,9 @@ const clearFilters = () => {
         <RouterLink to="/admin/announcements/create">+ Add</RouterLink>
       </Button>
     </div>
-    <PaginatedAnnouncements  :announcements="announcements"/>
+    <PaginatedAnnouncements  :announcements="announcements" v-if="announcements.length !== 0"/>
+
+  <EmptyCard v-else :emptyObject="emptyDisplay"/>
 
     <ConfirmDeleteDialog />
   </div>

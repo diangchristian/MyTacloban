@@ -9,9 +9,13 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-// Make sure this path is correct for your project structure
+
 import StepCard from "@/components/landing/StepCard.vue"; 
-import StepImg1 from "@/assets/images/create-account.png";
+import StepImg1 from "@/assets/images/Sign up-cuate.png";
+import StepImg2 from "@/assets/images/Search-cuate.png";
+import StepImg3 from "@/assets/images/Social media-amico.png";
+
+
 
 
 const api = ref<CarouselApi | null>(null);
@@ -29,13 +33,13 @@ const steps = [
     stepNumber: 2,
     title: "Search & Discover",
     description: "Easily search for local businesses, public services, and city events.",
-    image: "/assets/mockups/step-2-details.png", // <--- UPDATE THESE IMAGE PATHS
+    image: StepImg2, // <--- UPDATE THESE IMAGE PATHS
   },
   {
     stepNumber: 3,
     title: "Connect Locally",
     description: "Get contact information and directions to connect with the local community.",
-    image: "/assets/mockups/step-3-connect.png", // <--- UPDATE THESE IMAGE PATHS
+    image: StepImg3, // <--- UPDATE THESE IMAGE PATHS
   },
 ];
 
@@ -93,19 +97,19 @@ onBeforeUnmount(() => {
         </div>
 
         <div class=" flex items-center justify-center">
-          <div class="lg:max-w-xl">
+          <div class="">
             <Carousel class="relative w-full max-w-md" @init-api="setApi">
               <CarouselContent>
                 <CarouselItem v-for="(step, index) in steps" :key="index">
                   <div class="p-1 ">
-                    <Card class="">
+                    <Card class="w-full bg-primary/5">
                       <CardContent
-                        class="flex aspect-square items-center justify-center p-6 h-96"
+                        class="flex aspect-square items-center justify-center   "
                       >
                         <img
                             :src="step.image"
                             :alt="step.title"
-                            class="max-h-full object-contain rounded-md shadow-lg border"
+                            class="h-full object-cover rounded-md shadow-lg border"
                         />
                       </CardContent>
                     </Card>

@@ -17,8 +17,8 @@ defineProps<{
         </div>
         <div class="">
             <h2 class="text-xs font-semibold">Step {{ stepNumber }}</h2>
-            <h1 class=" text-lg md:text-xl font-semibold">{{ title }}</h1>
-            <p class="mt-2 text-sm text-gray-600">{{ description }}</p>
+            <h1 class=" text-lg md:text-md mt-2 font-semibold">{{ title }}</h1>
+            <p class="text-sm text-gray-600">{{ description }}</p>
         </div>
     </div>
 </template>
