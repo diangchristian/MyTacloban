@@ -1,6 +1,6 @@
 <script setup>
 import { Button } from '../ui/button';
-
+import { RouterLink } from 'vue-router';
 
 
 </script>
@@ -18,7 +18,9 @@ import { Button } from '../ui/button';
               <p class="mt-2 text-4xl font-semibold tracking-tight text-pretty  sm:text-5xl">Connect With Tacloban, Anytime.</p>
               <p class="mt-4 text-lg/8 ">Access city updates, submit reports, and stay informed — all in one trusted digital platform built for every Taclobanon.</p>
               
-              <Button class="mt-4 cursor-pointer">Get Started</Button>
+              <Button class="mt-4 cursor-pointer" asChild>
+                <RouterLink :to="{name: 'register' }">Get Started</RouterLink>
+              </Button>
     
             </div>
           </div>

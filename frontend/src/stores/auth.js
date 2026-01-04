@@ -137,6 +137,7 @@ export const useAuthStore = defineStore('auth', {
             
             if(data.status === 'succcess'){
                 this.router.push({name: "home"})
+                localStorage.removeItem('token')
             }
         },
         
